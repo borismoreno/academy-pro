@@ -89,10 +89,18 @@ export class AuthService {
     return { message: 'Revisa tu correo para activar tu cuenta.' };
   }
 
-  async login(user: User): Promise<AuthTokenResponse | AcademySelectionResponse> {
+  async login(
+    user: User,
+  ): Promise<AuthTokenResponse | AcademySelectionResponse> {
     if (!user.emailVerifiedAt) {
       throw new UnauthorizedException(
         'Debes verificar tu correo antes de iniciar sesión. Revisa tu bandeja de entrada o solicita un nuevo link.',
+      );
+    }
+
+    if (!user.isActive) {
+      throw new ForbiddenException(
+        'Tu cuenta está suspendida. Contacta al administrador.',
       );
     }
 
@@ -155,7 +163,9 @@ export class AuthService {
       },
     });
 
-    return { message: 'Correo verificado exitosamente. Ya puedes iniciar sesión.' };
+    return {
+      message: 'Correo verificado exitosamente. Ya puedes iniciar sesión.',
+    };
   }
 
   async resendVerification(email: string): Promise<{ message: string }> {
@@ -213,7 +223,10 @@ export class AuthService {
     });
   }
 
-  private buildTokenResponse(user: User, academy: AcademyInfo): AuthTokenResponse {
+  private buildTokenResponse(
+    user: User,
+    academy: AcademyInfo,
+  ): AuthTokenResponse {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
