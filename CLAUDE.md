@@ -192,6 +192,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Email verification flow (register, verify-email, resend-verification)
 - [x] Academies module
 - [x] Invitations flow
+- [x] Invitations accept — email verification compatibility fix
 - [ ] Teams module
 - [ ] Players module
 - [ ] Attendance module

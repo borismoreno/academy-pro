@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -136,18 +137,40 @@ export class InvitationsService {
 
       const existingUser = await tx.user.findUnique({ where: { email } });
 
-      if (existingUser) {
-        userId = existingUser.id;
-      } else {
+      if (!existingUser) {
+        // Case 1: new user — email is implicitly verified via invitation link
         const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
         const newUser = await tx.user.create({
           data: {
             fullName: dto.fullName,
             email,
             passwordHash,
+            isActive: true,
+            emailVerifiedAt: new Date(),
+            verificationToken: null,
+            verificationTokenExpiresAt: null,
           },
         });
         userId = newUser.id;
+      } else if (!existingUser.isActive) {
+        // Case 2: suspended user — block before any write
+        throw new ForbiddenException(
+          'Tu cuenta está suspendida. Contacta al administrador.',
+        );
+      } else if (!existingUser.emailVerifiedAt) {
+        // Case 3: active but unverified — invitation flow serves as implicit verification
+        await tx.user.update({
+          where: { id: existingUser.id },
+          data: {
+            emailVerifiedAt: new Date(),
+            verificationToken: null,
+            verificationTokenExpiresAt: null,
+          },
+        });
+        userId = existingUser.id;
+      } else {
+        // Case 4: active and already verified — no user record changes needed
+        userId = existingUser.id;
       }
 
       await tx.userAcademyRole.create({
