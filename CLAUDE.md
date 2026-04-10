@@ -201,7 +201,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Players module
 - [x] Attendance module
 - [x] Evaluations module
-- [ ] Notifications module
+- [x] Notifications module
 - [ ] Parent portal
 - [ ] Settings screen
 

@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto.js';
 import { CreateMetricDto } from './dto/create-metric.dto.js';
 import {
@@ -76,7 +77,10 @@ function parseDateRange(dateStr: string): { gte: Date; lt: Date } {
 
 @Injectable()
 export class EvaluationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   // ---------------------------------------------------------------------------
   // Metrics
@@ -248,6 +252,20 @@ export class EvaluationsService {
         include: evaluationInclude,
       });
     });
+
+    const parentLinks = await this.prisma.playerParent.findMany({
+      where: { playerId: dto.playerId },
+      select: { userId: true },
+    });
+
+    for (const { userId: parentUserId } of parentLinks) {
+      await this.notificationsService.createNotification({
+        userId: parentUserId,
+        academyId,
+        title: 'Nueva evaluación disponible',
+        message: `Tu hijo/a ${player.fullName} tiene una nueva evaluación del ${dto.evaluatedAt}.`,
+      });
+    }
 
     return mapEvaluation(evaluation);
   }

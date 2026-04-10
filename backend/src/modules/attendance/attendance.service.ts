@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
 import { CreateSessionDto } from './dto/create-session.dto.js';
 import { RecordAttendanceDto } from './dto/record-attendance.dto.js';
 import {
@@ -72,7 +73,10 @@ function mapSessionList(session: SessionWithDetails): SessionListResponseDto {
 
 @Injectable()
 export class AttendanceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   private parseDateRange(dateStr: string): { gte: Date; lt: Date } {
     const d = new Date(dateStr);
@@ -153,6 +157,22 @@ export class AttendanceService {
         include: sessionInclude,
       });
     });
+
+    const playerIds = players.map((p) => p.id);
+    const parentLinks = await this.prisma.playerParent.findMany({
+      where: { playerId: { in: playerIds } },
+      select: { userId: true },
+    });
+
+    const uniqueParentUserIds = [...new Set(parentLinks.map((pl) => pl.userId))];
+    for (const parentUserId of uniqueParentUserIds) {
+      await this.notificationsService.createNotification({
+        userId: parentUserId,
+        academyId,
+        title: 'Sesión de asistencia registrada',
+        message: `Se ha registrado una sesión de entrenamiento para ${team.name} el ${dto.sessionDate}.`,
+      });
+    }
 
     return mapSession(session);
   }
