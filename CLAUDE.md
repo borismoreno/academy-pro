@@ -190,7 +190,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Prisma setup (schema, Neon connection, PrismaService, initial migration)
 - [x] Auth module (register, login, JWT, roles)
 - [x] Academies module
-- [ ] Invitations flow
+- [x] Invitations flow
 - [ ] Teams module
 - [ ] Players module
 - [ ] Attendance module

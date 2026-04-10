@@ -14,6 +14,8 @@ import { PlayersModule } from './modules/players/players.module.js';
 import { AttendanceModule } from './modules/attendance/attendance.module.js';
 import { EvaluationsModule } from './modules/evaluations/evaluations.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
+import { InvitationsModule } from './modules/invitations/invitations.module.js';
+import { EmailModule } from './common/email/email.module.js';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AttendanceModule,
     EvaluationsModule,
     NotificationsModule,
+    EmailModule,
+    InvitationsModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
