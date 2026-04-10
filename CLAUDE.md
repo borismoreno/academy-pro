@@ -199,7 +199,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Fields module
 - [x] Teams module (depends on Fields module)
 - [x] Players module
-- [ ] Attendance module
+- [x] Attendance module
 - [ ] Evaluations module
 - [ ] Notifications module
 - [ ] Parent portal
