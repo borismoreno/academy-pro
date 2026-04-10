@@ -198,7 +198,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Schema update — add fields and team_schedules tables
 - [x] Fields module
 - [x] Teams module (depends on Fields module)
-- [ ] Players module
+- [x] Players module
 - [ ] Attendance module
 - [ ] Evaluations module
 - [ ] Notifications module
