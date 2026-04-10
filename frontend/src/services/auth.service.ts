@@ -1,5 +1,32 @@
-import api from './api';
-import type { ApiResponse, UserRole } from '@/types';
+import api from "./api";
+import type { ApiResponse, UserRole } from "@/types";
+
+interface RegisterPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  academyName: string;
+}
+
+export async function register(payload: RegisterPayload): Promise<string> {
+  const response = await api.post<ApiResponse<null>>("/auth/register", payload);
+  return response.data.message;
+}
+
+export async function verifyEmail(token: string): Promise<string> {
+  const response = await api.get<ApiResponse<null>>("/auth/verify-email", {
+    params: { token },
+  });
+  return response.data.message;
+}
+
+export async function resendVerification(email: string): Promise<string> {
+  const response = await api.post<ApiResponse<null>>(
+    "/auth/resend-verification",
+    { email },
+  );
+  return response.data.message;
+}
 
 interface LoginPayload {
   email: string;
@@ -35,6 +62,9 @@ interface AcademySelectionData {
 export type LoginResponse = LoginData | AcademySelectionData;
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
-  const response = await api.post<ApiResponse<LoginResponse>>('/auth/login', payload);
+  const response = await api.post<ApiResponse<LoginResponse>>(
+    "/auth/login",
+    payload,
+  );
   return response.data.data;
 }
