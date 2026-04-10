@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { UserRole } from '@/types';
 
 interface AuthUser {
   id: string;
@@ -10,10 +11,11 @@ interface AuthUser {
 interface AuthState {
   token: string | null;
   user: AuthUser | null;
+  role: UserRole | null;
   currentAcademyId: string | null;
-  setAuth: (token: string, user: AuthUser) => void;
+  setAuth: (token: string, user: AuthUser, role: UserRole) => void;
   setCurrentAcademy: (academyId: string) => void;
-  logout: () => void;
+  clearAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,10 +23,11 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       user: null,
+      role: null,
       currentAcademyId: null,
-      setAuth: (token, user) => set({ token, user }),
+      setAuth: (token, user, role) => set({ token, user, role }),
       setCurrentAcademy: (academyId) => set({ currentAcademyId: academyId }),
-      logout: () => set({ token: null, user: null, currentAcademyId: null }),
+      clearAuth: () => set({ token: null, user: null, role: null, currentAcademyId: null }),
     }),
     { name: 'academy-pro-auth' },
   ),

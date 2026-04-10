@@ -202,6 +202,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Attendance module
 - [x] Evaluations module
 - [x] Notifications module
+- [x] Login screen (React frontend — Kinetic Edge design system, routing, auth store)
 - [ ] Parent portal
 - [ ] Settings screen
 
