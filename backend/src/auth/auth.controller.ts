@@ -1,8 +1,18 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import type { User } from '@prisma/client';
 import { AuthService } from './auth.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { SelectAcademyDto } from './dto/select-academy.dto.js';
+import { ResendVerificationDto } from './dto/resend-verification.dto.js';
 import { Public } from './decorators/public.decorator.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
 import { LocalGuard } from './guards/local.guard.js';
@@ -15,9 +25,10 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   async register(@Body() dto: RegisterDto) {
-    const data = await this.authService.register(dto);
-    return { data, message: 'Cuenta creada exitosamente' };
+    const { message } = await this.authService.register(dto);
+    return { message };
   }
 
   @Public()
@@ -27,6 +38,22 @@ export class AuthController {
   async login(@CurrentUser() user: User) {
     const data = await this.authService.login(user);
     return { data, message: 'Inicio de sesión exitoso' };
+  }
+
+  @Public()
+  @Get('verify-email')
+  @HttpCode(HttpStatus.OK)
+  async verifyEmail(@Query('token') token: string) {
+    const { message } = await this.authService.verifyEmail(token);
+    return { message };
+  }
+
+  @Public()
+  @Post('resend-verification')
+  @HttpCode(HttpStatus.OK)
+  async resendVerification(@Body() dto: ResendVerificationDto) {
+    const { message } = await this.authService.resendVerification(dto.email);
+    return { message };
   }
 
   @UseGuards(JwtGuard)
