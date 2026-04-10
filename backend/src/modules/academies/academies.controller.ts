@@ -2,9 +2,12 @@ import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator.js';
 import { Roles } from '../../auth/decorators/roles.decorator.js';
-import { JwtPayload } from '../../auth/strategies/jwt.strategy.js';
+import type { JwtPayload } from '../../auth/strategies/jwt.strategy.js';
 import { AcademiesService } from './academies.service.js';
-import { AcademyResponseDto, AcademySubscriptionResponseDto } from './dto/academy-response.dto.js';
+import {
+  AcademyResponseDto,
+  AcademySubscriptionResponseDto,
+} from './dto/academy-response.dto.js';
 import { ListAcademiesQueryDto } from './dto/list-academies-query.dto.js';
 import { UpdateAcademyDto } from './dto/update-academy.dto.js';
 
@@ -16,7 +19,9 @@ export class AcademiesController {
   async getMyAcademy(
     @CurrentUser() user: JwtPayload,
   ): Promise<{ data: AcademyResponseDto; message: string }> {
-    const data = await this.academiesService.getMyAcademy(user.academyId as string);
+    const data = await this.academiesService.getMyAcademy(
+      user.academyId as string,
+    );
     return { data, message: 'Academia obtenida exitosamente' };
   }
 
@@ -26,7 +31,10 @@ export class AcademiesController {
     @CurrentUser() user: JwtPayload,
     @Body() dto: UpdateAcademyDto,
   ): Promise<{ data: AcademyResponseDto; message: string }> {
-    const data = await this.academiesService.updateMyAcademy(user.academyId as string, dto);
+    const data = await this.academiesService.updateMyAcademy(
+      user.academyId as string,
+      dto,
+    );
     return { data, message: 'Academia actualizada exitosamente' };
   }
 

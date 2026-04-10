@@ -177,6 +177,13 @@ Role is resolved per-academy via `UserAcademyRole` table.
 
 ---
 
+## Git Rules
+
+- Always work on the current branch — do not create new branches or worktrees
+- Do not commit automatically — leave changes staged for developer review
+
+---
+
 ## Current Development Status
 
 - [x] Project scaffolding (NestJS + React + Vite)
