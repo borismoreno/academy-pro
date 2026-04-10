@@ -21,7 +21,7 @@ Solo developer project. MVP target: 2 months.
 | Backend  | NestJS              |
 | Database | PostgreSQL via Neon |
 | Auth     | JWT + NestJS Guards |
-| ORM      | TypeORM             |
+| ORM      | Prisma              |
 | Storage  | Cloudinary          |
 | Hosting  | Railway or Render   |
 
@@ -35,6 +35,9 @@ academy-pro/
 ├── docs/
 │   └── PRD.md               # Full product requirements — read this first
 ├── backend/                 # NestJS app
+│   ├── prisma/
+│   │   ├── schema.prisma    # Single source of truth for the database schema
+│   │   └── migrations/      # Auto-generated migration files — never edit manually
 │   ├── src/
 │   │   ├── modules/         # One module per domain entity
 │   │   │   ├── auth/
@@ -47,7 +50,7 @@ academy-pro/
 │   │   │   └── notifications/
 │   │   ├── common/          # Guards, decorators, interceptors, pipes
 │   │   ├── config/          # App config and env validation
-│   │   └── database/        # TypeORM config and migrations
+│   │   └── prisma/          # PrismaModule and PrismaService (global)
 │   └── CLAUDE.md            # Backend-specific rules
 └── frontend/                # React + Vite app
     ├── src/
@@ -67,11 +70,14 @@ academy-pro/
 ```bash
 # Backend
 cd backend
-npm run start:dev       # Start NestJS in watch mode
-npm run migration:run   # Run pending migrations
-npm run migration:generate -- src/database/migrations/MigrationName
-npm run test            # Unit tests
-npm run test:e2e        # E2E tests
+npm run start:dev                          # Start NestJS in watch mode
+npx prisma migrate dev --name <name>       # Create and apply a new migration
+npx prisma migrate deploy                  # Apply migrations in production
+npx prisma db pull                         # Introspect existing DB into schema
+npx prisma generate                        # Regenerate Prisma Client after schema changes
+npx prisma studio                          # Open Prisma Studio (DB GUI)
+npm run test                               # Unit tests
+npm run test:e2e                           # E2E tests
 
 # Frontend
 cd frontend
@@ -90,7 +96,7 @@ npm run lint            # ESLint
 - App UI text (labels, messages, errors shown to users) in **Spanish**
 - Use `async/await` over `.then()` chains
 - No `any` types in TypeScript — always define proper interfaces/types
-- Use UUIDs for all primary keys
+- Use UUIDs for all primary keys (`@id @default(uuid())` in Prisma schema)
 
 ### NestJS (Backend)
 
@@ -99,9 +105,19 @@ npm run lint            # ESLint
 - Use custom decorators to extract current user: `@CurrentUser()`
 - Use `@Roles()` decorator + `RolesGuard` for role-based access control
 - All responses go through a standard response interceptor `{ data, message, statusCode }`
-- Never expose `password_hash` in any response — use response DTOs
-- Database queries via TypeORM repositories — no raw SQL unless necessary
-- Migrations for every schema change — never use `synchronize: true` in production
+- Never expose `passwordHash` in any response — use response DTOs
+- All DB access via `PrismaService` injected into the module's service
+- Never instantiate `PrismaClient` directly — always use the global `PrismaService`
+- Never use `prisma.$executeRaw` unless absolutely necessary — use Prisma query API
+
+### Prisma
+
+- `schema.prisma` is the **single source of truth** for the database — never alter DB directly
+- Run `npx prisma generate` after every schema change before coding
+- Migration names must be descriptive: `add_player_photo_url`, `create_invitations_table`
+- Never edit migration files manually after they are applied
+- Use `@@map("table_name")` and `@map("column_name")` to keep DB names in snake_case while model names stay PascalCase/camelCase in TypeScript
+- Always run `npx prisma migrate dev` in development — never `db push` (loses migration history)
 
 ### React + Vite (Frontend)
 
@@ -126,7 +142,7 @@ coach             → limited to their assigned teams
 parent            → read-only, their child's data only
 ```
 
-Role is resolved per-academy via `user_academy_roles` table.
+Role is resolved per-academy via `UserAcademyRole` table.
 **Never hardcode role checks in controllers** — always use `RolesGuard` + `@Roles()`.
 
 ---
@@ -134,9 +150,8 @@ Role is resolved per-academy via `user_academy_roles` table.
 ## Database Rules
 
 - All tables use `uuid` as primary key — never auto-increment integers
-- Every table has `created_at timestamp` — most also have `updated_at`
-- Soft deletes preferred over hard deletes — use `is_active: boolean`
-- Foreign key naming: `{referenced_table_singular}_id` (e.g. `academy_id`, `team_id`)
+- Every model has `createdAt DateTime @default(now())` — most also have `updatedAt DateTime @updatedAt`
+- Soft deletes preferred over hard deletes — use `isActive Boolean @default(true)`
 - See @docs/PRD.md Section 6 for the full schema
 
 ---
@@ -146,7 +161,7 @@ Role is resolved per-academy via `user_academy_roles` table.
 1. User logs in with email + password → receives JWT
 2. JWT payload includes: `{ sub: userId, email }`
 3. On each request, `JwtGuard` validates token and attaches user to request
-4. `RolesGuard` checks `user_academy_roles` for the current academy context
+4. `RolesGuard` checks `UserAcademyRole` for the current academy context
 5. Academy context is passed via header: `X-Academy-Id`
 
 ---
@@ -156,16 +171,16 @@ Role is resolved per-academy via `user_academy_roles` table.
 - A user can have **different roles in different academies** — never assume one role per user globally
 - A coach can be assigned to **multiple teams** within the same academy
 - A player can have **multiple parents** linked to their profile
-- Evaluation scores are **dynamic** — based on `evaluation_metrics` configured per academy, not hardcoded columns
-- Invitations expire — always check `status` and `expires_at` before accepting
+- Evaluation scores are **dynamic** — based on `EvaluationMetric` configured per academy, not hardcoded columns
+- Invitations expire — always check `status` and `expiresAt` before accepting
 - Parents only see data for **their linked child** — enforce at service layer, not just frontend
 
 ---
 
 ## Current Development Status
 
-- [ ] Project scaffolding (NestJS + React + Vite)
-- [ ] Database setup (Neon + TypeORM + migrations)
+- [x] Project scaffolding (NestJS + React + Vite)
+- [ ] Prisma setup (schema, Neon connection, PrismaService, initial migration)
 - [ ] Auth module (register, login, JWT, roles)
 - [ ] Academies module
 - [ ] Invitations flow

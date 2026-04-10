@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
+import { JwtModuleOptions } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { User } from '../users/entities/user.entity';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User]),
   ],
   exports: [JwtModule],
 })

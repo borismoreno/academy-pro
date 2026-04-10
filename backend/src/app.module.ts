@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from './config/typeorm.config';
 import { appConfig } from './config/app.config';
+import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { AcademiesModule } from './modules/academies/academies.module';
@@ -18,7 +17,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
       isGlobal: true,
       load: [appConfig],
     }),
-    TypeOrmModule.forRootAsync(typeOrmConfig),
+    PrismaModule,
     AuthModule,
     UsersModule,
     AcademiesModule,

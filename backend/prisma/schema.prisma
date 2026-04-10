@@ -1,0 +1,282 @@
+// Prisma schema for AcademyPro
+// Full model list matches PRD Section 6
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  saas_owner
+  academy_director
+  coach
+  parent
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  expired
+}
+
+enum SubscriptionPlan {
+  free
+  pro
+  enterprise
+}
+
+enum SubscriptionStatus {
+  active
+  suspended
+  cancelled
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(uuid())
+  fullName     String   @map("full_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  academyRoles       UserAcademyRole[]
+  invitationsSent    Invitation[]      @relation("InvitedBy")
+  teamCoaches        TeamCoach[]
+  playerParents      PlayerParent[]
+  attendanceSessions AttendanceSession[]
+  evaluations        Evaluation[]
+  notifications      Notification[]
+
+  @@map("users")
+}
+
+model Academy {
+  id        String   @id @default(uuid())
+  name      String
+  city      String?
+  address   String?
+  phone     String?
+  email     String?
+  logoUrl   String?  @map("logo_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userRoles     UserAcademyRole[]
+  subscription  AcademySubscription?
+  invitations   Invitation[]
+  teams         Team[]
+  players       Player[]
+  metrics       EvaluationMetric[]
+  notifications Notification[]
+
+  @@map("academies")
+}
+
+model UserAcademyRole {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  academyId String   @map("academy_id")
+  role      Role
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@unique([userId, academyId])
+  @@map("user_academy_roles")
+}
+
+model AcademySubscription {
+  id        String             @id @default(uuid())
+  academyId String             @unique @map("academy_id")
+  plan      SubscriptionPlan   @default(free)
+  status    SubscriptionStatus @default(active)
+  startsAt  DateTime           @map("starts_at")
+  endsAt    DateTime?          @map("ends_at")
+  createdAt DateTime           @default(now()) @map("created_at")
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@map("academy_subscriptions")
+}
+
+model Invitation {
+  id         String           @id @default(uuid())
+  academyId  String           @map("academy_id")
+  invitedBy  String           @map("invited_by")
+  email      String
+  role       Role
+  token      String           @unique
+  status     InvitationStatus @default(pending)
+  expiresAt  DateTime         @map("expires_at")
+  acceptedAt DateTime?        @map("accepted_at")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  academy       Academy @relation(fields: [academyId], references: [id])
+  invitedByUser User    @relation("InvitedBy", fields: [invitedBy], references: [id])
+
+  @@map("invitations")
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  academyId String   @map("academy_id")
+  name      String
+  category  String?
+  schedule  String?
+  field     String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  academy            Academy             @relation(fields: [academyId], references: [id])
+  coaches            TeamCoach[]
+  players            Player[]
+  attendanceSessions AttendanceSession[]
+
+  @@map("teams")
+}
+
+model TeamCoach {
+  id        String   @id @default(uuid())
+  teamId    String   @map("team_id")
+  userId    String   @map("user_id")
+  isPrimary Boolean  @default(false) @map("is_primary")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  team Team @relation(fields: [teamId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("team_coaches")
+}
+
+model Player {
+  id        String   @id @default(uuid())
+  academyId String   @map("academy_id")
+  teamId    String   @map("team_id")
+  fullName  String   @map("full_name")
+  birthDate DateTime @map("birth_date")
+  position  String?
+  photoUrl  String?  @map("photo_url")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  academy           Academy            @relation(fields: [academyId], references: [id])
+  team              Team               @relation(fields: [teamId], references: [id])
+  parents           PlayerParent[]
+  attendanceRecords AttendanceRecord[]
+  evaluations       Evaluation[]
+
+  @@map("players")
+}
+
+model PlayerParent {
+  id           String   @id @default(uuid())
+  playerId     String   @map("player_id")
+  userId       String   @map("user_id")
+  relationship String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  player Player @relation(fields: [playerId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("player_parents")
+}
+
+model AttendanceSession {
+  id          String   @id @default(uuid())
+  teamId      String   @map("team_id")
+  coachId     String   @map("coach_id")
+  sessionDate DateTime @map("session_date")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  team    Team               @relation(fields: [teamId], references: [id])
+  coach   User               @relation(fields: [coachId], references: [id])
+  records AttendanceRecord[]
+
+  @@map("attendance_sessions")
+}
+
+model AttendanceRecord {
+  id        String   @id @default(uuid())
+  sessionId String   @map("session_id")
+  playerId  String   @map("player_id")
+  present   Boolean
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session AttendanceSession @relation(fields: [sessionId], references: [id])
+  player  Player            @relation(fields: [playerId], references: [id])
+
+  @@map("attendance_records")
+}
+
+model EvaluationMetric {
+  id         String   @id @default(uuid())
+  academyId  String   @map("academy_id")
+  metricName String   @map("metric_name")
+  isActive   Boolean  @default(true) @map("is_active")
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  academy Academy           @relation(fields: [academyId], references: [id])
+  scores  EvaluationScore[]
+
+  @@map("evaluation_metrics")
+}
+
+model Evaluation {
+  id          String   @id @default(uuid())
+  playerId    String   @map("player_id")
+  coachId     String   @map("coach_id")
+  evaluatedAt DateTime @map("evaluated_at")
+  coachNotes  String?  @map("coach_notes")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  player Player            @relation(fields: [playerId], references: [id])
+  coach  User              @relation(fields: [coachId], references: [id])
+  scores EvaluationScore[]
+
+  @@map("evaluations")
+}
+
+model EvaluationScore {
+  id           String @id @default(uuid())
+  evaluationId String @map("evaluation_id")
+  metricId     String @map("metric_id")
+  score        Int
+
+  evaluation Evaluation       @relation(fields: [evaluationId], references: [id])
+  metric     EvaluationMetric @relation(fields: [metricId], references: [id])
+
+  @@map("evaluation_scores")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  academyId String   @map("academy_id")
+  title     String
+  message   String
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@map("notifications")
+}
