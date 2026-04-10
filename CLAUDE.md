@@ -180,8 +180,8 @@ Role is resolved per-academy via `UserAcademyRole` table.
 ## Current Development Status
 
 - [x] Project scaffolding (NestJS + React + Vite)
-- [ ] Prisma setup (schema, Neon connection, PrismaService, initial migration)
-- [ ] Auth module (register, login, JWT, roles)
+- [x] Prisma setup (schema, Neon connection, PrismaService, initial migration)
+- [x] Auth module (register, login, JWT, roles)
 - [ ] Academies module
 - [ ] Invitations flow
 - [ ] Teams module

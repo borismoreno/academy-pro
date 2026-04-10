@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,8 +14,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
-  app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',

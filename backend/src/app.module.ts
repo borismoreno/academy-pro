@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { appConfig } from './config/app.config';
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { AcademiesModule } from './modules/academies/academies.module';
-import { TeamsModule } from './modules/teams/teams.module';
-import { PlayersModule } from './modules/players/players.module';
-import { AttendanceModule } from './modules/attendance/attendance.module';
-import { EvaluationsModule } from './modules/evaluations/evaluations.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
+import { appConfig } from './config/app.config.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { JwtGuard } from './auth/guards/jwt.guard.js';
+import { RolesGuard } from './auth/guards/roles.guard.js';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { AcademiesModule } from './modules/academies/academies.module.js';
+import { TeamsModule } from './modules/teams/teams.module.js';
+import { PlayersModule } from './modules/players/players.module.js';
+import { AttendanceModule } from './modules/attendance/attendance.module.js';
+import { EvaluationsModule } from './modules/evaluations/evaluations.module.js';
+import { NotificationsModule } from './modules/notifications/notifications.module.js';
 
 @Module({
   imports: [
@@ -26,6 +30,11 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AttendanceModule,
     EvaluationsModule,
     NotificationsModule,
+  ],
+  providers: [
+    { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    { provide: APP_GUARD, useClass: JwtGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
 export class AppModule {}

@@ -35,8 +35,5 @@ lerna-debug.log*
 # NestJS
 backend/dist
 
-# Prisma generated client
-backend/generated/
-
 # Local files
 *.local
