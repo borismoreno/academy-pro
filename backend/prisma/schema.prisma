@@ -38,6 +38,16 @@ enum SubscriptionStatus {
   cancelled
 }
 
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 // ---------------------------------------------------------------------------
 // Models
 // ---------------------------------------------------------------------------
@@ -83,6 +93,7 @@ model Academy {
   players       Player[]
   metrics       EvaluationMetric[]
   notifications Notification[]
+  fields        Field[]
 
   @@map("academies")
 }
@@ -139,8 +150,6 @@ model Team {
   academyId String   @map("academy_id")
   name      String
   category  String?
-  schedule  String?
-  field     String?
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -148,8 +157,39 @@ model Team {
   coaches            TeamCoach[]
   players            Player[]
   attendanceSessions AttendanceSession[]
+  teamSchedules      TeamSchedule[]
 
   @@map("teams")
+}
+
+model Field {
+  id        String   @id @default(uuid())
+  academyId String   @map("academy_id")
+  name      String
+  location  String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  academy       Academy        @relation(fields: [academyId], references: [id])
+  teamSchedules TeamSchedule[]
+
+  @@map("fields")
+}
+
+model TeamSchedule {
+  id        String    @id @default(uuid())
+  teamId    String    @map("team_id")
+  fieldId   String    @map("field_id")
+  dayOfWeek DayOfWeek @map("day_of_week")
+  startTime String    @map("start_time")
+  endTime   String    @map("end_time")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  team  Team  @relation(fields: [teamId], references: [id])
+  field Field @relation(fields: [fieldId], references: [id])
+
+  @@map("team_schedules")
 }
 
 model TeamCoach {

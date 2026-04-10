@@ -205,16 +205,48 @@ Handles the invitation flow for coaches and parents sent by the `academy_directo
 
 Teams within an academy, grouped by age category.
 
-| Field      | Type                | Notes                  |
-| ---------- | ------------------- | ---------------------- |
-| id         | uuid PK             |                        |
-| academy_id | uuid FK → academies |                        |
-| name       | string              | e.g. "U14"             |
-| category   | string              | e.g. "Under 14"        |
-| schedule   | string              | e.g. "Mon & Wed 16:00" |
-| field      | string              | e.g. "Main field"      |
-| is_active  | boolean             |                        |
-| created_at | timestamp           |                        |
+| Field      | Type                | Notes           |
+| ---------- | ------------------- | --------------- |
+| id         | uuid PK             |                 |
+| academy_id | uuid FK → academies |                 |
+| name       | string              | e.g. "U14"      |
+| category   | string              | e.g. "Under 14" |
+| is_active  | boolean             |                 |
+| created_at | timestamp           |                 |
+
+---
+
+### `fields`
+
+Physical fields belonging to an academy. An academy can have one or more fields. Each field belongs to one academy.
+
+| Field      | Type                | Notes    |
+| ---------- | ------------------- | -------- |
+| id         | uuid PK             |          |
+| academy_id | uuid FK → academies |          |
+| name       | string              |          |
+| location   | string              | nullable |
+| is_active  | boolean             |          |
+| created_at | timestamp           |          |
+| updated_at | timestamp           |          |
+
+---
+
+### `team_schedules`
+
+Training schedule entries for a team. A team can have multiple schedules across different days and fields.
+
+| Field       | Type               | Notes                    |
+| ----------- | ------------------ | ------------------------ |
+| id          | uuid PK            |                          |
+| team_id     | uuid FK → teams    |                          |
+| field_id    | uuid FK → fields   |                          |
+| day_of_week | DayOfWeek enum     | see DayOfWeek enum below |
+| start_time  | string             | format HH:MM             |
+| end_time    | string             | format HH:MM             |
+| created_at  | timestamp          |                          |
+
+**DayOfWeek enum:** `MONDAY`, `TUESDAY`, `WEDNESDAY`, `THURSDAY`, `FRIDAY`, `SATURDAY`, `SUNDAY`
 
 ---
 
@@ -362,6 +394,9 @@ academies          ──< invitations
 academies          ──< teams
 academies          ──< players
 academies          ──< evaluation_metrics
+academies          ──< fields
+fields             ──< team_schedules
+teams              ──< team_schedules
 teams              ──< team_coaches >── users
 teams              ──< players
 players            ──< player_parents >── users
