@@ -15,6 +15,7 @@ import { AttendanceModule } from './modules/attendance/attendance.module.js';
 import { EvaluationsModule } from './modules/evaluations/evaluations.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { InvitationsModule } from './modules/invitations/invitations.module.js';
+import { FieldsModule } from './modules/fields/fields.module.js';
 import { EmailModule } from './common/email/email.module.js';
 
 @Module({
@@ -34,6 +35,7 @@ import { EmailModule } from './common/email/email.module.js';
     NotificationsModule,
     EmailModule,
     InvitationsModule,
+    FieldsModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
