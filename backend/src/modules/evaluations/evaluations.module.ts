@@ -7,5 +7,6 @@ import { EvaluationsService } from './evaluations.service.js';
   imports: [NotificationsModule],
   controllers: [EvaluationsController],
   providers: [EvaluationsService],
+  exports: [EvaluationsService],
 })
 export class EvaluationsModule {}

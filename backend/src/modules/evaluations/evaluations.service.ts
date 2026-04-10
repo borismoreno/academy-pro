@@ -19,6 +19,13 @@ import {
 import { MetricResponseDto } from './dto/metric-response.dto.js';
 import { UpdateMetricDto } from './dto/update-metric.dto.js';
 
+const DEFAULT_METRICS = [
+  { metricName: 'Técnica', sortOrder: 1, isActive: true },
+  { metricName: 'Física', sortOrder: 2, isActive: true },
+  { metricName: 'Táctica', sortOrder: 3, isActive: true },
+  { metricName: 'Actitud', sortOrder: 4, isActive: true },
+] as const;
+
 const evaluationInclude = {
   player: { select: { id: true, fullName: true, position: true, teamId: true } },
   coach: { select: { id: true, fullName: true } },
@@ -81,6 +88,31 @@ export class EvaluationsService {
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
   ) {}
+
+  // ---------------------------------------------------------------------------
+  // Default metrics seed (called after academy creation)
+  // ---------------------------------------------------------------------------
+
+  async seedDefaultMetrics(academyId: string): Promise<void> {
+    try {
+      const existingCount = await this.prisma.evaluationMetric.count({
+        where: { academyId },
+      });
+
+      if (existingCount > 0) return;
+
+      await this.prisma.evaluationMetric.createMany({
+        data: DEFAULT_METRICS.map((m) => ({
+          academyId,
+          metricName: m.metricName,
+          sortOrder: m.sortOrder,
+          isActive: m.isActive,
+        })),
+      });
+    } catch (err: unknown) {
+      console.error(`Failed to seed default metrics for academy ${academyId}:`, err);
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // Metrics

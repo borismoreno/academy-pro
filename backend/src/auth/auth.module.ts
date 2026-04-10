@@ -7,12 +7,14 @@ import { AuthController } from './auth.controller.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 import { LocalStrategy } from './strategies/local.strategy.js';
 import { EmailModule } from '../common/email/email.module.js';
+import { EvaluationsModule } from '../modules/evaluations/evaluations.module.js';
 
 @Module({
   imports: [
     PassportModule,
     ConfigModule,
     EmailModule,
+    EvaluationsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

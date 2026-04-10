@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { EmailService } from '../common/email/email.service.js';
+import { EvaluationsService } from '../modules/evaluations/evaluations.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { SelectAcademyDto } from './dto/select-academy.dto.js';
 import {
@@ -31,6 +32,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
     private readonly emailService: EmailService,
+    private readonly evaluationsService: EvaluationsService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -57,7 +59,7 @@ export class AuthService {
       Date.now() + VERIFICATION_EXPIRY_HOURS * 60 * 60 * 1000,
     );
 
-    await this.prisma.$transaction(async (tx) => {
+    const { newAcademyId } = await this.prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
           fullName: dto.fullName,
@@ -80,7 +82,11 @@ export class AuthService {
           role: Role.academy_director,
         },
       });
+
+      return { newAcademyId: newAcademy.id };
     });
+
+    await this.evaluationsService.seedDefaultMetrics(newAcademyId);
 
     const frontendUrl = this.config.getOrThrow<string>('app.frontendUrl');
     const verificationUrl = `${frontendUrl}/auth/verify-email?token=${verificationToken}`;
