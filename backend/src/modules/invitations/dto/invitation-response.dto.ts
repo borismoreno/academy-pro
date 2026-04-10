@@ -8,6 +8,7 @@ export class InvitationResponseDto {
   email: string;
   role: Role;
   status: InvitationStatus;
+  playerId: string | null;
   expiresAt: Date;
   acceptedAt: Date | null;
   createdAt: Date;

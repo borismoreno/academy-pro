@@ -135,12 +135,14 @@ model Invitation {
   role       Role
   token      String           @unique
   status     InvitationStatus @default(pending)
+  playerId   String?          @map("player_id")
   expiresAt  DateTime         @map("expires_at")
   acceptedAt DateTime?        @map("accepted_at")
   createdAt  DateTime         @default(now()) @map("created_at")
 
   academy       Academy @relation(fields: [academyId], references: [id])
   invitedByUser User    @relation("InvitedBy", fields: [invitedBy], references: [id])
+  player        Player? @relation(fields: [playerId], references: [id])
 
   @@map("invitations")
 }
@@ -222,6 +224,7 @@ model Player {
   parents           PlayerParent[]
   attendanceRecords AttendanceRecord[]
   evaluations       Evaluation[]
+  invitations       Invitation[]
 
   @@map("players")
 }

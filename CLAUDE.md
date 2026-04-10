@@ -194,6 +194,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Academies module
 - [x] Invitations flow
 - [x] Invitations accept — email verification compatibility fix
+- [x] Invitations — parent-to-player linking (playerId on invitation + auto PlayerParent on accept)
 - [x] Schema update — add fields and team_schedules tables
 - [x] Fields module
 - [x] Teams module (depends on Fields module)

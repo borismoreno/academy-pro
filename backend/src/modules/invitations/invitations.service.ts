@@ -26,7 +26,18 @@ export class InvitationsService {
   ) {}
 
   async create(academyId: string, invitedById: string, dto: CreateInvitationDto) {
+    dto.validate();
+
     const role = dto.role as unknown as Role;
+
+    if (dto.playerId) {
+      const player = await this.prisma.player.findFirst({
+        where: { id: dto.playerId, academyId, isActive: true },
+      });
+      if (!player) {
+        throw new NotFoundException('Jugador no encontrado');
+      }
+    }
 
     const existingMember = await this.prisma.userAcademyRole.findFirst({
       where: {
@@ -63,6 +74,7 @@ export class InvitationsService {
         role,
         token,
         status: InvitationStatus.pending,
+        playerId: dto.playerId ?? null,
         expiresAt,
       },
       include: { academy: true },
@@ -176,6 +188,21 @@ export class InvitationsService {
       await tx.userAcademyRole.create({
         data: { userId, academyId, role },
       });
+
+      if (invitation!.playerId) {
+        const alreadyLinked = await tx.playerParent.findFirst({
+          where: { playerId: invitation!.playerId, userId },
+        });
+        if (!alreadyLinked) {
+          await tx.playerParent.create({
+            data: {
+              playerId: invitation!.playerId,
+              userId,
+              relationship: 'tutor',
+            },
+          });
+        }
+      }
 
       await tx.invitation.update({
         where: { id: invitation!.id },
