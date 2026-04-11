@@ -1,7 +1,1 @@
-export default function DashboardPage() {
-  return (
-    <p className="font-body text-[0.875rem] text-on-surface-variant">
-      Dashboard — próximamente
-    </p>
-  );
-}
+export { default } from './dashboard/DashboardPage';
