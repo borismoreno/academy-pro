@@ -63,6 +63,26 @@ frontend/
 
 ---
 
+## API Contract Rule — Non-Negotiable
+
+Before implementing any API call, hook, or service function, Claude MUST first read the corresponding backend controller and service files to verify the exact endpoint, HTTP method, request body shape, query params, and response structure.
+
+The source of truth for all API contracts is the backend source code:
+
+- Controllers: backend/src/modules/{module}/{module}.controller.ts
+- DTOs: backend/src/modules/{module}/dto/
+- Response DTOs: backend/src/modules/{module}/dto/{entity}-response.dto.ts
+
+Rules:
+
+- Never assume an endpoint exists — always verify it in the backend controller first.
+- Never invent request body fields — always match the exact DTO defined in the backend.
+- Never assume a response shape — always check the response DTO.
+- If a required endpoint does not exist in the backend, stop and notify the developer instead of inventing it.
+- Never hardcode base URLs or endpoint paths — always define them as constants in src/services/ and derive them from what is actually implemented in the backend.
+
+---
+
 ## Design System: The Kinetic Edge
 
 > Full rules in @docs/design.md — this section summarizes the Tailwind implementation.
