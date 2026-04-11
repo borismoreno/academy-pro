@@ -1,7 +1,7 @@
-export default function DashboardPage() {
+export default function SettingsPage() {
   return (
     <p className="font-body text-[0.875rem] text-on-surface-variant">
-      Dashboard — próximamente
+      Configuración — próximamente
     </p>
   );
 }

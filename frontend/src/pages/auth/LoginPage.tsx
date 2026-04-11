@@ -1,17 +1,28 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useLogin } from "@/hooks/useLogin";
+import type { Location } from "react-router-dom";
+
+interface LocationState {
+  from?: Location;
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login, isPending, errorMessage } = useLogin();
+  // Recover the path the user tried to visit before being redirected to login
+  const location = useLocation();
+  const fromPath = (location.state as LocationState | null)?.from?.pathname;
+
+  const { login, isPending, errorMessage } = useLogin({
+    redirectAfterLogin: fromPath,
+  });
   const { toast } = useToast();
 
   useEffect(() => {
