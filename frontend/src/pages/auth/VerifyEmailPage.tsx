@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams, useLocation } from 'react-router-dom';
-import { Mail, Loader2, CheckCircle2, XCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useVerifyEmail } from '@/hooks/useVerifyEmail';
+import { useEffect, useState } from "react";
+import { useSearchParams, useLocation } from "react-router-dom";
+import { Mail, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 
 interface LocationState {
   email?: string;
@@ -11,22 +11,14 @@ interface LocationState {
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
   const state = location.state as LocationState | null;
-  const email = state?.email ?? '';
+  const email = state?.email ?? "";
 
-  const { verifyEmailMutation, resendVerificationMutation } = useVerifyEmail();
+  const { verifyEmailQuery, resendVerificationMutation } = useVerifyEmail(token);
 
   // Countdown state for resend cooldown
   const [countdown, setCountdown] = useState(0);
-
-  useEffect(() => {
-    if (token) {
-      verifyEmailMutation.mutate(token);
-    }
-  // Only run on mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -47,16 +39,16 @@ export default function VerifyEmailPage() {
         <div className="w-full max-w-sm">
           {/* Top glow */}
           <div
-            className="h-[2px] w-full rounded-t-[1.5rem]"
-            style={{ background: 'linear-gradient(135deg, #bcf521, #00f4fe)' }}
+            className="h-0.5 w-full rounded-t-3xl"
+            style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
           />
 
-          <div className="bg-surface-high rounded-b-[1.5rem] px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
+          <div className="bg-surface-high rounded-b-3xl px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
             <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant self-start">
               AcademyPro
             </span>
 
-            {verifyEmailMutation.isPending && (
+            {verifyEmailQuery.isPending && (
               <>
                 <Loader2 className="h-12 w-12 text-primary animate-spin" />
                 <div>
@@ -70,7 +62,7 @@ export default function VerifyEmailPage() {
               </>
             )}
 
-            {verifyEmailMutation.isSuccess && (
+            {verifyEmailQuery.isSuccess && (
               <>
                 <CheckCircle2 className="h-12 w-12 text-primary" />
                 <div>
@@ -84,7 +76,7 @@ export default function VerifyEmailPage() {
               </>
             )}
 
-            {verifyEmailMutation.isError && (
+            {verifyEmailQuery.isError && (
               <>
                 <XCircle className="h-12 w-12 text-error-container" />
                 <div>
@@ -92,9 +84,9 @@ export default function VerifyEmailPage() {
                     Error de verificación
                   </h2>
                   <p className="font-body text-[0.875rem] text-on-surface-variant mt-2">
-                    {verifyEmailMutation.error instanceof Error
-                      ? verifyEmailMutation.error.message
-                      : 'No se pudo verificar el correo. El enlace puede haber expirado.'}
+                    {verifyEmailQuery.error instanceof Error
+                      ? verifyEmailQuery.error.message
+                      : "No se pudo verificar el correo. El enlace puede haber expirado."}
                   </p>
                 </div>
               </>
@@ -111,11 +103,11 @@ export default function VerifyEmailPage() {
       <div className="w-full max-w-sm">
         {/* Top glow */}
         <div
-          className="h-[2px] w-full rounded-t-[1.5rem]"
-          style={{ background: 'linear-gradient(135deg, #bcf521, #00f4fe)' }}
+          className="h-0.5 w-full rounded-t-3xl"
+          style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
         />
 
-        <div className="bg-surface-high rounded-b-[1.5rem] px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
+        <div className="bg-surface-high rounded-b-3xl px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
           <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant self-start">
             AcademyPro
           </span>
@@ -124,7 +116,9 @@ export default function VerifyEmailPage() {
           <div className="relative">
             <div
               className="absolute inset-0 rounded-full blur-2xl opacity-30"
-              style={{ background: 'linear-gradient(135deg, #bcf521, #00f4fe)' }}
+              style={{
+                background: "linear-gradient(135deg, #bcf521, #00f4fe)",
+              }}
             />
             <div className="relative bg-surface-highest rounded-full p-5">
               <Mail className="h-10 w-10 text-primary" />
@@ -136,16 +130,19 @@ export default function VerifyEmailPage() {
               Revisa tu correo electrónico
             </h2>
             <p className="font-body text-[0.875rem] text-on-surface-variant mt-3 leading-relaxed">
-              Te enviamos un enlace de verificación a{' '}
-              <span className="text-on-surface font-medium">{email || 'tu correo'}</span>.{' '}
-              Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
+              Te enviamos un enlace de verificación a{" "}
+              <span className="text-on-surface font-medium">
+                {email || "tu correo"}
+              </span>
+              . Revisa tu bandeja de entrada y haz clic en el enlace para
+              activar tu cuenta.
             </p>
           </div>
 
           {/* Resend button */}
           <Button
             type="button"
-            variant="ghost"
+            variant="tertiary"
             size="lg"
             className="w-full bg-transparent text-on-surface-variant hover:text-primary rounded-xl"
             onClick={handleResend}
@@ -156,7 +153,7 @@ export default function VerifyEmailPage() {
             ) : countdown > 0 ? (
               `Reenviar en ${countdown}s`
             ) : (
-              'Reenviar correo'
+              "Reenviar correo"
             )}
           </Button>
         </div>

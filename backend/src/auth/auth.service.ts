@@ -89,7 +89,7 @@ export class AuthService {
     await this.evaluationsService.seedDefaultMetrics(newAcademyId);
 
     const frontendUrl = this.config.getOrThrow<string>('app.frontendUrl');
-    const verificationUrl = `${frontendUrl}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
     await this.emailService.sendVerificationEmail(dto.email, verificationUrl);
 
     return { message: 'Revisa tu correo para activar tu cuenta.' };
@@ -194,7 +194,7 @@ export class AuthService {
       });
 
       const frontendUrl = this.config.getOrThrow<string>('app.frontendUrl');
-      const verificationUrl = `${frontendUrl}/auth/verify-email?token=${verificationToken}`;
+      const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
       await this.emailService.sendVerificationEmail(email, verificationUrl);
     }
 

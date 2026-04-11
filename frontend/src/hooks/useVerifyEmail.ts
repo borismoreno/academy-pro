@@ -1,4 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { verifyEmail, resendVerification } from '@/services/auth.service';
@@ -13,27 +14,44 @@ function extractErrorMessage(error: Error, fallback: string): string {
   return fallback;
 }
 
-export function useVerifyEmail() {
+export function useVerifyEmail(token: string | null) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const toastShown = useRef(false);
 
-  const verifyEmailMutation = useMutation<string, Error, string>({
-    mutationFn: verifyEmail,
-    onSuccess: () => {
+  const verifyEmailQuery = useQuery({
+    queryKey: ['verify-email', token],
+    queryFn: () => verifyEmail(token!),
+    enabled: !!token,
+    retry: false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (verifyEmailQuery.isSuccess && !toastShown.current) {
+      toastShown.current = true;
       toast({
         title: 'Correo verificado',
         description: 'Correo verificado correctamente. Ya puedes iniciar sesión.',
       });
       setTimeout(() => navigate('/login'), 2000);
-    },
-    onError: (error) => {
+    }
+  }, [verifyEmailQuery.isSuccess]);
+
+  useEffect(() => {
+    if (verifyEmailQuery.isError && !toastShown.current) {
+      toastShown.current = true;
       toast({
         variant: 'destructive',
         title: 'Error de verificación',
-        description: extractErrorMessage(error, 'Error al verificar el correo'),
+        description: extractErrorMessage(
+          verifyEmailQuery.error as Error,
+          'Error al verificar el correo',
+        ),
       });
-    },
-  });
+    }
+  }, [verifyEmailQuery.isError]);
 
   const resendVerificationMutation = useMutation<string, Error, string>({
     mutationFn: resendVerification,
@@ -53,7 +71,7 @@ export function useVerifyEmail() {
   });
 
   return {
-    verifyEmailMutation,
+    verifyEmailQuery,
     resendVerificationMutation,
   };
 }
