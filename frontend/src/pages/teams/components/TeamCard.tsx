@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MoreVertical, User } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MoreVertical, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import TeamFormSheet from './TeamFormSheet';
-import type { TeamResponse } from '@/services/dashboard.service';
-import type { UserRole } from '@/types';
-import { useTeams } from '@/hooks/useTeams';
+} from "@/components/ui/dropdown-menu";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import TeamFormSheet from "./TeamFormSheet";
+import type { TeamResponse } from "@/services/dashboard.service";
+import type { UserRole } from "@/types";
+import { useTeams } from "@/hooks/useTeams";
 
 const DAY_LABELS: Record<string, string> = {
-  MONDAY: 'Lun',
-  TUESDAY: 'Mar',
-  WEDNESDAY: 'Mié',
-  THURSDAY: 'Jue',
-  FRIDAY: 'Vie',
-  SATURDAY: 'Sáb',
-  SUNDAY: 'Dom',
+  MONDAY: "Lun",
+  TUESDAY: "Mar",
+  WEDNESDAY: "Mié",
+  THURSDAY: "Jue",
+  FRIDAY: "Vie",
+  SATURDAY: "Sáb",
+  SUNDAY: "Dom",
 };
 
 interface TeamCardProps {
@@ -35,7 +35,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const isDirector = role === 'academy_director';
+  const isDirector = role === "academy_director";
   const headCoach = team.coaches.find((c) => c.isPrimary);
   const visibleSchedules = team.schedules.slice(0, 2);
   const extraSchedules = team.schedules.length - 2;
@@ -43,7 +43,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
   function handleCardClick(e: React.MouseEvent) {
     // Prevent navigation when clicking dropdown
     const target = e.target as HTMLElement;
-    if (target.closest('[data-dropdown]')) return;
+    if (target.closest("[data-dropdown]")) return;
     navigate(`/teams/${team.id}`);
   }
 
@@ -57,10 +57,10 @@ export default function TeamCard({ team, role }: TeamCardProps) {
     <>
       <div
         onClick={handleCardClick}
-        className="bg-surface-high rounded-[1.5rem] overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
+        className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
       >
         {/* Top glow */}
-        <div className="h-[2px] bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
 
         <div className="p-5 lg:p-6 flex flex-col gap-3">
           {/* Top row: name + dropdown */}
@@ -73,7 +73,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
               <div data-dropdown onClick={(e) => e.stopPropagation()}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
+                    <button className="min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
                       <MoreVertical size={18} />
                       <span className="sr-only">Opciones</span>
                     </button>
@@ -105,7 +105,8 @@ export default function TeamCard({ team, role }: TeamCardProps) {
           <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
             <User size={14} />
             <span>
-              {team.coaches.length} {team.coaches.length === 1 ? 'entrenador' : 'entrenadores'}
+              {team.coaches.length}{" "}
+              {team.coaches.length === 1 ? "entrenador" : "entrenadores"}
             </span>
           </div>
 
@@ -139,11 +140,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
       </div>
 
       {/* Edit sheet */}
-      <TeamFormSheet
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        team={team}
-      />
+      <TeamFormSheet open={editOpen} onOpenChange={setEditOpen} team={team} />
 
       {/* Delete confirm */}
       <ConfirmDialog

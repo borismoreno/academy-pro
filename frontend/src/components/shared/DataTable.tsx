@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import EmptyState from './EmptyState';
+import type { ReactNode } from "react";
+import EmptyState from "./EmptyState";
 
 interface Column<T> {
   key: string;
@@ -18,14 +18,16 @@ export default function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
   isLoading,
-  emptyMessage = 'No hay datos disponibles.',
+  emptyMessage = "No hay datos disponibles.",
 }: DataTableProps<T>) {
   return (
-    <div className="w-full rounded-[1.5rem] overflow-hidden">
+    <div className="w-full rounded-3xl overflow-hidden">
       {/* Header row */}
       <div
         className="grid bg-surface-lowest px-4 py-3"
-        style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+        style={{
+          gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
+        }}
       >
         {columns.map((col) => (
           <span
@@ -44,10 +46,15 @@ export default function DataTable<T extends Record<string, unknown>>({
           <div
             key={index}
             className="grid px-4 py-4 animate-pulse bg-surface-high"
-            style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+            style={{
+              gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
+            }}
           >
             {columns.map((col) => (
-              <div key={col.key} className="h-4 bg-surface-highest rounded-lg w-3/4" />
+              <div
+                key={col.key}
+                className="h-4 bg-surface-highest rounded-lg w-3/4"
+              />
             ))}
           </div>
         ))
@@ -62,14 +69,19 @@ export default function DataTable<T extends Record<string, unknown>>({
             <div
               key={rowIndex}
               className={[
-                'grid px-4 py-4 transition-colors hover:bg-surface-highest',
-                isEven ? 'bg-surface-high' : 'bg-surface-highest',
-              ].join(' ')}
-              style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
+                "grid px-4 py-4 transition-colors hover:bg-surface-highest",
+                isEven ? "bg-surface-high" : "bg-surface-highest",
+              ].join(" ")}
+              style={{
+                gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,
+              }}
             >
               {columns.map((col) => (
-                <div key={col.key} className="font-body text-[0.875rem] text-on-surface flex items-center">
-                  {col.render ? col.render(row) : String(row[col.key] ?? '—')}
+                <div
+                  key={col.key}
+                  className="font-body text-[0.875rem] text-on-surface flex items-center"
+                >
+                  {col.render ? col.render(row) : String(row[col.key] ?? "—")}
                 </div>
               ))}
             </div>

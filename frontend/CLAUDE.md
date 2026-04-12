@@ -154,10 +154,10 @@ Fonts are defined inside the `@theme` block above (see `--font-display` and `--f
 
 **Cards**
 
-- Always `rounded-[1.5rem]` (xl corner radius)
+- Always `rounded-3xl` (xl corner radius)
 - No internal divider lines — use `gap-8` (2rem) spacing instead
 - Top Glow signature: add a 2px gradient top border using a pseudo-element or inline style:
-  `background: linear-gradient(135deg, #bcf521, #00f4fe)` on a `h-[2px] w-full` element at the top of the card
+  `background: linear-gradient(135deg, #bcf521, #00f4fe)` on a `h-0.5 w-full` element at the top of the card
 
 **Buttons**
 
@@ -196,7 +196,7 @@ When installing or using shadcn/ui components, always override their default sty
 - Replace default white backgrounds with `surface-high` or `surface-highest`
 - Replace default border colors with `outline-variant/15` (ghost border)
 - Replace default primary color with the Lime-to-Cyan gradient
-- Replace default radius with `rounded-[1.5rem]` for containers, `rounded-xl` for buttons and inputs
+- Replace default radius with `rounded-3xl` for containers, `rounded-xl` for buttons and inputs
 - Replace default font with `font-body` (Inter)
 
 ---

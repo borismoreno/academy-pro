@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
-import { useAuthStore } from '@/store/auth.store';
-import { getBottomNavItems } from '@/config/navigation';
-import type { NavItemConfig } from '@/config/navigation';
+import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { useAuthStore } from "@/store/auth.store";
+import { getBottomNavItems } from "@/config/navigation";
+import type { NavItemConfig } from "@/config/navigation";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 
 // ---------------------------------------------------------------------------
 // Single tab button — used for both primary tabs and overflow sheet items
@@ -30,7 +30,7 @@ function TabButton({ item, isActive }: TabButtonProps) {
         <item.Icon
           size={22}
           strokeWidth={isActive ? 2.5 : 1.8}
-          className={isActive ? 'text-primary' : 'text-on-surface-variant'}
+          className={isActive ? "text-primary" : "text-on-surface-variant"}
         />
         {/* Active dot indicator */}
         {isActive && (
@@ -39,9 +39,9 @@ function TabButton({ item, isActive }: TabButtonProps) {
       </div>
       <span
         className={[
-          'font-body text-[0.6875rem] leading-tight',
-          isActive ? 'text-primary' : 'text-on-surface-variant',
-        ].join(' ')}
+          "font-body text-[0.6875rem] leading-tight",
+          isActive ? "text-primary" : "text-on-surface-variant",
+        ].join(" ")}
       >
         {item.label}
       </span>
@@ -65,11 +65,11 @@ function OverflowItem({ item, isActive, onClose }: OverflowItemProps) {
       to={item.path}
       onClick={onClose}
       className={[
-        'flex items-center gap-4 px-6 py-4 rounded-xl transition-colors',
+        "flex items-center gap-4 px-6 py-4 rounded-xl transition-colors",
         isActive
-          ? 'text-primary'
-          : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-highest',
-      ].join(' ')}
+          ? "text-primary"
+          : "text-on-surface-variant hover:text-on-surface hover:bg-surface-highest",
+      ].join(" ")}
     >
       <item.Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
       <span className="font-body text-[0.9375rem]">{item.label}</span>
@@ -92,18 +92,22 @@ export default function BottomNav() {
   const hasOverflow = overflow.length > 0;
 
   // Is the current route one of the overflow items?
-  const overflowIsActive = overflow.some((item) => item.path === location.pathname);
+  const overflowIsActive = overflow.some((item) =>
+    item.path === "/dashboard"
+      ? location.pathname === item.path
+      : location.pathname.startsWith(item.path),
+  );
 
   return (
     <>
       {/* Bottom navigation bar */}
       <nav
         className={[
-          'flex lg:hidden fixed bottom-0 left-0 right-0 z-50',
-          'bg-surface-lowest shadow-[0px_-4px_24px_rgba(0,0,0,0.4)]',
-          'h-16 sm:h-[72px]',
-          'px-2',
-        ].join(' ')}
+          "flex lg:hidden fixed bottom-0 left-0 right-0 z-50",
+          "bg-surface-lowest shadow-[0px_-4px_24px_rgba(0,0,0,0.4)]",
+          "h-16 sm:h-[72px]",
+          "px-2",
+        ].join(" ")}
         aria-label="Navegación principal"
       >
         {/* Primary tabs */}
@@ -111,7 +115,11 @@ export default function BottomNav() {
           <TabButton
             key={item.path}
             item={item}
-            isActive={location.pathname === item.path}
+            isActive={
+              item.path === "/dashboard"
+                ? location.pathname === item.path
+                : location.pathname.startsWith(item.path)
+            }
           />
         ))}
 
@@ -126,7 +134,9 @@ export default function BottomNav() {
               <Menu
                 size={22}
                 strokeWidth={overflowIsActive ? 2.5 : 1.8}
-                className={overflowIsActive ? 'text-primary' : 'text-on-surface-variant'}
+                className={
+                  overflowIsActive ? "text-primary" : "text-on-surface-variant"
+                }
               />
               {overflowIsActive && (
                 <span className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
@@ -134,9 +144,9 @@ export default function BottomNav() {
             </div>
             <span
               className={[
-                'font-body text-[0.6875rem] leading-tight',
-                overflowIsActive ? 'text-primary' : 'text-on-surface-variant',
-              ].join(' ')}
+                "font-body text-[0.6875rem] leading-tight",
+                overflowIsActive ? "text-primary" : "text-on-surface-variant",
+              ].join(" ")}
             >
               Más
             </span>
@@ -157,7 +167,11 @@ export default function BottomNav() {
                 <OverflowItem
                   key={item.path}
                   item={item}
-                  isActive={location.pathname === item.path}
+                  isActive={
+                    item.path === "/dashboard"
+                      ? location.pathname === item.path
+                      : location.pathname.startsWith(item.path)
+                  }
                   onClose={() => setSheetOpen(false)}
                 />
               ))}

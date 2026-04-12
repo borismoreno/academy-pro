@@ -1,5 +1,5 @@
-import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function PulseMonitorSvg() {
   return (
@@ -18,7 +18,13 @@ function PulseMonitorSvg() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        <filter id="glow-secondary" x="-20%" y="-20%" width="140%" height="140%">
+        <filter
+          id="glow-secondary"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
           <feGaussianBlur stdDeviation="4" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
@@ -76,7 +82,13 @@ function PulseMonitorSvg() {
       />
 
       {/* Dot marker at the top of line 1 */}
-      <circle cx="270" cy="10" r="4" fill="#bcf521" filter="url(#glow-primary)" />
+      <circle
+        cx="270"
+        cy="10"
+        r="4"
+        fill="#bcf521"
+        filter="url(#glow-primary)"
+      />
       <circle cx="270" cy="10" r="7" fill="#bcf521" opacity="0.2" />
     </svg>
   );
@@ -86,9 +98,9 @@ export default function HeroProgressBlock() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-surface-high rounded-[1.5rem] overflow-hidden">
+    <div className="bg-surface-high rounded-3xl overflow-hidden">
       {/* Top glow gradient line */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
 
       {/* p-5 on mobile, p-8 on desktop */}
       <div className="p-5 lg:p-8 flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
@@ -105,13 +117,14 @@ export default function HeroProgressBlock() {
 
           {/* Description hidden on mobile — headline + CTA are enough */}
           <p className="hidden lg:block font-body text-[0.875rem] text-on-surface-variant max-w-md">
-            Consulta el historial de evaluaciones y el avance de cada jugador en tiempo real.
+            Consulta el historial de evaluaciones y el avance de cada jugador en
+            tiempo real.
           </p>
 
           {/* CTA — full width on mobile, auto on desktop */}
           <button
-            onClick={() => navigate('/evaluations')}
-            className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-[44px] px-6 py-3 bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
+            onClick={() => navigate("/evaluations")}
+            className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-6 py-3 bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
           >
             Ver evaluaciones
             <ArrowRight size={16} />

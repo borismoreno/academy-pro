@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 interface PageHeaderProps {
   title: string;
@@ -6,7 +6,11 @@ interface PageHeaderProps {
   action?: ReactNode;
 }
 
-export default function PageHeader({ title, subtitle, action }: PageHeaderProps) {
+export default function PageHeader({
+  title,
+  subtitle,
+  action,
+}: PageHeaderProps) {
   return (
     <div className="flex items-start justify-between mb-8">
       <div>
@@ -14,10 +18,12 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-1 font-body text-[0.875rem] text-on-surface-variant">{subtitle}</p>
+          <p className="mt-1 font-body text-[0.875rem] text-on-surface-variant">
+            {subtitle}
+          </p>
         )}
       </div>
-      {action && <div className="flex-shrink-0 ml-4">{action}</div>}
+      {action && <div className="shrink-0 ml-4">{action}</div>}
     </div>
   );
 }

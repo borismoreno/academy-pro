@@ -48,7 +48,10 @@ export default function Sidebar() {
       <nav className="flex-1 px-3 overflow-y-auto">
         <ul className="flex flex-col gap-1">
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive =
+              item.path === '/dashboard'
+                ? location.pathname === item.path
+                : location.pathname.startsWith(item.path);
             return (
               <li key={item.path}>
                 <NavLink

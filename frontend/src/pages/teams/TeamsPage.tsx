@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Users } from 'lucide-react';
-import PageHeader from '@/components/shared/PageHeader';
-import EmptyState from '@/components/shared/EmptyState';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { Button } from '@/components/ui/button';
-import { useTeams } from '@/hooks/useTeams';
-import { useAuthStore } from '@/store/auth.store';
-import TeamCard from './components/TeamCard';
-import TeamFormSheet from './components/TeamFormSheet';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Users } from "lucide-react";
+import PageHeader from "@/components/shared/PageHeader";
+import EmptyState from "@/components/shared/EmptyState";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { Button } from "@/components/ui/button";
+import { useTeams } from "@/hooks/useTeams";
+import { useAuthStore } from "@/store/auth.store";
+import TeamCard from "./components/TeamCard";
+import TeamFormSheet from "./components/TeamFormSheet";
 
 export default function TeamsPage() {
   const { teams, isLoading } = useTeams();
   const role = useAuthStore((state) => state.role);
-  const isDirector = role === 'academy_director';
+  const isDirector = role === "academy_director";
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialize from URL param so sheet opens immediately on mount when ?action=create
   const [createOpen, setCreateOpen] = useState(
-    () => searchParams.get('action') === 'create',
+    () => searchParams.get("action") === "create",
   );
 
   // Clean up the URL param — setSearchParams is not React setState, safe in effects
   useEffect(() => {
-    if (searchParams.get('action') === 'create') {
+    if (searchParams.get("action") === "create") {
       setSearchParams({}, { replace: true });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -38,7 +38,7 @@ export default function TeamsPage() {
             <Button
               variant="primary"
               onClick={() => setCreateOpen(true)}
-              className="min-h-[44px]"
+              className="min-h-11"
             >
               Crear equipo
             </Button>
@@ -59,7 +59,7 @@ export default function TeamsPage() {
               <Button
                 variant="primary"
                 onClick={() => setCreateOpen(true)}
-                className="min-h-[44px]"
+                className="min-h-11"
               >
                 Crear equipo
               </Button>
@@ -74,7 +74,11 @@ export default function TeamsPage() {
         </div>
       )}
 
-      <TeamFormSheet open={createOpen} onOpenChange={setCreateOpen} team={null} />
+      <TeamFormSheet
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        team={null}
+      />
     </div>
   );
 }

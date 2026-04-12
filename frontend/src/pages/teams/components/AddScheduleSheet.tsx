@@ -1,27 +1,33 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { toast } from '@/hooks/use-toast';
-import { useTeamDetail } from '@/hooks/useTeamDetail';
-import { getFields } from '@/services/fields.service';
-import type { DayOfWeek } from '@/types';
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { toast } from "@/hooks/use-toast";
+import { useTeamDetail } from "@/hooks/useTeamDetail";
+import { getFields } from "@/services/fields.service";
+import type { DayOfWeek } from "@/types";
 
 const DAY_OPTIONS: { value: DayOfWeek; label: string }[] = [
-  { value: 'MONDAY', label: 'Lunes' },
-  { value: 'TUESDAY', label: 'Martes' },
-  { value: 'WEDNESDAY', label: 'Miércoles' },
-  { value: 'THURSDAY', label: 'Jueves' },
-  { value: 'FRIDAY', label: 'Viernes' },
-  { value: 'SATURDAY', label: 'Sábado' },
-  { value: 'SUNDAY', label: 'Domingo' },
+  { value: "MONDAY", label: "Lunes" },
+  { value: "TUESDAY", label: "Martes" },
+  { value: "WEDNESDAY", label: "Miércoles" },
+  { value: "THURSDAY", label: "Jueves" },
+  { value: "FRIDAY", label: "Viernes" },
+  { value: "SATURDAY", label: "Sábado" },
+  { value: "SUNDAY", label: "Domingo" },
 ];
 
 interface AddScheduleSheetProps {
@@ -39,29 +45,29 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addScheduleMutation } = useTeamDetail(teamId);
 
   const { data: fields = [], isLoading: fieldsLoading } = useQuery({
-    queryKey: ['fields'],
+    queryKey: ["fields"],
     queryFn: getFields,
   });
 
-  const [dayOfWeek, setDayOfWeek] = useState<DayOfWeek>('MONDAY');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [selectedFieldId, setSelectedFieldId] = useState('');
-  const [timeError, setTimeError] = useState('');
+  const [dayOfWeek, setDayOfWeek] = useState<DayOfWeek>("MONDAY");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [selectedFieldId, setSelectedFieldId] = useState("");
+  const [timeError, setTimeError] = useState("");
 
   // Derive effective fieldId: prefer explicit selection, fall back to first available
-  const fieldId = selectedFieldId || (fields.length > 0 ? fields[0].id : '');
+  const fieldId = selectedFieldId || (fields.length > 0 ? fields[0].id : "");
 
   function validate(): boolean {
     if (!startTime || !endTime) {
-      setTimeError('Las horas de inicio y fin son requeridas');
+      setTimeError("Las horas de inicio y fin son requeridas");
       return false;
     }
     if (endTime <= startTime) {
-      setTimeError('La hora de fin debe ser posterior a la hora de inicio');
+      setTimeError("La hora de fin debe ser posterior a la hora de inicio");
       return false;
     }
-    setTimeError('');
+    setTimeError("");
     return true;
   }
 
@@ -73,7 +79,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
       { dayOfWeek, startTime, endTime, fieldId },
       {
         onSuccess: () => {
-          toast({ description: 'Horario agregado correctamente' });
+          toast({ description: "Horario agregado correctamente" });
           onOpenChange(false);
         },
       },
@@ -96,7 +102,11 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-[0.875rem] text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
         >
           {DAY_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-surface-high">
+            <option
+              key={opt.value}
+              value={opt.value}
+              className="bg-surface-high"
+            >
               {opt.label}
             </option>
           ))}
@@ -113,7 +123,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           value={startTime}
           onChange={(e) => {
             setStartTime(e.target.value);
-            if (timeError) setTimeError('');
+            if (timeError) setTimeError("");
           }}
           disabled={isPending}
         />
@@ -129,12 +139,14 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           value={endTime}
           onChange={(e) => {
             setEndTime(e.target.value);
-            if (timeError) setTimeError('');
+            if (timeError) setTimeError("");
           }}
           disabled={isPending}
         />
         {timeError && (
-          <p className="font-body text-[0.75rem] text-error-container">{timeError}</p>
+          <p className="font-body text-[0.75rem] text-error-container">
+            {timeError}
+          </p>
         )}
       </div>
 
@@ -163,7 +175,8 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           >
             {fields.map((f) => (
               <option key={f.id} value={f.id} className="bg-surface-high">
-                {f.name}{f.location ? ` — ${f.location}` : ''}
+                {f.name}
+                {f.location ? ` — ${f.location}` : ""}
               </option>
             ))}
           </select>
@@ -194,14 +207,62 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   );
 }
 
-export default function AddScheduleSheet({ open, onOpenChange, teamId }: AddScheduleSheetProps) {
+function useIsDesktop(): boolean {
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsDesktop(window.innerWidth >= 1024);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isDesktop;
+}
+
+function TopGlow() {
+  return (
+    <div
+      className="h-0.5 w-full rounded-t-3xl"
+      style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
+    />
+  );
+}
+
+export default function AddScheduleSheet({
+  open,
+  onOpenChange,
+  teamId,
+}: AddScheduleSheetProps) {
+  const isDesktop = useIsDesktop();
+  const formKey = open ? teamId : "closed";
+
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+          <TopGlow />
+          <DialogHeader className="px-6 pt-6 pb-0">
+            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+              Agregar horario
+            </DialogTitle>
+          </DialogHeader>
+          <FormBody key={formKey} teamId={teamId} onOpenChange={onOpenChange} />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="max-h-[90vh] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Agregar horario</SheetTitle>
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
+        <SheetHeader className="px-6 pt-6 pb-0">
+          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            Agregar horario
+          </SheetTitle>
         </SheetHeader>
-        <FormBody key={open ? teamId : 'closed'} teamId={teamId} onOpenChange={onOpenChange} />
+        <FormBody key={formKey} teamId={teamId} onOpenChange={onOpenChange} />
       </SheetContent>
     </Sheet>
   );

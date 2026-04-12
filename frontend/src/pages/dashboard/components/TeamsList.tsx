@@ -1,7 +1,7 @@
-import { User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import EmptyState from '@/components/shared/EmptyState';
-import type { TeamResponse } from '@/services/dashboard.service';
+import { User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import EmptyState from "@/components/shared/EmptyState";
+import type { TeamResponse } from "@/services/dashboard.service";
 
 interface TeamsListProps {
   teams: TeamResponse[];
@@ -11,7 +11,7 @@ interface TeamsListProps {
 function SkeletonCard({ mobile }: { mobile: boolean }) {
   if (mobile) {
     return (
-      <div className="w-[200px] flex-shrink-0 bg-surface-high rounded-xl overflow-hidden animate-pulse">
+      <div className="w-[200px] shrink-0 bg-surface-high rounded-xl overflow-hidden animate-pulse">
         <div className="h-px w-full bg-gradient-to-r from-primary to-secondary" />
         <div className="p-4 space-y-2.5">
           <div className="h-4 w-16 bg-surface-highest rounded" />
@@ -21,8 +21,8 @@ function SkeletonCard({ mobile }: { mobile: boolean }) {
     );
   }
   return (
-    <div className="bg-surface-high rounded-[1.5rem] overflow-hidden animate-pulse">
-      <div className="h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+    <div className="bg-surface-high rounded-3xl overflow-hidden animate-pulse">
+      <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
       <div className="p-6 space-y-3">
         <div className="h-5 w-20 bg-surface-highest rounded" />
         <div className="h-3 w-14 bg-surface-highest rounded" />
@@ -76,7 +76,7 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                 <div
                   key={team.id}
                   onClick={() => navigate(`/teams/${team.id}`)}
-                  className="w-[200px] flex-shrink-0 snap-start bg-surface-high rounded-xl overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
+                  className="w-[200px] shrink-0 snap-start bg-surface-high rounded-xl overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
                 >
                   <div className="h-px w-full bg-gradient-to-r from-primary to-secondary" />
                   <div className="p-4 space-y-1.5">
@@ -104,9 +104,9 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                 <div
                   key={team.id}
                   onClick={() => navigate(`/teams/${team.id}`)}
-                  className="bg-surface-high rounded-[1.5rem] overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
+                  className="bg-surface-high rounded-3xl overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
                 >
-                  <div className="h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+                  <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
                   <div className="p-6 space-y-2">
                     <h4 className="font-display text-[1.75rem] font-semibold text-on-surface leading-tight">
                       {team.name}
@@ -118,7 +118,10 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                     )}
                     {primaryCoach && (
                       <div className="pt-2 flex items-center gap-1.5">
-                        <User size={14} className="text-on-surface-variant flex-shrink-0" />
+                        <User
+                          size={14}
+                          className="text-on-surface-variant shrink-0"
+                        />
                         <span className="font-body text-[0.875rem] text-on-surface-variant truncate">
                           {primaryCoach.user.fullName}
                         </span>

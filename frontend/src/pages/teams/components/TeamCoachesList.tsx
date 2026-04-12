@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import EmptyState from '@/components/shared/EmptyState';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import AddCoachSheet from './AddCoachSheet';
-import { useTeamDetail } from '@/hooks/useTeamDetail';
-import type { TeamCoach } from '@/services/dashboard.service';
-import type { UserRole } from '@/types';
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import EmptyState from "@/components/shared/EmptyState";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import AddCoachSheet from "./AddCoachSheet";
+import { useTeamDetail } from "@/hooks/useTeamDetail";
+import type { TeamCoach } from "@/services/dashboard.service";
+import type { UserRole } from "@/types";
 
 interface TeamCoachesListProps {
   coaches: TeamCoach[];
@@ -16,16 +16,20 @@ interface TeamCoachesListProps {
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
-export default function TeamCoachesList({ coaches, teamId, role }: TeamCoachesListProps) {
+export default function TeamCoachesList({
+  coaches,
+  teamId,
+  role,
+}: TeamCoachesListProps) {
   const { removeCoachMutation } = useTeamDetail(teamId);
-  const isDirector = role === 'academy_director';
+  const isDirector = role === "academy_director";
 
   const [addOpen, setAddOpen] = useState(false);
   const [removeTarget, setRemoveTarget] = useState<TeamCoach | null>(null);
@@ -50,7 +54,7 @@ export default function TeamCoachesList({ coaches, teamId, role }: TeamCoachesLi
               variant="tertiary"
               size="sm"
               onClick={() => setAddOpen(true)}
-              className="gap-1.5 min-h-[44px]"
+              className="gap-1.5 min-h-11"
             >
               <Plus size={14} />
               Agregar entrenador
@@ -66,7 +70,7 @@ export default function TeamCoachesList({ coaches, teamId, role }: TeamCoachesLi
             {coaches.map((coach) => (
               <div key={coach.id} className="flex items-center gap-3">
                 {/* Avatar */}
-                <div className="flex-shrink-0 w-9 h-9 rounded-full bg-surface-highest flex items-center justify-center">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-surface-highest flex items-center justify-center">
                   <span className="font-body text-[0.6875rem] font-semibold text-primary">
                     {getInitials(coach.user.fullName)}
                   </span>
@@ -81,20 +85,20 @@ export default function TeamCoachesList({ coaches, teamId, role }: TeamCoachesLi
 
                 {/* Role chip */}
                 <span
-                  className={`flex-shrink-0 font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-2.5 py-0.5 ${
+                  className={`shrink-0 font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-2.5 py-0.5 ${
                     coach.isPrimary
-                      ? 'bg-primary-container text-on-primary'
-                      : 'bg-surface-highest text-on-surface-variant'
+                      ? "bg-primary-container text-on-primary"
+                      : "bg-surface-highest text-on-surface-variant"
                   }`}
                 >
-                  {coach.isPrimary ? 'Principal' : 'Asistente'}
+                  {coach.isPrimary ? "Principal" : "Asistente"}
                 </span>
 
                 {/* Remove button */}
                 {isDirector && (
                   <button
                     onClick={() => setRemoveTarget(coach)}
-                    className="flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
+                    className="shrink-0 min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
                     aria-label="Quitar entrenador"
                   >
                     <X size={16} />
@@ -110,9 +114,11 @@ export default function TeamCoachesList({ coaches, teamId, role }: TeamCoachesLi
 
       <ConfirmDialog
         open={removeTarget !== null}
-        onOpenChange={(open) => { if (!open) setRemoveTarget(null); }}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
         title="¿Quitar entrenador?"
-        description={`¿Deseas quitar a ${removeTarget?.user.fullName ?? ''} del equipo?`}
+        description={`¿Deseas quitar a ${removeTarget?.user.fullName ?? ""} del equipo?`}
         confirmLabel="Quitar"
         variant="destructive"
         onConfirm={handleRemoveConfirm}

@@ -1,19 +1,25 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import { toast } from '@/hooks/use-toast';
-import { useTeamDetail } from '@/hooks/useTeamDetail';
-import api from '@/services/api';
-import type { ApiResponse } from '@/types';
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import { toast } from "@/hooks/use-toast";
+import { useTeamDetail } from "@/hooks/useTeamDetail";
+import api from "@/services/api";
+import type { ApiResponse } from "@/types";
 
 interface AcademyMember {
   userId: string;
@@ -25,7 +31,7 @@ interface AcademyMember {
 
 async function fetchCoaches(): Promise<AcademyMember[]> {
   const response = await api.get<ApiResponse<AcademyMember[]>>(
-    '/academies/members?role=coach',
+    "/academies/members?role=coach",
   );
   return response.data.data;
 }
@@ -43,10 +49,10 @@ interface FormBodyProps {
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -54,12 +60,12 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addCoachMutation } = useTeamDetail(teamId);
 
   const { data: coaches = [], isLoading } = useQuery({
-    queryKey: ['academy-coaches'],
+    queryKey: ["academy-coaches"],
     queryFn: fetchCoaches,
   });
 
-  const [search, setSearch] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState('');
+  const [search, setSearch] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
   const [isPrimary, setIsPrimary] = useState(false);
 
   const filtered = coaches.filter((c) =>
@@ -74,7 +80,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
       { userId: selectedUserId, isPrimary },
       {
         onSuccess: () => {
-          toast({ description: 'Entrenador agregado correctamente' });
+          toast({ description: "Entrenador agregado correctamente" });
           onOpenChange(false);
         },
       },
@@ -101,8 +107,8 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           <EmptyState
             message={
               search
-                ? 'No se encontraron entrenadores con ese nombre.'
-                : 'No hay entrenadores registrados en esta academia.'
+                ? "No se encontraron entrenadores con ese nombre."
+                : "No hay entrenadores registrados en esta academia."
             }
           />
         ) : (
@@ -112,14 +118,14 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
               type="button"
               onClick={() => setSelectedUserId(coach.userId)}
               disabled={addCoachMutation.isPending}
-              className={`flex items-center gap-3 min-h-[44px] px-3 rounded-xl transition-colors text-left ${
+              className={`flex items-center gap-3 min-h-11 px-3 rounded-xl transition-colors text-left ${
                 selectedUserId === coach.userId
-                  ? 'bg-surface-highest'
-                  : 'hover:bg-surface-highest'
+                  ? "bg-surface-highest"
+                  : "hover:bg-surface-highest"
               }`}
             >
               {/* Avatar */}
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-surface-highest flex items-center justify-center">
+              <div className="shrink-0 w-8 h-8 rounded-full bg-surface-highest flex items-center justify-center">
                 <span className="font-body text-[0.6875rem] font-semibold text-primary">
                   {getInitials(coach.fullName)}
                 </span>
@@ -134,7 +140,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
               </div>
               {/* Selection indicator */}
               {selectedUserId === coach.userId && (
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary" />
+                <div className="shrink-0 w-4 h-4 rounded-full bg-primary" />
               )}
             </button>
           ))
@@ -142,7 +148,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
       </div>
 
       {/* isPrimary toggle */}
-      <div className="flex items-center justify-between min-h-[44px]">
+      <div className="flex items-center justify-between min-h-11">
         <span className="font-body text-[0.875rem] text-on-surface-variant">
           Entrenador principal
         </span>
@@ -153,12 +159,12 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           onClick={() => setIsPrimary((prev) => !prev)}
           disabled={addCoachMutation.isPending}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-50 ${
-            isPrimary ? 'bg-primary' : 'bg-surface-highest'
+            isPrimary ? "bg-primary" : "bg-surface-highest"
           }`}
         >
           <span
             className={`inline-block h-4 w-4 rounded-full bg-on-primary transition-transform ${
-              isPrimary ? 'translate-x-6' : 'translate-x-1'
+              isPrimary ? "translate-x-6" : "translate-x-1"
             }`}
           />
         </button>
@@ -188,14 +194,62 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   );
 }
 
-export default function AddCoachSheet({ open, onOpenChange, teamId }: AddCoachSheetProps) {
+function useIsDesktop(): boolean {
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsDesktop(window.innerWidth >= 1024);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isDesktop;
+}
+
+function TopGlow() {
+  return (
+    <div
+      className="h-0.5 w-full rounded-t-3xl"
+      style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
+    />
+  );
+}
+
+export default function AddCoachSheet({
+  open,
+  onOpenChange,
+  teamId,
+}: AddCoachSheetProps) {
+  const isDesktop = useIsDesktop();
+  const formKey = open ? teamId : "closed";
+
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+          <TopGlow />
+          <DialogHeader className="px-6 pt-6 pb-0">
+            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+              Agregar entrenador
+            </DialogTitle>
+          </DialogHeader>
+          <FormBody key={formKey} teamId={teamId} onOpenChange={onOpenChange} />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="max-h-[90vh] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Agregar entrenador</SheetTitle>
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
+        <SheetHeader className="px-6 pt-6 pb-0">
+          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            Agregar entrenador
+          </SheetTitle>
         </SheetHeader>
-        <FormBody key={open ? teamId : 'closed'} teamId={teamId} onOpenChange={onOpenChange} />
+        <FormBody key={formKey} teamId={teamId} onOpenChange={onOpenChange} />
       </SheetContent>
     </Sheet>
   );

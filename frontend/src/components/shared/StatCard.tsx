@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 interface StatCardProps {
   label: string;
@@ -9,14 +9,17 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, icon, trend }: StatCardProps) {
   return (
-    <div className="bg-surface-high rounded-[1.5rem] overflow-hidden">
+    <div className="bg-surface-high rounded-3xl overflow-hidden">
       {/* Top glow gradient line */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
 
       <div className="p-6 relative">
         {/* Icon — top right */}
         {icon && (
-          <div className="absolute top-6 right-6 text-on-surface-variant" style={{ fontSize: 20 }}>
+          <div
+            className="absolute top-6 right-6 text-on-surface-variant"
+            style={{ fontSize: 20 }}
+          >
             {icon}
           </div>
         )}

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Users, User, BarChart2 } from 'lucide-react';
+import type { ReactNode } from "react";
+import { Users, User, BarChart2 } from "lucide-react";
 
 interface KpiGridProps {
   totalTeams: number;
@@ -16,9 +16,9 @@ interface KpiCardProps {
 
 function KpiCard({ label, value, icon }: KpiCardProps) {
   return (
-    <div className="bg-surface-high rounded-xl lg:rounded-[1.5rem] overflow-hidden">
+    <div className="bg-surface-high rounded-xl lg:rounded-3xl overflow-hidden">
       {/* Top glow — 1px on mobile, 2px on desktop */}
-      <div className="h-px lg:h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-px lg:h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
 
       <div className="p-3 lg:p-6 relative">
         {/* Icon — hidden on mobile to save space */}
@@ -42,8 +42,8 @@ function KpiCard({ label, value, icon }: KpiCardProps) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-surface-high rounded-xl lg:rounded-[1.5rem] overflow-hidden animate-pulse">
-      <div className="h-px lg:h-[2px] w-full bg-gradient-to-r from-primary to-secondary" />
+    <div className="bg-surface-high rounded-xl lg:rounded-3xl overflow-hidden animate-pulse">
+      <div className="h-px lg:h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
       <div className="p-3 lg:p-6">
         <div className="h-2.5 w-16 lg:w-24 bg-surface-highest rounded mb-2 lg:mb-4" />
         <div className="h-7 lg:h-14 w-12 lg:w-16 bg-surface-highest rounded" />
@@ -52,7 +52,12 @@ function SkeletonCard() {
   );
 }
 
-export default function KpiGrid({ totalTeams, totalPlayers, totalEvaluations, isLoading }: KpiGridProps) {
+export default function KpiGrid({
+  totalTeams,
+  totalPlayers,
+  totalEvaluations,
+  isLoading,
+}: KpiGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-3 lg:grid-cols-3 gap-3 lg:gap-4">
@@ -65,9 +70,21 @@ export default function KpiGrid({ totalTeams, totalPlayers, totalEvaluations, is
 
   return (
     <div className="grid grid-cols-3 lg:grid-cols-3 gap-3 lg:gap-4">
-      <KpiCard label="Equipos activos" value={totalTeams} icon={<Users size={20} />} />
-      <KpiCard label="Jugadores registrados" value={totalPlayers} icon={<User size={20} />} />
-      <KpiCard label="Evaluaciones realizadas" value={totalEvaluations} icon={<BarChart2 size={20} />} />
+      <KpiCard
+        label="Equipos activos"
+        value={totalTeams}
+        icon={<Users size={20} />}
+      />
+      <KpiCard
+        label="Jugadores registrados"
+        value={totalPlayers}
+        icon={<User size={20} />}
+      />
+      <KpiCard
+        label="Evaluaciones realizadas"
+        value={totalEvaluations}
+        icon={<BarChart2 size={20} />}
+      />
     </div>
   );
 }
