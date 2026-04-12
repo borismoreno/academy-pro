@@ -205,6 +205,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Login screen (React frontend — Kinetic Edge design system, routing, auth store)
 - [x] Dashboard page
 - [x] Teams screen (TeamsPage, TeamDetailPage, service, hooks, all components)
+- [x] Players screen (PlayersPage, PlayerDetailPage, service, hooks, all components)
 - [ ] Parent portal
 - [ ] Settings screen
 

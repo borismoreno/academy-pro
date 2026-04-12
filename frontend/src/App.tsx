@@ -16,6 +16,7 @@ import DashboardPage from '@/pages/DashboardPage';
 import TeamsPage from '@/pages/TeamsPage';
 import TeamDetailPage from '@/pages/teams/TeamDetailPage';
 import PlayersPage from '@/pages/PlayersPage';
+import PlayerDetailPage from '@/pages/players/PlayerDetailPage';
 import AttendancePage from '@/pages/AttendancePage';
 import EvaluationsPage from '@/pages/EvaluationsPage';
 import NotificationsPage from '@/pages/NotificationsPage';
@@ -71,6 +72,7 @@ export default function App() {
             <Route path="/teams"        element={<TeamsPage />} />
             <Route path="/teams/:id"    element={<TeamDetailPage />} />
             <Route path="/players"      element={<PlayersPage />} />
+            <Route path="/players/:id" element={<PlayerDetailPage />} />
             <Route path="/attendance"   element={<AttendancePage />} />
             <Route path="/evaluations"  element={<EvaluationsPage />} />
             <Route path="/notifications"element={<NotificationsPage />} />
