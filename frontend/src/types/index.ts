@@ -67,3 +67,68 @@ export interface Field {
   createdAt: string;
   updatedAt: string;
 }
+
+// ─── Attendance ───────────────────────────────────────────────────────────────
+
+export interface TeamInfo {
+  id: string;
+  name: string;
+}
+
+export interface PlayerInfo {
+  id: string;
+  fullName: string;
+  position: string | null;
+  teamId: string;
+}
+
+export interface AttendanceRecord {
+  id: string;
+  sessionId: string;
+  playerId: string;
+  present: boolean;
+  createdAt: string;
+  player: PlayerInfo;
+}
+
+/** Full session with records (returned by GET /attendance/sessions/:id and POST /attendance/sessions) */
+export interface Session {
+  id: string;
+  teamId: string;
+  coachId: string;
+  sessionDate: string;
+  notes: string | null;
+  createdAt: string;
+  team: TeamInfo;
+  records: AttendanceRecord[];
+  totalPresent: number;
+  totalAbsent: number;
+}
+
+/** Session list item — no records array (returned by GET /attendance/sessions) */
+export interface SessionListItem {
+  id: string;
+  teamId: string;
+  coachId: string;
+  sessionDate: string;
+  notes: string | null;
+  createdAt: string;
+  team: TeamInfo;
+  totalPresent: number;
+  totalAbsent: number;
+}
+
+export interface PlayerAttendanceSummaryItem {
+  sessionId: string;
+  sessionDate: string;
+  present: boolean;
+}
+
+export interface PlayerAttendanceSummary {
+  playerId: string;
+  totalSessions: number;
+  totalPresent: number;
+  totalAbsent: number;
+  attendancePercentage: number;
+  sessions: PlayerAttendanceSummaryItem[];
+}

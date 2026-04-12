@@ -206,6 +206,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Dashboard page
 - [x] Teams screen (TeamsPage, TeamDetailPage, service, hooks, all components)
 - [x] Players screen (PlayersPage, PlayerDetailPage, service, hooks, all components)
+- [x] Attendance screen (AttendancePage, SessionDetailPage, service, hooks, all components)
 - [ ] Parent portal
 - [ ] Settings screen
 

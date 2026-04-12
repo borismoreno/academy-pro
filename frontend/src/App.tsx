@@ -17,7 +17,8 @@ import TeamsPage from '@/pages/TeamsPage';
 import TeamDetailPage from '@/pages/teams/TeamDetailPage';
 import PlayersPage from '@/pages/PlayersPage';
 import PlayerDetailPage from '@/pages/players/PlayerDetailPage';
-import AttendancePage from '@/pages/AttendancePage';
+import AttendancePage from '@/pages/attendance/AttendancePage';
+import SessionDetailPage from '@/pages/attendance/SessionDetailPage';
 import EvaluationsPage from '@/pages/EvaluationsPage';
 import NotificationsPage from '@/pages/NotificationsPage';
 import SettingsPage from '@/pages/SettingsPage';
@@ -73,7 +74,8 @@ export default function App() {
             <Route path="/teams/:id"    element={<TeamDetailPage />} />
             <Route path="/players"      element={<PlayersPage />} />
             <Route path="/players/:id" element={<PlayerDetailPage />} />
-            <Route path="/attendance"   element={<AttendancePage />} />
+            <Route path="/attendance"      element={<AttendancePage />} />
+            <Route path="/attendance/:id"  element={<SessionDetailPage />} />
             <Route path="/evaluations"  element={<EvaluationsPage />} />
             <Route path="/notifications"element={<NotificationsPage />} />
             <Route path="/settings"     element={<SettingsPage />} />
