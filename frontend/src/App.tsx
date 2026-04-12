@@ -14,6 +14,7 @@ import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 // Protected pages
 import DashboardPage from '@/pages/DashboardPage';
 import TeamsPage from '@/pages/TeamsPage';
+import TeamDetailPage from '@/pages/teams/TeamDetailPage';
 import PlayersPage from '@/pages/PlayersPage';
 import AttendancePage from '@/pages/AttendancePage';
 import EvaluationsPage from '@/pages/EvaluationsPage';
@@ -68,6 +69,7 @@ export default function App() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard"    element={<DashboardPage />} />
             <Route path="/teams"        element={<TeamsPage />} />
+            <Route path="/teams/:id"    element={<TeamDetailPage />} />
             <Route path="/players"      element={<PlayersPage />} />
             <Route path="/attendance"   element={<AttendancePage />} />
             <Route path="/evaluations"  element={<EvaluationsPage />} />

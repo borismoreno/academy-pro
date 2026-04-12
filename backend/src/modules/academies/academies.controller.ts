@@ -5,10 +5,12 @@ import { Roles } from '../../auth/decorators/roles.decorator.js';
 import type { JwtPayload } from '../../auth/strategies/jwt.strategy.js';
 import { AcademiesService } from './academies.service.js';
 import {
+  AcademyMemberResponseDto,
   AcademyResponseDto,
   AcademySubscriptionResponseDto,
 } from './dto/academy-response.dto.js';
 import { ListAcademiesQueryDto } from './dto/list-academies-query.dto.js';
+import { ListMembersQueryDto } from './dto/list-members-query.dto.js';
 import { UpdateAcademyDto } from './dto/update-academy.dto.js';
 
 @Controller('academies')
@@ -23,6 +25,19 @@ export class AcademiesController {
       user.academyId as string,
     );
     return { data, message: 'Academia obtenida exitosamente' };
+  }
+
+  @Get('members')
+  @Roles(Role.academy_director, Role.coach)
+  async getMembers(
+    @CurrentUser() user: JwtPayload,
+    @Query() query: ListMembersQueryDto,
+  ): Promise<{ data: AcademyMemberResponseDto[]; message: string }> {
+    const data = await this.academiesService.getMembers(
+      user.academyId as string,
+      query.role,
+    );
+    return { data, message: 'Miembros obtenidos exitosamente' };
   }
 
   @Patch('me')

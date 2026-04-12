@@ -1,4 +1,12 @@
-import { SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
+import { Role, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
+
+export class AcademyMemberResponseDto {
+  userId: string;
+  fullName: string;
+  email: string;
+  isActive: boolean;
+  role: Role;
+}
 
 export class AcademySubscriptionResponseDto {
   id: string;

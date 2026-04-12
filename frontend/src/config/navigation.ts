@@ -40,13 +40,29 @@ export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
 
 /**
  * Returns true when `role` is permitted to access `path`.
- * Paths not present in ROUTE_PERMISSIONS are considered unprotected
- * (public routes) and return false here — the router handles them separately.
+ *
+ * Resolution order:
+ * 1. Exact match — e.g. `/teams` hits the `/teams` entry directly.
+ * 2. Prefix match — e.g. `/teams/abc-123` falls back to the longest
+ *    registered prefix (`/teams`), inheriting its permissions.
+ *    This covers all dynamic segments like `:id` without needing to
+ *    enumerate every parametric route in ROUTE_PERMISSIONS.
+ *
+ * Paths not present in ROUTE_PERMISSIONS (and with no matching prefix)
+ * are considered unprotected and return false — the router handles them.
  */
 export function isRouteAllowed(path: string, role: UserRole): boolean {
-  const allowed = ROUTE_PERMISSIONS[path];
-  if (!allowed) return false;
-  return allowed.includes(role);
+  // 1. Exact match
+  const exact = ROUTE_PERMISSIONS[path];
+  if (exact) return exact.includes(role);
+
+  // 2. Prefix match — find the longest registered prefix that the path starts with
+  const prefixMatch = Object.keys(ROUTE_PERMISSIONS)
+    .filter((key) => path.startsWith(key + '/'))
+    .sort((a, b) => b.length - a.length)[0];
+
+  if (!prefixMatch) return false;
+  return ROUTE_PERMISSIONS[prefixMatch].includes(role);
 }
 
 /**

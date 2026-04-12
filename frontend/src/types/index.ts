@@ -48,3 +48,22 @@ export interface Player {
   photoUrl: string | null;
   isActive: boolean;
 }
+
+export type DayOfWeek =
+  | 'MONDAY'
+  | 'TUESDAY'
+  | 'WEDNESDAY'
+  | 'THURSDAY'
+  | 'FRIDAY'
+  | 'SATURDAY'
+  | 'SUNDAY';
+
+export interface Field {
+  id: string;
+  academyId: string;
+  name: string;
+  location: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

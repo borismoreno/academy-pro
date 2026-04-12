@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
+import { Role, SubscriptionPlan, SubscriptionStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import { UpdateAcademyDto } from './dto/update-academy.dto.js';
 
@@ -52,6 +52,30 @@ export class AcademiesService {
           : undefined,
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async getMembers(academyId: string, role?: Role) {
+    const records = await this.prisma.userAcademyRole.findMany({
+      where: {
+        academyId,
+        isActive: true,
+        ...(role && { role }),
+      },
+      include: {
+        user: {
+          select: { id: true, fullName: true, email: true, isActive: true },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return records.map((r) => ({
+      userId: r.userId,
+      fullName: r.user.fullName,
+      email: r.user.email,
+      isActive: r.user.isActive,
+      role: r.role,
+    }));
   }
 
   async suspendAcademy(id: string) {
