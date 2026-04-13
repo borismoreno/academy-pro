@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Check, X } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import AttendancePlayerRow from './AttendancePlayerRow';
-import type { AttendanceRecord } from '@/types';
-import type { BulkUpdateData } from '@/services/attendance.service';
+import { useState } from "react";
+import { Check, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import AttendancePlayerRow from "./AttendancePlayerRow";
+import type { AttendanceRecord } from "@/types";
+import type { BulkUpdateData } from "@/services/attendance.service";
 
 interface AttendanceListProps {
   sessionId: string;
@@ -18,13 +18,15 @@ export default function AttendanceList({
   onBulkUpdate,
   isLoading,
 }: AttendanceListProps) {
-  const [localPresence, setLocalPresence] = useState<Record<string, boolean>>(() => {
-    const map: Record<string, boolean> = {};
-    for (const r of records) {
-      map[r.playerId] = r.present;
-    }
-    return map;
-  });
+  const [localPresence, setLocalPresence] = useState<Record<string, boolean>>(
+    () => {
+      const map: Record<string, boolean> = {};
+      for (const r of records) {
+        map[r.playerId] = r.present;
+      }
+      return map;
+    },
+  );
   const [isSaving, setIsSaving] = useState(false);
 
   const presentCount = Object.values(localPresence).filter(Boolean).length;
@@ -47,7 +49,7 @@ export default function AttendanceList({
           present: localPresence[r.playerId] ?? r.present,
         })),
       });
-      toast({ description: 'Asistencia guardada correctamente' });
+      toast({ description: "Asistencia guardada correctamente" });
     } catch {
       // error toast is handled by the mutation's onError
     } finally {
@@ -111,7 +113,7 @@ export default function AttendanceList({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-gradient-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
           {isSaving ? <LoadingSpinner size="sm" /> : null}
           Guardar asistencia

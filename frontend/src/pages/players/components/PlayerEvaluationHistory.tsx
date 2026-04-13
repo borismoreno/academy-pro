@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import type { EvaluationProgress } from '@/services/players.service';
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import type { EvaluationProgress } from "@/services/players.service";
 
 interface Props {
   progress: EvaluationProgress | undefined;
@@ -25,7 +25,7 @@ export default function PlayerEvaluationHistory({
 
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
-      <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
       <div className="p-5 lg:p-6 flex flex-col gap-4">
         <h3 className="font-display text-[1.75rem] font-semibold text-on-surface">
           Evaluaciones
@@ -40,8 +40,10 @@ export default function PlayerEvaluationHistory({
         ) : (
           <>
             <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-              Última evaluación:{' '}
-              {new Date(latestEvaluation.evaluatedAt).toLocaleDateString('es-EC')}
+              Última evaluación:{" "}
+              {new Date(latestEvaluation.evaluatedAt).toLocaleDateString(
+                "es-EC",
+              )}
             </p>
 
             <div className="flex flex-col gap-4">
@@ -57,7 +59,7 @@ export default function PlayerEvaluationHistory({
                   </div>
                   <div className="w-full h-1 bg-surface-highest rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+                      className="h-full bg-linear-to-r from-primary to-secondary rounded-full"
                       style={{ width: `${score.score * 10}%` }}
                     />
                   </div>

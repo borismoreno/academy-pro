@@ -148,7 +148,7 @@ Fonts are defined inside the `@theme` block above (see `--font-display` and `--f
 
 **Glass & Gradient Rule**
 
-- Primary CTAs must use gradient: `bg-gradient-to-br from-primary to-secondary`
+- Primary CTAs must use gradient: `bg-linear-to-br from-primary to-secondary`
 - CTA text color: `text-on-primary`
 - Floating navbars/headers: `bg-surface-high/70 backdrop-blur-[20px]`
 
@@ -161,7 +161,7 @@ Fonts are defined inside the `@theme` block above (see `--font-display` and `--f
 
 **Buttons**
 
-- Primary: `bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl`
+- Primary: `bg-linear-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl`
 - Secondary: `bg-surface-highest text-primary font-medium rounded-xl`
 - Tertiary: `bg-transparent text-on-surface-variant hover:text-primary rounded-xl`
 

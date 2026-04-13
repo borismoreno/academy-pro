@@ -11,7 +11,7 @@ export default function StatCard({ label, value, icon, trend }: StatCardProps) {
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
       {/* Top glow gradient line */}
-      <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
       <div className="p-6 relative">
         {/* Icon — top right */}

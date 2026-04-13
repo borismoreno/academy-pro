@@ -132,3 +132,56 @@ export interface PlayerAttendanceSummary {
   attendancePercentage: number;
   sessions: PlayerAttendanceSummaryItem[];
 }
+
+// ─── Evaluations ──────────────────────────────────────────────────────────────
+
+export interface EvaluationScore {
+  id: string;
+  metricId: string;
+  metricName: string;
+  score: number;
+}
+
+export interface EvaluationPlayerInfo {
+  id: string;
+  fullName: string;
+  position: string | null;
+  teamId: string;
+}
+
+export interface EvaluationCoachInfo {
+  id: string;
+  fullName: string;
+}
+
+export interface Evaluation {
+  id: string;
+  playerId: string;
+  coachId: string;
+  evaluatedAt: string;
+  coachNotes: string | null;
+  createdAt: string;
+  player: EvaluationPlayerInfo;
+  coach: EvaluationCoachInfo;
+  scores: EvaluationScore[];
+}
+
+export interface Metric {
+  id: string;
+  academyId: string;
+  metricName: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface PlayerProgressItem {
+  evaluatedAt: string;
+  coachNotes: string | null;
+  scores: EvaluationScore[];
+}
+
+export interface PlayerProgress {
+  player: EvaluationPlayerInfo;
+  evaluations: PlayerProgressItem[];
+}

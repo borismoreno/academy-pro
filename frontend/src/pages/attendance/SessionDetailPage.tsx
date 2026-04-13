@@ -1,65 +1,71 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Users, User, FileText } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { useAuthStore } from '@/store/auth.store';
-import { useSessionDetail } from '@/hooks/useSessionDetail';
-import { updateSession } from '@/services/attendance.service';
-import type { UpdateSessionData } from '@/services/attendance.service';
-import AttendanceList from './components/AttendanceList';
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, Users, User, FileText } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { useAuthStore } from "@/store/auth.store";
+import { useSessionDetail } from "@/hooks/useSessionDetail";
+import { updateSession } from "@/services/attendance.service";
+import type { UpdateSessionData } from "@/services/attendance.service";
+import AttendanceList from "./components/AttendanceList";
 
 const TEXTAREA_CLASS =
-  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed';
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
 
 function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === 'object' && 'response' in error) {
+  if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message) return axiosError.response.data.message;
+    if (axiosError.response?.data?.message)
+      return axiosError.response.data.message;
   }
-  return 'Ha ocurrido un error inesperado';
+  return "Ha ocurrido un error inesperado";
 }
 
 function formatFullDate(dateStr: string): string {
   const date = new Date(dateStr);
-  const formatted = date.toLocaleDateString('es-EC', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'America/Bogota',
+  const formatted = date.toLocaleDateString("es-EC", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/Bogota",
   });
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
 export default function SessionDetailPage() {
-  const { id = '' } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const role = useAuthStore((s) => s.role);
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
 
-  const { session, records, isLoading, bulkUpdateMutation } = useSessionDetail(id);
+  const { session, records, isLoading, bulkUpdateMutation } =
+    useSessionDetail(id);
 
   const [editingNotes, setEditingNotes] = useState(false);
-  const [notesValue, setNotesValue] = useState('');
+  const [notesValue, setNotesValue] = useState("");
 
   const updateNotesMutation = useMutation({
     mutationFn: (data: UpdateSessionData) => updateSession(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session', id] });
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      queryClient.invalidateQueries({ queryKey: ["session", id] });
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
       setEditingNotes(false);
-      toast({ description: 'Notas actualizadas correctamente' });
+      toast({ description: "Notas actualizadas correctamente" });
     },
     onError: (error: unknown) => {
-      toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
+      toast({
+        title: "Error",
+        description: extractErrorMessage(error),
+        variant: "destructive",
+      });
     },
   });
 
   function startEditingNotes() {
-    setNotesValue(session?.notes ?? '');
+    setNotesValue(session?.notes ?? "");
     setEditingNotes(true);
   }
 
@@ -90,21 +96,21 @@ export default function SessionDetailPage() {
   }
 
   const total = session.totalPresent + session.totalAbsent;
-  const presentPct = total > 0 ? Math.round((session.totalPresent / total) * 100) : 0;
-  const coachName =
-    user && session.coachId === user.id ? user.fullName : null;
-  const canEditNotes = role === 'academy_director' || role === 'coach';
+  const presentPct =
+    total > 0 ? Math.round((session.totalPresent / total) * 100) : 0;
+  const coachName = user && session.coachId === user.id ? user.fullName : null;
+  const canEditNotes = role === "academy_director" || role === "coach";
 
   return (
     <div className="flex flex-col gap-6">
       {/* Hero card */}
       <div className="bg-surface-high rounded-3xl overflow-hidden">
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
 
         <div className="p-6 flex flex-col gap-4">
           {/* Back button */}
           <button
-            onClick={() => navigate('/attendance')}
+            onClick={() => navigate("/attendance")}
             className="self-start flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors -ml-1"
           >
             <ArrowLeft size={16} />
@@ -142,7 +148,7 @@ export default function SessionDetailPage() {
           {/* Attendance bar */}
           <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all"
+              className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all"
               style={{ width: `${presentPct}%` }}
             />
           </div>
@@ -172,9 +178,11 @@ export default function SessionDetailPage() {
                 <button
                   onClick={saveNotes}
                   disabled={updateNotesMutation.isPending}
-                  className="flex items-center gap-1.5 h-9 px-4 rounded-xl font-body text-[0.875rem] font-semibold bg-gradient-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 h-9 px-4 rounded-xl font-body text-[0.875rem] font-semibold bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
                 >
-                  {updateNotesMutation.isPending ? <LoadingSpinner size="sm" /> : null}
+                  {updateNotesMutation.isPending ? (
+                    <LoadingSpinner size="sm" />
+                  ) : null}
                   Guardar
                 </button>
                 <button
@@ -190,7 +198,10 @@ export default function SessionDetailPage() {
             <div className="flex flex-col gap-1">
               {session.notes && (
                 <div className="flex items-start gap-1.5">
-                  <FileText size={14} className="text-on-surface-variant shrink-0 mt-0.5" />
+                  <FileText
+                    size={14}
+                    className="text-on-surface-variant shrink-0 mt-0.5"
+                  />
                   <p className="font-body text-[0.875rem] text-on-surface-variant italic">
                     {session.notes}
                   </p>
@@ -201,7 +212,7 @@ export default function SessionDetailPage() {
                   onClick={startEditingNotes}
                   className="self-start font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
                 >
-                  {session.notes ? 'Editar notas' : '+ Agregar notas'}
+                  {session.notes ? "Editar notas" : "+ Agregar notas"}
                 </button>
               )}
             </div>
@@ -211,7 +222,7 @@ export default function SessionDetailPage() {
 
       {/* Attendance list */}
       <div className="bg-surface-high rounded-3xl overflow-hidden">
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <div className="p-5 lg:p-6">
           <h2 className="font-display text-[1.125rem] font-semibold text-on-surface mb-4">
             Registro de asistencia
@@ -219,7 +230,9 @@ export default function SessionDetailPage() {
           <AttendanceList
             sessionId={session.id}
             records={records}
-            onBulkUpdate={(data) => bulkUpdateMutation.mutateAsync(data)}
+            onBulkUpdate={async (data) => {
+              await bulkUpdateMutation.mutateAsync(data);
+            }}
             isLoading={isLoading}
           />
         </div>

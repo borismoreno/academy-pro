@@ -91,7 +91,7 @@ export default function TeamSchedulesList({
                 {isDirector && (
                   <button
                     onClick={() => setRemoveTarget(s)}
-                    className="shrink-0 min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
+                    className="shrink-0 min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
                     aria-label="Eliminar horario"
                   >
                     <X size={16} />

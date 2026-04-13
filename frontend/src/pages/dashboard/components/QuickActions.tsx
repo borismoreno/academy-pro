@@ -21,7 +21,7 @@ export default function QuickActions({ role }: QuickActionsProps) {
           <>
             <button
               onClick={() => navigate("/teams?action=create")}
-              className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-5 lg:px-6 py-2.5 lg:py-3 bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
+              className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-5 lg:px-6 py-2.5 lg:py-3 bg-linear-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
             >
               <Plus size={16} />
               Crear equipo
@@ -40,7 +40,7 @@ export default function QuickActions({ role }: QuickActionsProps) {
           <>
             <button
               onClick={() => navigate("/attendance?action=create")}
-              className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-5 lg:px-6 py-2.5 lg:py-3 bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
+              className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-5 lg:px-6 py-2.5 lg:py-3 bg-linear-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
             >
               <ClipboardList size={16} />
               Registrar asistencia

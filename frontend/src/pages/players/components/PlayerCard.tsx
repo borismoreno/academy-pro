@@ -1,34 +1,35 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MoreVertical, Users, Calendar } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MoreVertical, Users, Calendar } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import { toast } from '@/hooks/use-toast';
-import { deletePlayer } from '@/services/players.service';
-import type { PlayerResponse } from '@/services/players.service';
-import type { UserRole } from '@/types';
-import PlayerFormSheet from './PlayerFormSheet';
+} from "@/components/ui/dropdown-menu";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { toast } from "@/hooks/use-toast";
+import { deletePlayer } from "@/services/players.service";
+import type { PlayerResponse } from "@/services/players.service";
+import type { UserRole } from "@/types";
+import PlayerFormSheet from "./PlayerFormSheet";
 
 function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === 'object' && 'response' in error) {
+  if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message) return axiosError.response.data.message;
+    if (axiosError.response?.data?.message)
+      return axiosError.response.data.message;
   }
-  return 'Ha ocurrido un error inesperado';
+  return "Ha ocurrido un error inesperado";
 }
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -52,27 +53,27 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const canEdit = role === 'academy_director' || role === 'coach';
-  const canDelete = role === 'academy_director';
+  const canEdit = role === "academy_director" || role === "coach";
+  const canDelete = role === "academy_director";
 
   const deletePlayerMutation = useMutation({
     mutationFn: () => deletePlayer(player.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['players'] });
+      queryClient.invalidateQueries({ queryKey: ["players"] });
       setDeleteOpen(false);
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
 
   function handleCardClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
-    if (target.closest('[data-dropdown]')) return;
+    if (target.closest("[data-dropdown]")) return;
     navigate(`/players/${player.id}`);
   }
 
@@ -85,7 +86,7 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
         className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
       >
         {/* Top glow */}
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
 
         <div className="p-5 lg:p-6 flex flex-col gap-3">
           {/* Top row: avatar + name + dropdown */}
@@ -122,7 +123,7 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
               <div data-dropdown onClick={(e) => e.stopPropagation()}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
+                    <button className="min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
                       <MoreVertical size={18} />
                       <span className="sr-only">Opciones</span>
                     </button>
@@ -163,7 +164,11 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
         </div>
       </div>
 
-      <PlayerFormSheet open={editOpen} onOpenChange={setEditOpen} player={player} />
+      <PlayerFormSheet
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        player={player}
+      />
 
       <ConfirmDialog
         open={deleteOpen}

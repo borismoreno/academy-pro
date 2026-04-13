@@ -5,11 +5,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from './LoadingSpinner';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "./LoadingSpinner";
 
-type DialogVariant = 'default' | 'destructive';
+type DialogVariant = "default" | "destructive";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -28,11 +28,11 @@ export default function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  confirmLabel = "Confirmar",
+  cancelLabel = "Cancelar",
   onConfirm,
   isLoading = false,
-  variant = 'default',
+  variant = "default",
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -51,7 +51,7 @@ export default function ConfirmDialog({
             {cancelLabel}
           </Button>
 
-          {variant === 'destructive' ? (
+          {variant === "destructive" ? (
             <button
               onClick={onConfirm}
               disabled={isLoading}
@@ -64,7 +64,7 @@ export default function ConfirmDialog({
             <button
               onClick={onConfirm}
               disabled={isLoading}
-              className="inline-flex items-center justify-center gap-2 h-11 px-6 py-2 text-sm font-semibold rounded-xl bg-gradient-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 py-2 text-sm font-semibold rounded-xl bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
             >
               {isLoading ? <LoadingSpinner size="sm" /> : null}
               {confirmLabel}

@@ -18,7 +18,7 @@ function KpiCard({ label, value, icon }: KpiCardProps) {
   return (
     <div className="bg-surface-high rounded-xl lg:rounded-3xl overflow-hidden">
       {/* Top glow — 1px on mobile, 2px on desktop */}
-      <div className="h-px lg:h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-px lg:h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
       <div className="p-3 lg:p-6 relative">
         {/* Icon — hidden on mobile to save space */}
@@ -43,7 +43,7 @@ function KpiCard({ label, value, icon }: KpiCardProps) {
 function SkeletonCard() {
   return (
     <div className="bg-surface-high rounded-xl lg:rounded-3xl overflow-hidden animate-pulse">
-      <div className="h-px lg:h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-px lg:h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
       <div className="p-3 lg:p-6">
         <div className="h-2.5 w-16 lg:w-24 bg-surface-highest rounded mb-2 lg:mb-4" />
         <div className="h-7 lg:h-14 w-12 lg:w-16 bg-surface-highest rounded" />

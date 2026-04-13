@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MoreVertical, Users, User, FileText } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MoreVertical, Users, User, FileText } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import type { SessionListItem, UserRole } from '@/types';
+} from "@/components/ui/dropdown-menu";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import type { SessionListItem, UserRole } from "@/types";
 
 interface SessionCardProps {
   session: SessionListItem;
@@ -21,12 +21,12 @@ interface SessionCardProps {
 
 function formatSessionDate(dateStr: string): string {
   const date = new Date(dateStr);
-  const formatted = date.toLocaleDateString('es-EC', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'America/Bogota',
+  const formatted = date.toLocaleDateString("es-EC", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/Bogota",
   });
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
@@ -50,7 +50,7 @@ export default function SessionCard({
 
   function handleCardClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
-    if (target.closest('[data-dropdown]')) return;
+    if (target.closest("[data-dropdown]")) return;
     navigate(`/attendance/${session.id}`);
   }
 
@@ -61,7 +61,7 @@ export default function SessionCard({
         className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
       >
         {/* Top glow */}
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
 
         <div className="p-5 flex flex-col gap-3">
           {/* Top row: date + dropdown */}
@@ -70,11 +70,11 @@ export default function SessionCard({
               {formatSessionDate(session.sessionDate)}
             </h3>
 
-            {role === 'academy_director' && (
+            {role === "academy_director" && (
               <div data-dropdown onClick={(e) => e.stopPropagation()}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
+                    <button className="min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
                       <MoreVertical size={18} />
                       <span className="sr-only">Opciones</span>
                     </button>
@@ -113,7 +113,7 @@ export default function SessionCard({
           {/* Attendance bar */}
           <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all"
+              className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all"
               style={{ width: `${presentPct}%` }}
             />
           </div>
@@ -131,7 +131,10 @@ export default function SessionCard({
           {/* Notes preview */}
           {session.notes && (
             <div className="flex items-center gap-1.5">
-              <FileText size={14} className="text-on-surface-variant shrink-0" />
+              <FileText
+                size={14}
+                className="text-on-surface-variant shrink-0"
+              />
               <span className="font-body text-[0.875rem] text-on-surface-variant italic truncate">
                 {session.notes}
               </span>

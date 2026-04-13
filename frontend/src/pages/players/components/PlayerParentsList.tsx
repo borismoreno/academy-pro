@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import type { PlayerParent } from '@/services/players.service';
-import type { UserRole } from '@/types';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import EmptyState from '@/components/shared/EmptyState';
-import { usePlayerDetail } from '@/hooks/usePlayerDetail';
-import AddParentSheet from './AddParentSheet';
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
+import type { PlayerParent } from "@/services/players.service";
+import type { UserRole } from "@/types";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import EmptyState from "@/components/shared/EmptyState";
+import { usePlayerDetail } from "@/hooks/usePlayerDetail";
+import AddParentSheet from "./AddParentSheet";
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -27,7 +27,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
   const [addOpen, setAddOpen] = useState(false);
   const [removeUserId, setRemoveUserId] = useState<string | null>(null);
 
-  const isDirector = role === 'academy_director';
+  const isDirector = role === "academy_director";
   const parentToRemove = parents.find((p) => p.userId === removeUserId);
 
   function handleRemove() {
@@ -40,7 +40,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
   return (
     <>
       <div className="bg-surface-high rounded-3xl overflow-hidden">
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <div className="p-5 lg:p-6 flex flex-col gap-4">
           {/* Header row */}
           <div className="flex items-center justify-between">
@@ -64,7 +64,10 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
           ) : (
             <div className="flex flex-col gap-3">
               {parents.map((parent) => (
-                <div key={parent.id} className="flex items-center gap-3 min-h-11">
+                <div
+                  key={parent.id}
+                  className="flex items-center gap-3 min-h-11"
+                >
                   {/* Avatar */}
                   <div className="shrink-0 w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center">
                     <span className="font-body text-[0.6875rem] font-semibold text-primary">
@@ -93,7 +96,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
                   {isDirector && (
                     <button
                       onClick={() => setRemoveUserId(parent.userId)}
-                      className="shrink-0 min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
+                      className="shrink-0 min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
                     >
                       <X size={16} />
                       <span className="sr-only">Desvincular</span>
@@ -106,7 +109,11 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
         </div>
       </div>
 
-      <AddParentSheet open={addOpen} onOpenChange={setAddOpen} playerId={playerId} />
+      <AddParentSheet
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        playerId={playerId}
+      />
 
       <ConfirmDialog
         open={!!removeUserId}
@@ -114,7 +121,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
           if (!open) setRemoveUserId(null);
         }}
         title="¿Desvincular padre/tutor?"
-        description={`¿Estás seguro de que deseas desvincular a ${parentToRemove?.user.fullName ?? ''}?`}
+        description={`¿Estás seguro de que deseas desvincular a ${parentToRemove?.user.fullName ?? ""}?`}
         confirmLabel="Desvincular"
         variant="destructive"
         onConfirm={handleRemove}

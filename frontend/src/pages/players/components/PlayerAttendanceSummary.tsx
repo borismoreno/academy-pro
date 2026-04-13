@@ -1,6 +1,6 @@
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import type { AttendanceSummary } from '@/services/players.service';
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import type { AttendanceSummary } from "@/services/players.service";
 
 interface Props {
   summary: AttendanceSummary | undefined;
@@ -11,7 +11,7 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
   if (isLoading) {
     return (
       <div className="bg-surface-high rounded-3xl overflow-hidden">
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <div className="p-5 lg:p-6 flex justify-center py-12">
           <LoadingSpinner size="md" />
         </div>
@@ -25,7 +25,8 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
     ? [...summary.sessions]
         .sort(
           (a, b) =>
-            new Date(b.sessionDate).getTime() - new Date(a.sessionDate).getTime(),
+            new Date(b.sessionDate).getTime() -
+            new Date(a.sessionDate).getTime(),
         )
         .slice(0, 5)
     : [];
@@ -33,14 +34,14 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
   const pct = summary?.attendancePercentage ?? 0;
   const pctColor =
     pct >= 80
-      ? 'text-primary'
+      ? "text-primary"
       : pct >= 60
-        ? 'text-secondary'
-        : 'text-error-container';
+        ? "text-secondary"
+        : "text-error-container";
 
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
-      <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
       <div className="p-5 lg:p-6 flex flex-col gap-4">
         <h3 className="font-display text-[1.75rem] font-semibold text-on-surface">
           Asistencia
@@ -52,7 +53,9 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
           <>
             {/* Big percentage */}
             <div>
-              <span className={`font-display text-[3.5rem] font-bold leading-none ${pctColor}`}>
+              <span
+                className={`font-display text-[3.5rem] font-bold leading-none ${pctColor}`}
+              >
                 {Math.round(pct)}%
               </span>
               <p className="mt-1 font-body text-[0.875rem] text-on-surface-variant">
@@ -63,7 +66,7 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
             {/* Progress bar */}
             <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all"
+                className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all"
                 style={{ width: `${Math.min(pct, 100)}%` }}
               />
             </div>
@@ -77,16 +80,18 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
                     className="flex items-center justify-between min-h-11"
                   >
                     <span className="font-body text-[0.875rem] text-on-surface-variant">
-                      {new Date(session.sessionDate).toLocaleDateString('es-EC')}
+                      {new Date(session.sessionDate).toLocaleDateString(
+                        "es-EC",
+                      )}
                     </span>
                     <span
                       className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-2 py-0.5 ${
                         session.present
-                          ? 'bg-primary-container text-on-primary'
-                          : 'bg-error-container text-on-surface'
+                          ? "bg-primary-container text-on-primary"
+                          : "bg-error-container text-on-surface"
                       }`}
                     >
-                      {session.present ? 'Presente' : 'Ausente'}
+                      {session.present ? "Presente" : "Ausente"}
                     </span>
                   </div>
                 ))}

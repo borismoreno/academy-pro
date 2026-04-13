@@ -60,7 +60,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
         className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
       >
         {/* Top glow */}
-        <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+        <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
 
         <div className="p-5 lg:p-6 flex flex-col gap-3">
           {/* Top row: name + dropdown */}
@@ -73,7 +73,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
               <div data-dropdown onClick={(e) => e.stopPropagation()}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
+                    <button className="min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors -mr-2 -mt-1">
                       <MoreVertical size={18} />
                       <span className="sr-only">Opciones</span>
                     </button>

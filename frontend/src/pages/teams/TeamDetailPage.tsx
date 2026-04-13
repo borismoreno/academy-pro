@@ -15,7 +15,7 @@ import TeamSchedulesList from "./components/TeamSchedulesList";
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
-      <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
       <div className="p-5 lg:p-6">{children}</div>
     </div>
   );

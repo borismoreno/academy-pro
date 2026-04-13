@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Users, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import { usePlayerDetail } from '@/hooks/usePlayerDetail';
-import { useAuthStore } from '@/store/auth.store';
-import PlayerFormSheet from './components/PlayerFormSheet';
-import PlayerAttendanceSummary from './components/PlayerAttendanceSummary';
-import PlayerEvaluationHistory from './components/PlayerEvaluationHistory';
-import PlayerParentsList from './components/PlayerParentsList';
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ChevronLeft, Users, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import { usePlayerDetail } from "@/hooks/usePlayerDetail";
+import { useAuthStore } from "@/store/auth.store";
+import PlayerFormSheet from "./components/PlayerFormSheet";
+import PlayerAttendanceSummary from "./components/PlayerAttendanceSummary";
+import PlayerEvaluationHistory from "./components/PlayerEvaluationHistory";
+import PlayerParentsList from "./components/PlayerParentsList";
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -33,10 +33,10 @@ export default function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const role = useAuthStore((state) => state.role);
-  const canEdit = role === 'academy_director' || role === 'coach';
+  const canEdit = role === "academy_director" || role === "coach";
 
   const { player, attendanceSummary, evaluationProgress, isLoading, isError } =
-    usePlayerDetail(id ?? '');
+    usePlayerDetail(id ?? "");
 
   const [editOpen, setEditOpen] = useState(false);
 
@@ -53,7 +53,7 @@ export default function PlayerDetailPage() {
       <div className="flex flex-col gap-4">
         <Button
           variant="tertiary"
-          onClick={() => navigate('/players')}
+          onClick={() => navigate("/players")}
           className="self-start gap-1.5 min-h-11 -ml-2"
         >
           <ChevronLeft size={16} />
@@ -72,7 +72,7 @@ export default function PlayerDetailPage() {
         {/* Back button */}
         <Button
           variant="tertiary"
-          onClick={() => navigate('/players')}
+          onClick={() => navigate("/players")}
           className="self-start gap-1.5 min-h-11 -ml-2"
         >
           <ChevronLeft size={16} />
@@ -81,7 +81,7 @@ export default function PlayerDetailPage() {
 
         {/* Hero card */}
         <div className="bg-surface-high rounded-3xl overflow-hidden">
-          <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+          <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <div className="p-6 flex flex-col gap-4">
             <div className="flex flex-wrap items-start justify-between gap-4">
               {/* Avatar + info */}
@@ -123,7 +123,7 @@ export default function PlayerDetailPage() {
                     <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
                       <Calendar size={14} />
                       <span>
-                        {new Date(player.birthDate).toLocaleDateString('es-EC')}
+                        {new Date(player.birthDate).toLocaleDateString("es-EC")}
                       </span>
                     </div>
                   </div>

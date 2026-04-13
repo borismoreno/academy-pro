@@ -98,7 +98,7 @@ export default function TeamCoachesList({
                 {isDirector && (
                   <button
                     onClick={() => setRemoveTarget(coach)}
-                    className="shrink-0 min-h-11 min-w-[44px] flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
+                    className="shrink-0 min-h-11 min-w-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors"
                     aria-label="Quitar entrenador"
                   >
                     <X size={16} />

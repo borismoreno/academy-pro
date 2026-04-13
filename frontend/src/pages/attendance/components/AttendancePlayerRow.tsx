@@ -1,12 +1,12 @@
-import { Check, X } from 'lucide-react';
-import type { AttendanceRecord } from '@/types';
+import { Check, X } from "lucide-react";
+import type { AttendanceRecord } from "@/types";
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -28,7 +28,7 @@ export default function AttendancePlayerRow({
   return (
     <div
       className={`flex items-center gap-4 px-3 py-3 lg:px-4 lg:py-4 rounded-xl min-h-[56px] ${
-        isEven ? 'bg-surface-high' : 'bg-surface-highest'
+        isEven ? "bg-surface-high" : "bg-surface-highest"
       }`}
     >
       {/* Avatar */}
@@ -54,14 +54,14 @@ export default function AttendancePlayerRow({
       <button
         type="button"
         onClick={() => onChange(!present)}
-        className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-[0.6875rem] uppercase tracking-[0.05em] transition-all active:scale-95 min-h-[44px] ${
+        className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-[0.6875rem] uppercase tracking-[0.05em] transition-all active:scale-95 min-h-11 ${
           present
-            ? 'bg-primary text-on-primary'
-            : 'bg-surface-highest text-on-surface-variant'
+            ? "bg-primary text-on-primary"
+            : "bg-surface-highest text-on-surface-variant"
         }`}
       >
         {present ? <Check size={14} /> : <X size={14} />}
-        {present ? 'Presente' : 'Ausente'}
+        {present ? "Presente" : "Ausente"}
       </button>
     </div>
   );

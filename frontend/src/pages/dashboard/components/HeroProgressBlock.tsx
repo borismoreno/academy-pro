@@ -100,7 +100,7 @@ export default function HeroProgressBlock() {
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
       {/* Top glow gradient line */}
-      <div className="h-0.5 w-full bg-gradient-to-r from-primary to-secondary" />
+      <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
       {/* p-5 on mobile, p-8 on desktop */}
       <div className="p-5 lg:p-8 flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
@@ -124,7 +124,7 @@ export default function HeroProgressBlock() {
           {/* CTA — full width on mobile, auto on desktop */}
           <button
             onClick={() => navigate("/evaluations")}
-            className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-6 py-3 bg-gradient-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
+            className="w-full lg:w-auto inline-flex items-center justify-center lg:justify-start gap-2 min-h-11 px-6 py-3 bg-linear-to-br from-primary to-secondary text-on-primary font-semibold rounded-xl transition-opacity hover:opacity-90"
           >
             Ver evaluaciones
             <ArrowRight size={16} />
