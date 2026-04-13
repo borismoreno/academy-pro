@@ -59,7 +59,6 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [birthDate, setBirthDate] = useState(initialBirthDate);
   const [position, setPosition] = useState(player?.position ?? 'Portero');
   const [teamId, setTeamId] = useState(player?.teamId ?? '');
-  const [photoUrl, setPhotoUrl] = useState(player?.photoUrl ?? '');
 
   const [fullNameError, setFullNameError] = useState('');
   const [birthDateError, setBirthDateError] = useState('');
@@ -121,7 +120,6 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       birthDate,
       position,
       teamId,
-      ...(photoUrl.trim() ? { photoUrl: photoUrl.trim() } : {}),
     };
 
     if (isEditMode && player) {
@@ -223,20 +221,6 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         {teamIdError && (
           <p className="font-body text-[0.75rem] text-error-container">{teamIdError}</p>
         )}
-      </div>
-
-      {/* Photo URL */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
-          Foto (URL, opcional)
-        </label>
-        <Input
-          type="url"
-          value={photoUrl}
-          onChange={(e) => setPhotoUrl(e.target.value)}
-          placeholder="https://..."
-          disabled={isPending}
-        />
       </div>
 
       <div className="flex flex-col gap-3 pt-2">

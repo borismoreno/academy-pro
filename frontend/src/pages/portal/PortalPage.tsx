@@ -71,7 +71,7 @@ export default function PortalPage() {
           )}
 
           {/* Player hero */}
-          <PortalPlayerHero player={player} isLoading={isLoadingDetail} />
+          <PortalPlayerHero player={player} isLoading={isLoadingDetail} selectedPlayerId={selectedPlayerId} />
 
           {/* Stats grid — 2 columns */}
           <div className="grid grid-cols-2 gap-4">

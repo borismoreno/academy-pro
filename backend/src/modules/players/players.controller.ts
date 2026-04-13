@@ -72,7 +72,7 @@ export class PlayersController {
   }
 
   @Patch(':id')
-  @Roles(Role.academy_director, Role.coach)
+  @Roles(Role.academy_director, Role.coach, Role.parent)
   async update(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,

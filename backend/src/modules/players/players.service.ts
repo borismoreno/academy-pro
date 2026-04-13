@@ -195,6 +195,31 @@ export class PlayersService {
       throw new NotFoundException('Jugador no encontrado');
     }
 
+    if (role === Role.parent) {
+      const linked = await this.prisma.playerParent.findFirst({
+        where: { playerId: id, userId },
+      });
+      if (!linked) {
+        throw new ForbiddenException('No tienes acceso a este jugador');
+      }
+
+      const hasDisallowedFields =
+        dto.fullName !== undefined ||
+        dto.birthDate !== undefined ||
+        dto.position !== undefined ||
+        dto.teamId !== undefined;
+      if (hasDisallowedFields) {
+        throw new ForbiddenException('Solo puedes actualizar la foto del jugador');
+      }
+
+      const updated = await this.prisma.player.update({
+        where: { id },
+        data: { ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }) },
+        include: playerInclude,
+      });
+      return mapPlayer(updated);
+    }
+
     if (role === Role.coach) {
       const assigned = await this.prisma.teamCoach.findFirst({
         where: { teamId: player.teamId, userId },

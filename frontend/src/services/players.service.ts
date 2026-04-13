@@ -64,7 +64,6 @@ export interface CreatePlayerData {
   birthDate: string;
   position: string;
   teamId: string;
-  photoUrl?: string;
 }
 
 export interface UpdatePlayerData {
@@ -72,7 +71,6 @@ export interface UpdatePlayerData {
   birthDate?: string;
   position?: string;
   teamId?: string;
-  photoUrl?: string;
 }
 
 export interface AddParentData {
@@ -106,6 +104,11 @@ export async function createPlayer(data: CreatePlayerData): Promise<PlayerRespon
 
 export async function updatePlayer(id: string, data: UpdatePlayerData): Promise<PlayerResponse> {
   const response = await api.patch<ApiResponse<PlayerResponse>>(`/players/${id}`, data);
+  return response.data.data;
+}
+
+export async function updatePlayerPhoto(id: string, photoUrl: string): Promise<PlayerResponse> {
+  const response = await api.patch<ApiResponse<PlayerResponse>>(`/players/${id}`, { photoUrl });
   return response.data.data;
 }
 
