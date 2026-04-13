@@ -40,7 +40,7 @@ export class PlayersController {
   }
 
   @Get()
-  @Roles(Role.academy_director, Role.coach)
+  @Roles(Role.academy_director, Role.coach, Role.parent)
   async findAll(
     @CurrentUser() user: JwtPayload,
     @Query('teamId') teamId?: string,

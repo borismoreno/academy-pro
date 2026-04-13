@@ -131,6 +131,9 @@ export class PlayersService {
       ...(role === Role.coach && {
         team: { coaches: { some: { userId } } },
       }),
+      ...(role === Role.parent && {
+        parents: { some: { userId } },
+      }),
     };
 
     const players = await this.prisma.player.findMany({

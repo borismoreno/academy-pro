@@ -208,7 +208,7 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Players screen (PlayersPage, PlayerDetailPage, service, hooks, all components)
 - [x] Attendance screen (AttendancePage, SessionDetailPage, service, hooks, all components)
 - [x] Evaluations screen (EvaluationsPage, EvaluationDetailPage, service, hooks, all components)
-- [ ] Parent portal
+- [x] Parent portal (PortalPage, PlayerSelector, PortalPlayerHero, PortalAttendanceSummary, PortalEvaluationSummary, PortalRecentActivity, portal.service.ts, usePortal.ts)
 - [ ] Settings screen
 
 > Update this checklist as features are completed.
