@@ -213,7 +213,9 @@ function AttendanceStep({ session, onFinish }: AttendanceStepProps) {
       <AttendanceList
         sessionId={session.id}
         records={session.records}
-        onBulkUpdate={(data) => bulkMutation.mutateAsync(data)}
+        onBulkUpdate={async (data) => {
+          await bulkMutation.mutateAsync(data);
+        }}
         isLoading={false}
       />
       <button
@@ -282,7 +284,7 @@ export default function SessionFormSheet({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-[480px] p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+        <DialogContent className="bg-surface-high border-0 rounded-3xl min-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <DialogHeader className="px-6 pt-6 pb-0">
             <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
@@ -297,10 +299,7 @@ export default function SessionFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0"
-      >
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">

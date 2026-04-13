@@ -15,7 +15,7 @@ export default function UnauthorizedPage() {
         {/* Top glow — Kinetic Edge card signature */}
         <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary rounded-t-3xl" />
 
-        <div className="bg-surface-high rounded-b-[1.5rem] px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center gap-6 text-center">
+        <div className="bg-surface-high rounded-b-3xl px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center gap-6 text-center">
           {/* Lock icon */}
           <div className="w-16 h-16 rounded-full bg-surface-highest flex items-center justify-center">
             <Lock size={28} className="text-on-surface-variant" />

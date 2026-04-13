@@ -112,7 +112,7 @@ export default function RegisterPage() {
             style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
           />
 
-          <div className="bg-surface-high rounded-b-[1.5rem] px-8 py-10 shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
+          <div className="bg-surface-high rounded-b-3xl px-8 py-10 shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
             {/* Header */}
             <div className="mb-8">
               <span className="lg:hidden font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant block mb-4">

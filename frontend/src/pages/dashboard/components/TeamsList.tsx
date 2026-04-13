@@ -11,7 +11,7 @@ interface TeamsListProps {
 function SkeletonCard({ mobile }: { mobile: boolean }) {
   if (mobile) {
     return (
-      <div className="w-[200px] shrink-0 bg-surface-high rounded-xl overflow-hidden animate-pulse">
+      <div className="w-50 shrink-0 bg-surface-high rounded-xl overflow-hidden animate-pulse">
         <div className="h-px w-full bg-linear-to-r from-primary to-secondary" />
         <div className="p-4 space-y-2.5">
           <div className="h-4 w-16 bg-surface-highest rounded" />
@@ -76,7 +76,7 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                 <div
                   key={team.id}
                   onClick={() => navigate(`/teams/${team.id}`)}
-                  className="w-[200px] shrink-0 snap-start bg-surface-high rounded-xl overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
+                  className="w-50 shrink-0 snap-start bg-surface-high rounded-xl overflow-hidden cursor-pointer hover:bg-surface-highest transition-colors"
                 >
                   <div className="h-px w-full bg-linear-to-r from-primary to-secondary" />
                   <div className="p-4 space-y-1.5">
@@ -93,7 +93,7 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
               ))}
             </div>
             {/* Right fade gradient hinting more cards */}
-            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-surface-low to-transparent pointer-events-none" />
+            <div className="absolute right-0 top-0 w-12 h-full bg-linear-to-l from-surface-low to-transparent pointer-events-none" />
           </div>
 
           {/* Desktop: grid layout */}
