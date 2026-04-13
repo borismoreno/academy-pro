@@ -24,6 +24,7 @@ export default function PortalPage() {
     evaluationProgress,
     isLoadingPlayers,
     isLoadingDetail,
+    isProgressForbidden,
   } = usePortal();
 
   return (
@@ -82,6 +83,7 @@ export default function PortalPage() {
             <PortalEvaluationSummary
               progress={evaluationProgress}
               isLoading={isLoadingDetail}
+              isForbidden={isProgressForbidden}
             />
           </div>
 

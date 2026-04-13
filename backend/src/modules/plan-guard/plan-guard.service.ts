@@ -11,6 +11,12 @@ const LIMIT_MESSAGES: Record<string, string> = {
     'Has alcanzado el límite de entrenadores para tu plan actual. Actualiza tu plan para invitar más entrenadores.',
   fields:
     'Has alcanzado el límite de canchas para tu plan actual. Actualiza tu plan para agregar más canchas.',
+  evaluations_custom_metrics:
+    'La personalización de métricas no está disponible en tu plan actual. Actualiza a Pro para personalizar las métricas de evaluación.',
+  parent_portal_evaluations:
+    'La visualización de evaluaciones en el portal de padres no está disponible en tu plan actual. Actualiza a Pro para que los padres puedan ver las evaluaciones.',
+  parent_notifications:
+    'Las notificaciones a padres no están disponibles en tu plan actual. Actualiza a Pro para activar las notificaciones.',
 };
 
 @Injectable()
@@ -19,32 +25,41 @@ export class PlanGuardService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  private async resolveActivePlan(academyId: string): Promise<SubscriptionPlan> {
+    const subscription = await this.prisma.academySubscription.findFirst({
+      where: { academyId, status: 'active' },
+      orderBy: { createdAt: 'desc' },
+    });
+    return subscription?.plan ?? SubscriptionPlan.free;
+  }
+
   async validateLimit(academyId: string, resource: string): Promise<void> {
     try {
-      // Step 1 — resolve the active subscription plan for this academy
-      const subscription = await this.prisma.academySubscription.findFirst({
-        where: { academyId, status: 'active' },
-        orderBy: { createdAt: 'desc' },
-      });
+      const activePlan = await this.resolveActivePlan(academyId);
 
-      const activePlan: SubscriptionPlan = subscription?.plan ?? SubscriptionPlan.free;
-
-      // Step 2 — get the configured limit for this plan/resource pair
       const planLimit = await this.prisma.planLimit.findUnique({
         where: { plan_resource: { plan: activePlan, resource } },
       });
 
+      // No limit configured for this resource — allow by default
       if (!planLimit) {
-        // No limit configured for this resource — allow by default
         return;
       }
 
-      // Step 3 — unlimited plan, no restriction
+      // Unlimited plan — no restriction
       if (planLimit.maxCount === -1) {
         return;
       }
 
-      // Step 4 — count current active resources for this academy
+      // maxCount === 0 means the feature is disabled — throw immediately without counting
+      if (planLimit.maxCount === 0) {
+        const message =
+          LIMIT_MESSAGES[resource] ??
+          'Esta función no está disponible en tu plan actual. Actualiza tu plan para continuar.';
+        throw new ForbiddenException(message);
+      }
+
+      // Count current active resources for this academy
       let currentCount = 0;
 
       switch (resource) {
@@ -73,11 +88,10 @@ export class PlanGuardService {
           break;
 
         default:
-          // Unknown resource — allow by default
+          // Unknown count resource — allow by default
           return;
       }
 
-      // Step 5 — enforce the limit
       if (currentCount >= planLimit.maxCount) {
         const message =
           LIMIT_MESSAGES[resource] ??
@@ -92,6 +106,31 @@ export class PlanGuardService {
 
       // Unexpected error during limit check — log and allow to avoid blocking users
       this.logger.error(`Error al verificar límite de plan para recurso "${resource}":`, err);
+    }
+  }
+
+  async isFeatureEnabled(academyId: string, resource: string): Promise<boolean> {
+    try {
+      const activePlan = await this.resolveActivePlan(academyId);
+
+      const planLimit = await this.prisma.planLimit.findUnique({
+        where: { plan_resource: { plan: activePlan, resource } },
+      });
+
+      // No record found — default to false for unknown feature resources
+      if (!planLimit) {
+        return false;
+      }
+
+      // -1 = unlimited/enabled, > 0 = enabled
+      return planLimit.maxCount === -1 || planLimit.maxCount > 0;
+    } catch (err) {
+      this.logger.error(
+        `Error al verificar habilitación de función "${resource}" para academia "${academyId}":`,
+        err,
+      );
+      // On unexpected error, default to false
+      return false;
     }
   }
 }

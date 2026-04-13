@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import { GripVertical, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import type { Metric } from '@/types';
-import type { CreateMetricData, UpdateMetricData } from '@/services/settings.service';
+import { useState } from "react";
+import { GripVertical, Lock, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import type { Metric } from "@/types";
+import type {
+  CreateMetricData,
+  UpdateMetricData,
+} from "@/services/settings.service";
 
 // ── Metric row ────────────────────────────────────────────────────────────────
 
@@ -14,9 +17,17 @@ interface MetricRowProps {
   onDelete: (id: string) => void;
   isUpdating: boolean;
   isDeleting: boolean;
+  isDisabled?: boolean;
 }
 
-function MetricRow({ metric, onUpdate, onDelete, isUpdating, isDeleting }: MetricRowProps) {
+function MetricRow({
+  metric,
+  onUpdate,
+  onDelete,
+  isUpdating,
+  isDeleting,
+  isDisabled,
+}: MetricRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(metric.metricName);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -37,10 +48,10 @@ function MetricRow({ metric, onUpdate, onDelete, isUpdating, isDeleting }: Metri
   }
 
   function handleNameKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.currentTarget.blur();
     }
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setEditName(metric.metricName);
       setIsEditing(false);
     }
@@ -63,6 +74,7 @@ function MetricRow({ metric, onUpdate, onDelete, isUpdating, isDeleting }: Metri
         <div className="flex-1 min-w-0">
           {isEditing ? (
             <Input
+              disabled={isDisabled}
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               onBlur={handleNameBlur}
@@ -87,19 +99,19 @@ function MetricRow({ metric, onUpdate, onDelete, isUpdating, isDeleting }: Metri
           onClick={handleToggleActive}
           disabled={isUpdating}
           className={[
-            'flex items-center gap-1.5 h-7 px-3 rounded-full font-body text-[0.6875rem] transition-all disabled:opacity-50 cursor-pointer shrink-0',
+            "flex items-center gap-1.5 h-7 px-3 rounded-full font-body text-[0.6875rem] transition-all disabled:opacity-50 cursor-pointer shrink-0",
             metric.isActive
-              ? 'bg-primary/10 text-primary'
-              : 'bg-surface-highest text-on-surface-variant',
-          ].join(' ')}
+              ? "bg-primary/10 text-primary"
+              : "bg-surface-highest text-on-surface-variant",
+          ].join(" ")}
         >
           <span
             className={[
-              'w-2 h-2 rounded-full',
-              metric.isActive ? 'bg-primary' : 'bg-on-surface-variant',
-            ].join(' ')}
+              "w-2 h-2 rounded-full",
+              metric.isActive ? "bg-primary" : "bg-on-surface-variant",
+            ].join(" ")}
           />
-          {metric.isActive ? 'Activa' : 'Inactiva'}
+          {metric.isActive ? "Activa" : "Inactiva"}
         </button>
 
         {/* Delete */}
@@ -134,6 +146,7 @@ function MetricRow({ metric, onUpdate, onDelete, isUpdating, isDeleting }: Metri
 
 interface Props {
   metrics: Metric[];
+  isCustomMetricsEnabled: boolean;
   onCreate: (data: CreateMetricData) => void;
   onUpdate: (id: string, data: UpdateMetricData) => void;
   onDelete: (id: string) => void;
@@ -145,6 +158,7 @@ interface Props {
 
 export default function EvaluationMetricsManager({
   metrics,
+  isCustomMetricsEnabled,
   onCreate,
   onUpdate,
   onDelete,
@@ -153,7 +167,7 @@ export default function EvaluationMetricsManager({
   isUpdating,
   isDeleting,
 }: Props) {
-  const [newMetricName, setNewMetricName] = useState('');
+  const [newMetricName, setNewMetricName] = useState("");
 
   const sorted = [...metrics].sort((a, b) => a.sortOrder - b.sortOrder);
 
@@ -162,7 +176,7 @@ export default function EvaluationMetricsManager({
     const trimmed = newMetricName.trim();
     if (trimmed.length < 2) return;
     onCreate({ metricName: trimmed, sortOrder: metrics.length });
-    setNewMetricName('');
+    setNewMetricName("");
   }
 
   return (
@@ -176,24 +190,33 @@ export default function EvaluationMetricsManager({
         </p>
       </div>
 
-      {/* Add metric */}
-      <form onSubmit={handleCreate} className="flex gap-3">
-        <Input
-          value={newMetricName}
-          onChange={(e) => setNewMetricName(e.target.value)}
-          placeholder="Nueva métrica..."
-          disabled={isCreating}
-          className="flex-1"
-        />
-        <button
-          type="submit"
-          disabled={isCreating || newMetricName.trim().length < 2}
-          className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer whitespace-nowrap shrink-0"
-        >
-          {isCreating && <LoadingSpinner size="sm" />}
-          Agregar
-        </button>
-      </form>
+      {/* Add metric — only shown when custom metrics are enabled */}
+      {isCustomMetricsEnabled ? (
+        <form onSubmit={handleCreate} className="flex gap-3">
+          <Input
+            value={newMetricName}
+            onChange={(e) => setNewMetricName(e.target.value)}
+            placeholder="Nueva métrica..."
+            disabled={isCreating}
+            className="flex-1"
+          />
+          <button
+            type="submit"
+            disabled={isCreating || newMetricName.trim().length < 2}
+            className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer whitespace-nowrap shrink-0"
+          >
+            {isCreating && <LoadingSpinner size="sm" />}
+            Agregar
+          </button>
+        </form>
+      ) : (
+        <div className="flex items-center gap-2 text-on-surface-variant">
+          <Lock size={14} className="shrink-0" />
+          <p className="font-body text-[0.875rem]">
+            La personalización de métricas está disponible en el Plan Pro.
+          </p>
+        </div>
+      )}
 
       {/* Metrics list */}
       {isLoading ? (
@@ -214,6 +237,7 @@ export default function EvaluationMetricsManager({
               onDelete={onDelete}
               isUpdating={isUpdating}
               isDeleting={isDeleting}
+              isDisabled={!isCustomMetricsEnabled}
             />
           ))}
         </div>

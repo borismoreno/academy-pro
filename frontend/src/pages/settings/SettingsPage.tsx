@@ -50,6 +50,7 @@ export default function SettingsPage() {
     membersLoading,
     metrics,
     metricsLoading,
+    isCustomMetricsEnabled,
     updateAcademyMutation,
     createMetricMutation,
     updateMetricMutation,
@@ -105,6 +106,7 @@ export default function SettingsPage() {
         return (
           <EvaluationMetricsManager
             metrics={metrics}
+            isCustomMetricsEnabled={isCustomMetricsEnabled}
             onCreate={(data) => createMetricMutation.mutate(data)}
             onUpdate={(id, data) => updateMetricMutation.mutate({ id, data })}
             onDelete={(id) => deleteMetricMutation.mutate(id)}

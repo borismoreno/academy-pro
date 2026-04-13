@@ -17,8 +17,13 @@ import { CreateAcademyDto } from './dto/create-academy.dto.js';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto.js';
 import { UpdatePlanLimitDto } from './dto/update-plan-limit.dto.js';
 import { OwnerStatsResponseDto } from './dto/owner-stats-response.dto.js';
+import { EvaluationsService } from '../evaluations/evaluations.service.js';
 
-const PLAN_PRICES: Record<string, number> = { free: 0, pro: 29, enterprise: 79 };
+const PLAN_PRICES: Record<string, number> = {
+  free: 0,
+  pro: 29,
+  enterprise: 79,
+};
 const INVITATION_TTL_HOURS = 48;
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -28,6 +33,7 @@ export class OwnerService {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly config: ConfigService,
+    private readonly evaluationsService: EvaluationsService,
   ) {}
 
   async getStats(): Promise<OwnerStatsResponseDto> {
@@ -90,7 +96,14 @@ export class OwnerService {
         : undefined,
       include: {
         subscription: {
-          select: { id: true, plan: true, status: true, startsAt: true, endsAt: true, createdAt: true },
+          select: {
+            id: true,
+            plan: true,
+            status: true,
+            startsAt: true,
+            endsAt: true,
+            createdAt: true,
+          },
         },
         userRoles: {
           where: { role: Role.academy_director, isActive: true },
@@ -171,7 +184,9 @@ export class OwnerService {
 
   async createAcademy(dto: CreateAcademyDto, ownerId: string) {
     const token = randomUUID();
-    const expiresAt = new Date(Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000);
+    const expiresAt = new Date(
+      Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000,
+    );
     const endsAt = new Date(Date.now() + ONE_YEAR_MS);
 
     const academy = await this.prisma.$transaction(async (tx) => {
@@ -210,6 +225,8 @@ export class OwnerService {
       return newAcademy;
     });
 
+    await this.evaluationsService.seedDefaultMetrics(academy.id);
+
     const frontendUrl = this.config.get<string>('app.frontendUrl');
     const acceptUrl = `${frontendUrl}/invitations/accept?token=${token}`;
 
@@ -246,7 +263,9 @@ export class OwnerService {
         plan: dto.plan ?? SubscriptionPlan.free,
         status: dto.status ?? SubscriptionStatus.active,
         startsAt: dto.startsAt ? new Date(dto.startsAt) : new Date(),
-        endsAt: dto.endsAt ? new Date(dto.endsAt) : new Date(Date.now() + ONE_YEAR_MS),
+        endsAt: dto.endsAt
+          ? new Date(dto.endsAt)
+          : new Date(Date.now() + ONE_YEAR_MS),
       },
     });
   }

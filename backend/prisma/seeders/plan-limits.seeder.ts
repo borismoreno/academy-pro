@@ -13,23 +13,33 @@ type PlanLimitSeed = {
 };
 
 const LIMITS: PlanLimitSeed[] = [
-  // Free plan — strict caps
+  // ── Free plan — strict caps ─────────────────────────────────────────────────
   { plan: SubscriptionPlan.free, resource: 'teams', maxCount: 1 },
   { plan: SubscriptionPlan.free, resource: 'players', maxCount: 15 },
   { plan: SubscriptionPlan.free, resource: 'coaches', maxCount: 1 },
   { plan: SubscriptionPlan.free, resource: 'fields', maxCount: 1 },
+  // 0 = feature disabled
+  { plan: SubscriptionPlan.free, resource: 'evaluations_custom_metrics', maxCount: 0 },
+  { plan: SubscriptionPlan.free, resource: 'parent_portal_evaluations', maxCount: 0 },
+  { plan: SubscriptionPlan.free, resource: 'parent_notifications', maxCount: 0 },
 
-  // Pro plan — unlimited (-1)
+  // ── Pro plan — unlimited (-1) ────────────────────────────────────────────────
   { plan: SubscriptionPlan.pro, resource: 'teams', maxCount: -1 },
   { plan: SubscriptionPlan.pro, resource: 'players', maxCount: -1 },
   { plan: SubscriptionPlan.pro, resource: 'coaches', maxCount: -1 },
   { plan: SubscriptionPlan.pro, resource: 'fields', maxCount: -1 },
+  { plan: SubscriptionPlan.pro, resource: 'evaluations_custom_metrics', maxCount: -1 },
+  { plan: SubscriptionPlan.pro, resource: 'parent_portal_evaluations', maxCount: -1 },
+  { plan: SubscriptionPlan.pro, resource: 'parent_notifications', maxCount: -1 },
 
-  // Enterprise plan — unlimited (-1)
+  // ── Enterprise plan — unlimited (-1) ────────────────────────────────────────
   { plan: SubscriptionPlan.enterprise, resource: 'teams', maxCount: -1 },
   { plan: SubscriptionPlan.enterprise, resource: 'players', maxCount: -1 },
   { plan: SubscriptionPlan.enterprise, resource: 'coaches', maxCount: -1 },
   { plan: SubscriptionPlan.enterprise, resource: 'fields', maxCount: -1 },
+  { plan: SubscriptionPlan.enterprise, resource: 'evaluations_custom_metrics', maxCount: -1 },
+  { plan: SubscriptionPlan.enterprise, resource: 'parent_portal_evaluations', maxCount: -1 },
+  { plan: SubscriptionPlan.enterprise, resource: 'parent_notifications', maxCount: -1 },
 ];
 
 async function main(): Promise<void> {

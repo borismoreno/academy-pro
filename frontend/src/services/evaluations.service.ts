@@ -45,8 +45,8 @@ export async function createEvaluation(data: CreateEvaluationData): Promise<Eval
 }
 
 export async function getMetrics(): Promise<Metric[]> {
-  const response = await api.get<ApiResponse<Metric[]>>('/evaluations/metrics');
-  return response.data.data;
+  const response = await api.get<ApiResponse<{ metrics: Metric[]; isCustomMetricsEnabled: boolean }>>('/evaluations/metrics');
+  return response.data.data.metrics;
 }
 
 export async function getPlayerProgress(

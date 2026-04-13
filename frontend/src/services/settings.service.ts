@@ -44,8 +44,13 @@ export async function inviteUser(data: InviteUserData): Promise<void> {
 
 // ── Evaluation Metrics ────────────────────────────────────────────────────────
 
-export async function getMetrics(): Promise<Metric[]> {
-  const response = await api.get<ApiResponse<Metric[]>>('/evaluations/metrics');
+export interface MetricsListResponse {
+  metrics: Metric[];
+  isCustomMetricsEnabled: boolean;
+}
+
+export async function getMetrics(): Promise<MetricsListResponse> {
+  const response = await api.get<ApiResponse<MetricsListResponse>>('/evaluations/metrics');
   return response.data.data;
 }
 

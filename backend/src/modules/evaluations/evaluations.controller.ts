@@ -49,7 +49,7 @@ export class EvaluationsController {
   @Roles(Role.academy_director, Role.coach)
   async findAllMetrics(
     @CurrentUser() user: JwtPayload,
-  ): Promise<{ data: MetricResponseDto[]; message: string }> {
+  ): Promise<{ data: { metrics: MetricResponseDto[]; isCustomMetricsEnabled: boolean }; message: string }> {
     const data = await this.evaluationsService.findAllMetrics(
       user.academyId as string,
     );

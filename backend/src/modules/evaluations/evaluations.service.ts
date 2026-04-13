@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto.js';
 import { CreateMetricDto } from './dto/create-metric.dto.js';
@@ -86,6 +87,7 @@ function parseDateRange(dateStr: string): { gte: Date; lt: Date } {
 export class EvaluationsService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
     private readonly notificationsService: NotificationsService,
   ) {}
 
@@ -122,6 +124,8 @@ export class EvaluationsService {
     academyId: string,
     dto: CreateMetricDto,
   ): Promise<MetricResponseDto> {
+    await this.planGuard.validateLimit(academyId, 'evaluations_custom_metrics');
+
     const duplicate = await this.prisma.evaluationMetric.findFirst({
       where: {
         academyId,
@@ -145,11 +149,18 @@ export class EvaluationsService {
     return metric;
   }
 
-  async findAllMetrics(academyId: string): Promise<MetricResponseDto[]> {
-    return this.prisma.evaluationMetric.findMany({
-      where: { academyId, isActive: true },
-      orderBy: { sortOrder: 'asc' },
-    });
+  async findAllMetrics(
+    academyId: string,
+  ): Promise<{ metrics: MetricResponseDto[]; isCustomMetricsEnabled: boolean }> {
+    const [metrics, isCustomMetricsEnabled] = await Promise.all([
+      this.prisma.evaluationMetric.findMany({
+        where: { academyId, isActive: true },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.planGuard.isFeatureEnabled(academyId, 'evaluations_custom_metrics'),
+    ]);
+
+    return { metrics, isCustomMetricsEnabled };
   }
 
   async updateMetric(
@@ -396,6 +407,9 @@ export class EvaluationsService {
       if (!linked) {
         throw new ForbiddenException('No tienes acceso a este jugador');
       }
+
+      // Gate: parent_portal_evaluations — throws ForbiddenException if disabled
+      await this.planGuard.validateLimit(academyId, 'parent_portal_evaluations');
     }
 
     const dateFilter: Prisma.DateTimeFilter = {};

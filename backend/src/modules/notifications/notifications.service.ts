@@ -1,12 +1,17 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { NotificationResponseDto } from './dto/notification-response.dto.js';
 
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
+  ) {}
 
   async findAll(
     userId: string,
@@ -83,6 +88,27 @@ export class NotificationsService {
     message: string;
   }): Promise<void> {
     try {
+      // Check if the recipient is a parent in this academy
+      const parentRole = await this.prisma.userAcademyRole.findFirst({
+        where: {
+          userId: params.userId,
+          academyId: params.academyId,
+          role: Role.parent,
+          isActive: true,
+        },
+      });
+
+      if (parentRole) {
+        const enabled = await this.planGuard.isFeatureEnabled(
+          params.academyId,
+          'parent_notifications',
+        );
+        if (!enabled) {
+          // Silently skip — parent notifications disabled on this plan
+          return;
+        }
+      }
+
       await this.prisma.notification.create({
         data: {
           userId: params.userId,

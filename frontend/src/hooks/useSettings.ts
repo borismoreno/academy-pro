@@ -40,11 +40,15 @@ export function useSettings(isDirector = false) {
     enabled: isDirector,
   });
 
-  const { data: metrics = [], isLoading: metricsLoading } = useQuery({
+  const metricsQuery = useQuery({
     queryKey: ['metrics'],
     queryFn: getMetrics,
     enabled: isDirector,
   });
+
+  const metrics = metricsQuery.data?.metrics ?? [];
+  const isCustomMetricsEnabled = metricsQuery.data?.isCustomMetricsEnabled ?? true;
+  const metricsLoading = metricsQuery.isLoading;
 
   const updateAcademyMutation = useMutation({
     mutationFn: (data: UpdateAcademyData) => updateAcademy(data),
@@ -125,6 +129,7 @@ export function useSettings(isDirector = false) {
     membersLoading,
     metrics,
     metricsLoading,
+    isCustomMetricsEnabled,
     updateAcademyMutation,
     inviteUserMutation,
     createMetricMutation,

@@ -1,9 +1,11 @@
+import { Lock } from 'lucide-react';
 import type { EvaluationProgress } from '@/services/portal.service';
 import type { EvaluationScoreItem } from '@/services/players.service';
 
 interface PortalEvaluationSummaryProps {
   progress: EvaluationProgress | undefined;
   isLoading: boolean;
+  isForbidden?: boolean;
 }
 
 function SkeletonCard() {
@@ -16,6 +18,31 @@ function SkeletonCard() {
         <div className="h-4 w-28 bg-surface-highest rounded" />
         <div className="h-2.5 w-36 bg-surface-highest rounded" />
         <div className="h-2.5 w-36 bg-surface-highest rounded" />
+      </div>
+    </div>
+  );
+}
+
+function UpgradePromptCard() {
+  return (
+    <div className="bg-surface-high rounded-3xl overflow-hidden">
+      {/* Top glow */}
+      <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
+
+      <div className="p-5 flex flex-col items-center gap-3 text-center">
+        <Lock size={32} className="text-on-surface-variant" />
+
+        <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+          Evaluaciones
+        </p>
+
+        <p className="font-display text-[1.75rem] font-semibold text-on-surface">
+          Disponible en Plan Pro
+        </p>
+
+        <p className="font-body text-[0.875rem] text-on-surface-variant">
+          Las evaluaciones detalladas de tu hijo están disponibles en el plan Pro. Habla con el director de la academia para actualizarlo.
+        </p>
       </div>
     </div>
   );
@@ -35,8 +62,11 @@ function assessment(avg: number): { text: string; color: string } {
 export default function PortalEvaluationSummary({
   progress,
   isLoading,
+  isForbidden = false,
 }: PortalEvaluationSummaryProps) {
   if (isLoading) return <SkeletonCard />;
+
+  if (isForbidden) return <UpgradePromptCard />;
 
   const hasEvaluations = progress && progress.evaluations.length > 0;
   const latest = hasEvaluations ? progress.evaluations[0] : null;

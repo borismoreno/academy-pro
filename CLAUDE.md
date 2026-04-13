@@ -211,6 +211,6 @@ Role is resolved per-academy via `UserAcademyRole` table.
 - [x] Parent portal (PortalPage, PlayerSelector, PortalPlayerHero, PortalAttendanceSummary, PortalEvaluationSummary, PortalRecentActivity, portal.service.ts, usePortal.ts)
 - [x] Settings screen (AcademyInfoForm, LogoUploader, UserManagement, InviteUserSheet, EvaluationMetricsManager, ProfileForm, ChangePasswordForm; backend PATCH /auth/me and PATCH /auth/me/password)
 - [x] saas_owner panel (OwnerDashboardPage, OwnerAcademiesPage, OwnerAcademyDetailPage, OwnerSubscriptionsPage, OwnerPlanLimitsPage, OwnerUsersPage; backend /owner/* endpoints; PlanLimit model + migration)
-- [x] Plan limits system (parametrizable per plan/resource; PlanGuardService + PlanGuardModule; enforced in teams, players, fields, invitations; seeded via seed:plan-limits)
+- [x] Plan limits system (parametrizable per plan/resource/feature; PlanGuardService + PlanGuardModule; enforced in teams, players, fields, invitations, evaluations custom metrics, parent portal evaluations, parent notifications; feature gates: evaluations_custom_metrics, parent_portal_evaluations, parent_notifications; seeded via seed:plan-limits)
 
 > Update this checklist as features are completed.

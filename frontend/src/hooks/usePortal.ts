@@ -10,6 +10,14 @@ import type { PlayerResponse, AttendanceSummary, EvaluationProgress } from '@/se
 
 export type { PlayerResponse, AttendanceSummary, EvaluationProgress };
 
+function isAxios403(error: unknown): boolean {
+  if (error !== null && typeof error === 'object' && 'response' in error) {
+    const axiosError = error as { response?: { status?: number } };
+    return axiosError.response?.status === 403;
+  }
+  return false;
+}
+
 export function usePortal() {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
 
@@ -43,7 +51,14 @@ export function usePortal() {
     queryKey: ['portal-progress', selectedPlayerId],
     queryFn: () => getEvaluationProgress(selectedPlayerId!),
     enabled: !!selectedPlayerId,
+    retry: (failureCount, error) => {
+      // Do not retry on 403 — it is an expected plan-gate response
+      if (isAxios403(error)) return false;
+      return failureCount < 3;
+    },
   });
+
+  const isProgressForbidden = isAxios403(progressQuery.error);
 
   return {
     players,
@@ -55,5 +70,6 @@ export function usePortal() {
     isLoadingPlayers: playersQuery.isLoading,
     isLoadingDetail:
       playerQuery.isLoading || attendanceQuery.isLoading || progressQuery.isLoading,
+    isProgressForbidden,
   };
 }
