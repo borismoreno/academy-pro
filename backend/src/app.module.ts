@@ -17,6 +17,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { InvitationsModule } from './modules/invitations/invitations.module.js';
 import { FieldsModule } from './modules/fields/fields.module.js';
 import { EmailModule } from './common/email/email.module.js';
+import { StorageModule } from './modules/storage/storage.module.js';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EmailModule } from './common/email/email.module.js';
     EmailModule,
     InvitationsModule,
     FieldsModule,
+    StorageModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

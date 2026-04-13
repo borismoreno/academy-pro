@@ -21,7 +21,9 @@
     "seed:metrics": "ts-node --esm prisma/seeders/default-metrics.seeder.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1029.0",
     "@aws-sdk/client-ses": "^3.1028.0",
+    "@aws-sdk/s3-request-presigner": "^3.1029.0",
     "@neondatabase/serverless": "^1.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
