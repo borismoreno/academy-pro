@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Building2, Users, BarChart2, User } from 'lucide-react';
+import { Building2, Users, BarChart2, User, MapPin } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import PageHeader from '@/components/shared/PageHeader';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -10,8 +10,9 @@ import UserManagement from './components/UserManagement';
 import EvaluationMetricsManager from './components/EvaluationMetricsManager';
 import ProfileForm from './components/ProfileForm';
 import InviteUserSheet from './components/InviteUserSheet';
+import FieldsManager from './components/FieldsManager';
 
-type TabId = 'academia' | 'usuarios' | 'metricas' | 'perfil';
+type TabId = 'academia' | 'canchas' | 'usuarios' | 'metricas' | 'perfil';
 
 interface TabConfig {
   id: TabId;
@@ -21,6 +22,7 @@ interface TabConfig {
 
 const DIRECTOR_TABS: TabConfig[] = [
   { id: 'academia', label: 'Mi academia', Icon: Building2 },
+  { id: 'canchas', label: 'Canchas', Icon: MapPin },
   { id: 'usuarios', label: 'Usuarios', Icon: Users },
   { id: 'metricas', label: 'Métricas', Icon: BarChart2 },
   { id: 'perfil', label: 'Mi perfil', Icon: User },
@@ -79,6 +81,9 @@ export default function SettingsPage() {
             isLoading={updateAcademyMutation.isPending}
           />
         );
+
+      case 'canchas':
+        return <FieldsManager />;
 
       case 'usuarios':
         return (

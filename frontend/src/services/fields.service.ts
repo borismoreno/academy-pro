@@ -11,7 +11,31 @@ export interface FieldResponse {
   updatedAt: string;
 }
 
+export interface CreateFieldData {
+  name: string;
+  location?: string;
+}
+
+export interface UpdateFieldData {
+  name?: string;
+  location?: string;
+}
+
 export async function getFields(): Promise<FieldResponse[]> {
   const response = await api.get<ApiResponse<FieldResponse[]>>('/fields');
   return response.data.data;
+}
+
+export async function createField(data: CreateFieldData): Promise<FieldResponse> {
+  const response = await api.post<ApiResponse<FieldResponse>>('/fields', data);
+  return response.data.data;
+}
+
+export async function updateField(id: string, data: UpdateFieldData): Promise<FieldResponse> {
+  const response = await api.patch<ApiResponse<FieldResponse>>(`/fields/${id}`, data);
+  return response.data.data;
+}
+
+export async function deleteField(id: string): Promise<void> {
+  await api.delete(`/fields/${id}`);
 }
