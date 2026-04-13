@@ -18,7 +18,7 @@ export default function PageHeader({
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-1 font-body text-[0.875rem] text-on-surface-variant">
+          <p className="mt-1 font-body text-sm text-on-surface-variant">
             {subtitle}
           </p>
         )}

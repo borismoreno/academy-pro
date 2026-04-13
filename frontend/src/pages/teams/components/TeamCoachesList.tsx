@@ -46,7 +46,7 @@ export default function TeamCoachesList({
       <div className="flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="font-display text-[1.125rem] font-semibold text-on-surface">
+          <h3 className="font-display text-lg font-semibold text-on-surface">
             Entrenadores
           </h3>
           {isDirector && (
@@ -78,7 +78,7 @@ export default function TeamCoachesList({
 
                 {/* Name */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-body text-[0.875rem] text-on-surface truncate">
+                  <p className="font-body text-sm text-on-surface truncate">
                     {coach.user.fullName}
                   </p>
                 </div>

@@ -34,7 +34,7 @@ export default function PortalPage() {
         <h1 className="font-display text-[1.75rem] font-semibold text-on-surface">
           Hola, {user ? getFirstName(user.fullName) : ''}
         </h1>
-        <p className="font-body text-[0.875rem] text-on-surface-variant mt-1">
+        <p className="font-body text-sm text-on-surface-variant mt-1">
           Aquí está el progreso de tu hijo/a
         </p>
       </div>
@@ -53,7 +53,7 @@ export default function PortalPage() {
             icon={<Users size={48} />}
             message="Aún no tienes jugadores vinculados a tu cuenta."
           />
-          <p className="font-body text-[0.875rem] text-on-surface-variant max-w-xs -mt-2">
+          <p className="font-body text-sm text-on-surface-variant max-w-xs -mt-2">
             El director de la academia debe vincular a tu hijo/a a tu perfil.
           </p>
         </div>

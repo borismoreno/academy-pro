@@ -27,20 +27,20 @@ export default function AttendancePlayerRow({
 
   return (
     <div
-      className={`flex items-center gap-4 px-3 py-3 lg:px-4 lg:py-4 rounded-xl min-h-[56px] ${
+      className={`flex items-center gap-4 px-3 py-3 lg:px-4 lg:py-4 rounded-xl min-h-14 ${
         isEven ? "bg-surface-high" : "bg-surface-highest"
       }`}
     >
       {/* Avatar */}
       <div className="shrink-0 w-9 h-9 rounded-full bg-surface-highest flex items-center justify-center">
-        <span className="font-display text-[0.75rem] font-semibold text-primary">
+        <span className="font-display text-xs font-semibold text-primary">
           {getInitials(record.player.fullName)}
         </span>
       </div>
 
       {/* Name + position */}
       <div className="flex-1 min-w-0">
-        <p className="font-body text-[0.875rem] text-on-surface truncate">
+        <p className="font-body text-sm text-on-surface truncate">
           {record.player.fullName}
         </p>
         {record.player.position && (

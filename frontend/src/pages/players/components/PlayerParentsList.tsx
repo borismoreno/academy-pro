@@ -50,7 +50,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
             {isDirector && (
               <button
                 onClick={() => setAddOpen(true)}
-                className="flex items-center gap-1.5 min-h-11 px-3 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors rounded-xl"
+                className="flex items-center gap-1.5 min-h-11 px-3 font-body text-sm text-on-surface-variant hover:text-primary transition-colors rounded-xl"
               >
                 <Plus size={16} />
                 Vincular
@@ -78,7 +78,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-body text-[0.875rem] text-on-surface">
+                      <span className="font-body text-sm text-on-surface">
                         {parent.user.fullName}
                       </span>
                       {parent.relationship && (
@@ -87,7 +87,7 @@ export default function PlayerParentsList({ parents, playerId, role }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="font-body text-[0.875rem] text-on-surface-variant truncate">
+                    <p className="font-body text-sm text-on-surface-variant truncate">
                       {parent.user.email}
                     </p>
                   </div>

@@ -29,10 +29,10 @@ import type { Session } from "@/types";
 import AttendanceList from "./AttendanceList";
 
 const SELECT_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
 const TEXTAREA_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
 
 function extractErrorMessage(error: unknown): string {
   if (error !== null && typeof error === "object" && "response" in error) {
@@ -116,7 +116,7 @@ function SessionForm({ onCreated }: SessionFormProps) {
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Team */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Equipo
         </label>
         <select
@@ -136,7 +136,7 @@ function SessionForm({ onCreated }: SessionFormProps) {
           ))}
         </select>
         {teamIdError && (
-          <p className="font-body text-[0.75rem] text-error-container">
+          <p className="font-body text-xs text-error-container">
             {teamIdError}
           </p>
         )}
@@ -144,7 +144,7 @@ function SessionForm({ onCreated }: SessionFormProps) {
 
       {/* Session date */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Fecha de la sesión
         </label>
         <Input
@@ -158,7 +158,7 @@ function SessionForm({ onCreated }: SessionFormProps) {
 
       {/* Notes */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Notas (opcional)
         </label>
         <textarea
@@ -174,7 +174,7 @@ function SessionForm({ onCreated }: SessionFormProps) {
       <button
         type="submit"
         disabled={createMutation.isPending}
-        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
       >
         {createMutation.isPending ? <LoadingSpinner size="sm" /> : null}
         Registrar sesión
@@ -221,7 +221,7 @@ function AttendanceStep({ session, onFinish }: AttendanceStepProps) {
       <button
         type="button"
         onClick={onFinish}
-        className="w-full h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer"
+        className="w-full h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer"
       >
         Finalizar
       </button>
@@ -287,7 +287,7 @@ export default function SessionFormSheet({
         <DialogContent className="bg-surface-high border-0 rounded-3xl min-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -302,7 +302,7 @@ export default function SessionFormSheet({
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

@@ -44,7 +44,7 @@ export default function PlanLimitRow({ limit, onUpdate }: PlanLimitRowProps) {
 
   return (
     <div className="flex items-center justify-between gap-4 px-4 py-3 bg-surface-high rounded-xl">
-      <span className="font-body text-[0.875rem] text-on-surface">
+      <span className="font-body text-sm text-on-surface">
         {RESOURCE_LABELS[limit.resource] ?? limit.resource}
       </span>
 
@@ -65,7 +65,7 @@ export default function PlanLimitRow({ limit, onUpdate }: PlanLimitRowProps) {
               }}
               onBlur={handleSave}
               onKeyDown={handleKeyDown}
-              className="w-24 h-10 text-center rounded-xl border border-outline-variant/15 bg-surface-low font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary"
+              className="w-24 h-10 text-center rounded-xl border border-outline-variant/15 bg-surface-low font-body text-sm text-on-surface focus:outline-none focus:border-primary"
             />
           )}
         </div>

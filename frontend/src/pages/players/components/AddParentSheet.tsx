@@ -126,10 +126,10 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-body text-[0.875rem] text-on-surface truncate">
+                <p className="font-body text-sm text-on-surface truncate">
                   {parent.fullName}
                 </p>
-                <p className="font-body text-[0.75rem] text-on-surface-variant truncate">
+                <p className="font-body text-xs text-on-surface-variant truncate">
                   {parent.email}
                 </p>
               </div>
@@ -143,14 +143,14 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
 
       {/* Relationship select */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Relación con el jugador
         </label>
         <select
           value={relationship}
           onChange={(e) => setRelationship(e.target.value)}
           disabled={addParentMutation.isPending}
-          className="w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer"
+          className="w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer"
         >
           {RELATIONSHIP_OPTIONS.map((opt) => (
             <option key={opt} value={opt}>
@@ -227,7 +227,7 @@ export default function AddParentSheet({
         <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <TopGlow />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               Vincular padre/tutor
             </DialogTitle>
           </DialogHeader>
@@ -244,7 +244,7 @@ export default function AddParentSheet({
         className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0"
       >
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             Vincular padre/tutor
           </SheetTitle>
         </SheetHeader>

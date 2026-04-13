@@ -55,7 +55,7 @@ export default function VerifyEmailPage() {
                   <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
                     Verificando tu correo...
                   </h2>
-                  <p className="font-body text-[0.875rem] text-on-surface-variant mt-2">
+                  <p className="font-body text-sm text-on-surface-variant mt-2">
                     Por favor espera un momento.
                   </p>
                 </div>
@@ -69,7 +69,7 @@ export default function VerifyEmailPage() {
                   <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
                     ¡Correo verificado!
                   </h2>
-                  <p className="font-body text-[0.875rem] text-on-surface-variant mt-2">
+                  <p className="font-body text-sm text-on-surface-variant mt-2">
                     Correo verificado. Redirigiendo al login...
                   </p>
                 </div>
@@ -83,7 +83,7 @@ export default function VerifyEmailPage() {
                   <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
                     Error de verificación
                   </h2>
-                  <p className="font-body text-[0.875rem] text-on-surface-variant mt-2">
+                  <p className="font-body text-sm text-on-surface-variant mt-2">
                     {verifyEmailQuery.error instanceof Error
                       ? verifyEmailQuery.error.message
                       : "No se pudo verificar el correo. El enlace puede haber expirado."}
@@ -129,7 +129,7 @@ export default function VerifyEmailPage() {
             <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
               Revisa tu correo electrónico
             </h2>
-            <p className="font-body text-[0.875rem] text-on-surface-variant mt-3 leading-relaxed">
+            <p className="font-body text-sm text-on-surface-variant mt-3 leading-relaxed">
               Te enviamos un enlace de verificación a{" "}
               <span className="text-on-surface font-medium">
                 {email || "tu correo"}

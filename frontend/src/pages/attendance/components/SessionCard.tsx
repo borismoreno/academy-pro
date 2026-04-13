@@ -66,7 +66,7 @@ export default function SessionCard({
         <div className="p-5 flex flex-col gap-3">
           {/* Top row: date + dropdown */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-display text-[1.125rem] font-semibold text-on-surface leading-tight">
+            <h3 className="font-display text-lg font-semibold text-on-surface leading-tight">
               {formatSessionDate(session.sessionDate)}
             </h3>
 
@@ -122,7 +122,7 @@ export default function SessionCard({
           {coachName && (
             <div className="flex items-center gap-1.5">
               <User size={14} className="text-on-surface-variant shrink-0" />
-              <span className="font-body text-[0.875rem] text-on-surface-variant">
+              <span className="font-body text-sm text-on-surface-variant">
                 Registrado por {coachName}
               </span>
             </div>
@@ -135,7 +135,7 @@ export default function SessionCard({
                 size={14}
                 className="text-on-surface-variant shrink-0"
               />
-              <span className="font-body text-[0.875rem] text-on-surface-variant italic truncate">
+              <span className="font-body text-sm text-on-surface-variant italic truncate">
                 {session.notes}
               </span>
             </div>

@@ -111,16 +111,16 @@ export default function PlayerDetailPage() {
                   )}
                   <div className="flex flex-col gap-1.5 mt-1">
                     {player.team && (
-                      <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+                      <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                         <Users size={14} />
                         <span>{player.team.name}</span>
                       </div>
                     )}
-                    <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+                    <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                       <Calendar size={14} />
                       <span>{age} años</span>
                     </div>
-                    <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+                    <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                       <Calendar size={14} />
                       <span>
                         {new Date(player.birthDate).toLocaleDateString("es-EC")}

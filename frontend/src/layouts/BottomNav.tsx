@@ -24,7 +24,7 @@ function TabButton({ item, isActive }: TabButtonProps) {
   return (
     <NavLink
       to={item.path}
-      className="flex flex-col items-center justify-center gap-1 flex-1 min-h-[48px] transition-colors"
+      className="flex flex-col items-center justify-center gap-1 flex-1 min-h-12 transition-colors"
     >
       <div className="relative flex items-center justify-center">
         <item.Icon
@@ -105,7 +105,7 @@ export default function BottomNav() {
         className={[
           "flex lg:hidden fixed bottom-0 left-0 right-0 z-50",
           "bg-surface-lowest shadow-[0px_-4px_24px_rgba(0,0,0,0.4)]",
-          "h-16 sm:h-[72px]",
+          "h-16 sm:h-18",
           "px-2",
         ].join(" ")}
         aria-label="Navegación principal"
@@ -127,7 +127,7 @@ export default function BottomNav() {
         {hasOverflow && (
           <button
             onClick={() => setSheetOpen(true)}
-            className="flex flex-col items-center justify-center gap-1 flex-1 min-h-[48px] transition-colors cursor-pointer"
+            className="flex flex-col items-center justify-center gap-1 flex-1 min-h-12 transition-colors cursor-pointer"
             aria-label="Más opciones"
           >
             <div className="relative flex items-center justify-center">

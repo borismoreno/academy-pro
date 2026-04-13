@@ -86,7 +86,7 @@ function MetricRow({
             <button
               type="button"
               onClick={handleNameClick}
-              className="font-body text-[0.875rem] text-on-surface text-left w-full truncate hover:text-primary transition-colors cursor-text"
+              className="font-body text-sm text-on-surface text-left w-full truncate hover:text-primary transition-colors cursor-text"
             >
               {metric.metricName}
             </button>
@@ -119,7 +119,7 @@ function MetricRow({
           type="button"
           onClick={() => setConfirmOpen(true)}
           disabled={isDeleting}
-          className="p-1 rounded-lg text-on-surface-variant hover:text-error-container transition-colors disabled:opacity-50 cursor-pointer shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="p-1 rounded-lg text-on-surface-variant hover:text-error-container transition-colors disabled:opacity-50 cursor-pointer shrink-0 min-h-11 min-w-11 flex items-center justify-center"
         >
           <Trash2 size={15} />
         </button>
@@ -185,7 +185,7 @@ export default function EvaluationMetricsManager({
         <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
           Métricas de evaluación
         </h2>
-        <p className="font-body text-[0.875rem] text-on-surface-variant mt-1">
+        <p className="font-body text-sm text-on-surface-variant mt-1">
           Configura las métricas con las que se evalúa a los jugadores.
         </p>
       </div>
@@ -203,7 +203,7 @@ export default function EvaluationMetricsManager({
           <button
             type="submit"
             disabled={isCreating || newMetricName.trim().length < 2}
-            className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer whitespace-nowrap shrink-0"
+            className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer whitespace-nowrap shrink-0"
           >
             {isCreating && <LoadingSpinner size="sm" />}
             Agregar
@@ -212,7 +212,7 @@ export default function EvaluationMetricsManager({
       ) : (
         <div className="flex items-center gap-2 text-on-surface-variant">
           <Lock size={14} className="shrink-0" />
-          <p className="font-body text-[0.875rem]">
+          <p className="font-body text-sm">
             La personalización de métricas está disponible en el Plan Pro.
           </p>
         </div>
@@ -224,7 +224,7 @@ export default function EvaluationMetricsManager({
           <LoadingSpinner size="lg" />
         </div>
       ) : sorted.length === 0 ? (
-        <p className="font-body text-[0.875rem] text-on-surface-variant">
+        <p className="font-body text-sm text-on-surface-variant">
           No hay métricas configuradas.
         </p>
       ) : (

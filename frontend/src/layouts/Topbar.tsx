@@ -62,11 +62,11 @@ export default function Topbar({ pageTitle }: TopbarProps) {
               className="w-9 h-9 rounded-full bg-surface-high flex items-center justify-center hover:bg-surface-highest transition-colors cursor-pointer focus:outline-none"
               aria-label="Menú de usuario"
             >
-              <span className="font-display text-[0.75rem] font-bold text-primary">{initials}</span>
+              <span className="font-display text-xs font-bold text-primary">{initials}</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel className="font-body text-[0.875rem] font-medium text-on-surface px-3 py-2">
+            <DropdownMenuLabel className="font-body text-sm font-medium text-on-surface px-3 py-2">
               {user?.fullName ?? '—'}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

@@ -78,8 +78,8 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
       )}
       {payload.map((item) => (
         <div key={item.name} className="flex items-center justify-between gap-4">
-          <span className="font-body text-[0.875rem] text-on-surface-variant">{item.name}</span>
-          <span className="font-body text-[0.875rem] font-semibold" style={{ color: item.color }}>
+          <span className="font-body text-sm text-on-surface-variant">{item.name}</span>
+          <span className="font-body text-sm font-semibold" style={{ color: item.color }}>
             {item.value}
           </span>
         </div>
@@ -112,7 +112,7 @@ export default function EvaluationProgressChart({ playerId }: EvaluationProgress
 
   return (
     <div className="flex flex-col gap-3">
-      <ResponsiveContainer width="100%" height={220} className="lg:!h-[280px]">
+      <ResponsiveContainer width="100%" height={220} className="lg:!h-70">
         <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
           <CartesianGrid stroke="#201f1f" strokeDasharray="3 3" vertical={false} />
           <XAxis
@@ -158,7 +158,7 @@ export default function EvaluationProgressChart({ playerId }: EvaluationProgress
       </ResponsiveContainer>
 
       {singlePoint && (
-        <p className="font-body text-[0.875rem] text-on-surface-variant text-center">
+        <p className="font-body text-sm text-on-surface-variant text-center">
           Registra más evaluaciones para ver el progreso del jugador.
         </p>
       )}

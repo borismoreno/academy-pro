@@ -43,7 +43,7 @@ export default function EvaluationCard({ evaluation }: EvaluationCardProps) {
       <div className="p-5 flex flex-col gap-3">
         {/* Top row: player name + date */}
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-[1.125rem] font-semibold text-on-surface leading-tight flex-1 min-w-0">
+          <h3 className="font-display text-lg font-semibold text-on-surface leading-tight flex-1 min-w-0">
             {evaluation.player.fullName}
           </h3>
           <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant shrink-0">
@@ -54,7 +54,7 @@ export default function EvaluationCard({ evaluation }: EvaluationCardProps) {
         {/* Team + position */}
         <div className="flex items-center gap-1.5">
           <Users size={14} className="text-on-surface-variant shrink-0" />
-          <span className="font-body text-[0.875rem] text-on-surface-variant truncate">
+          <span className="font-body text-sm text-on-surface-variant truncate">
             {evaluation.player.position ?? "Sin posición"}
           </span>
         </div>
@@ -62,7 +62,7 @@ export default function EvaluationCard({ evaluation }: EvaluationCardProps) {
         {/* Coach */}
         <div className="flex items-center gap-1.5">
           <User size={14} className="text-on-surface-variant shrink-0" />
-          <span className="font-body text-[0.875rem] text-on-surface-variant truncate">
+          <span className="font-body text-sm text-on-surface-variant truncate">
             Evaluado por {evaluation.coach.fullName}
           </span>
         </div>
@@ -106,7 +106,7 @@ export default function EvaluationCard({ evaluation }: EvaluationCardProps) {
               size={14}
               className="text-on-surface-variant shrink-0 mt-0.5"
             />
-            <p className="font-body text-[0.875rem] text-on-surface-variant italic truncate">
+            <p className="font-body text-sm text-on-surface-variant italic truncate">
               {evaluation.coachNotes}
             </p>
           </div>

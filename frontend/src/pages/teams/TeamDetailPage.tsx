@@ -119,7 +119,7 @@ export default function TeamDetailPage() {
         {/* Players — full width */}
         <SectionCard>
           <div className="flex flex-col gap-4">
-            <h3 className="font-display text-[1.125rem] font-semibold text-on-surface">
+            <h3 className="font-display text-lg font-semibold text-on-surface">
               Jugadores
             </h3>
 
@@ -134,7 +134,7 @@ export default function TeamDetailPage() {
                     className="flex items-center gap-3 min-h-11 px-3 rounded-xl hover:bg-surface-highest transition-colors text-left -mx-3"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-[0.875rem] text-on-surface truncate">
+                      <p className="font-body text-sm text-on-surface truncate">
                         {player.fullName}
                       </p>
                     </div>

@@ -40,7 +40,7 @@ function UpgradePromptCard() {
           Disponible en Plan Pro
         </p>
 
-        <p className="font-body text-[0.875rem] text-on-surface-variant">
+        <p className="font-body text-sm text-on-surface-variant">
           Las evaluaciones detalladas de tu hijo están disponibles en el plan Pro. Habla con el director de la academia para actualizarlo.
         </p>
       </div>
@@ -89,18 +89,18 @@ export default function PortalEvaluationSummary({
         </p>
 
         {!hasEvaluations ? (
-          <p className="font-body text-[0.875rem] text-on-surface-variant">
+          <p className="font-body text-sm text-on-surface-variant">
             Sin evaluaciones aún
           </p>
         ) : (
           <>
             {/* Average score */}
-            <p className="font-display text-[3rem] font-bold leading-none text-primary">
+            <p className="font-display text-5xl font-bold leading-none text-primary">
               {avg.toFixed(1)}
             </p>
 
             {/* Date */}
-            <p className="font-body text-[0.875rem] text-on-surface-variant">
+            <p className="font-body text-sm text-on-surface-variant">
               {new Date(latest!.evaluatedAt).toLocaleDateString('es-EC')}
             </p>
 

@@ -11,7 +11,7 @@ import type { UpdateSessionData } from "@/services/attendance.service";
 import AttendanceList from "./components/AttendanceList";
 
 const TEXTAREA_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
 
 function extractErrorMessage(error: unknown): string {
   if (error !== null && typeof error === "object" && "response" in error) {
@@ -88,7 +88,7 @@ export default function SessionDetailPage() {
   if (!session) {
     return (
       <div className="flex justify-center py-16">
-        <p className="font-body text-[0.875rem] text-on-surface-variant">
+        <p className="font-body text-sm text-on-surface-variant">
           Sesión no encontrada.
         </p>
       </div>
@@ -111,7 +111,7 @@ export default function SessionDetailPage() {
           {/* Back button */}
           <button
             onClick={() => navigate("/attendance")}
-            className="self-start flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors -ml-1"
+            className="self-start flex items-center gap-1.5 font-body text-sm text-on-surface-variant hover:text-primary transition-colors -ml-1"
           >
             <ArrowLeft size={16} />
             Asistencia
@@ -157,7 +157,7 @@ export default function SessionDetailPage() {
           {coachName && (
             <div className="flex items-center gap-1.5">
               <User size={14} className="text-on-surface-variant shrink-0" />
-              <span className="font-body text-[0.875rem] text-on-surface-variant">
+              <span className="font-body text-sm text-on-surface-variant">
                 Registrado por {coachName}
               </span>
             </div>
@@ -178,7 +178,7 @@ export default function SessionDetailPage() {
                 <button
                   onClick={saveNotes}
                   disabled={updateNotesMutation.isPending}
-                  className="flex items-center gap-1.5 h-9 px-4 rounded-xl font-body text-[0.875rem] font-semibold bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 h-9 px-4 rounded-xl font-body text-sm font-semibold bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
                 >
                   {updateNotesMutation.isPending ? (
                     <LoadingSpinner size="sm" />
@@ -188,7 +188,7 @@ export default function SessionDetailPage() {
                 <button
                   onClick={cancelEditingNotes}
                   disabled={updateNotesMutation.isPending}
-                  className="h-9 px-4 rounded-xl font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                  className="h-9 px-4 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -202,7 +202,7 @@ export default function SessionDetailPage() {
                     size={14}
                     className="text-on-surface-variant shrink-0 mt-0.5"
                   />
-                  <p className="font-body text-[0.875rem] text-on-surface-variant italic">
+                  <p className="font-body text-sm text-on-surface-variant italic">
                     {session.notes}
                   </p>
                 </div>
@@ -210,7 +210,7 @@ export default function SessionDetailPage() {
               {canEditNotes && (
                 <button
                   onClick={startEditingNotes}
-                  className="self-start font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+                  className="self-start font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   {session.notes ? "Editar notas" : "+ Agregar notas"}
                 </button>
@@ -224,7 +224,7 @@ export default function SessionDetailPage() {
       <div className="bg-surface-high rounded-3xl overflow-hidden">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <div className="p-5 lg:p-6">
-          <h2 className="font-display text-[1.125rem] font-semibold text-on-surface mb-4">
+          <h2 className="font-display text-lg font-semibold text-on-surface mb-4">
             Registro de asistencia
           </h2>
           <AttendanceList

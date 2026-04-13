@@ -139,7 +139,7 @@ export default function SettingsPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={[
-                  'flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl font-body text-[0.875rem] whitespace-nowrap transition-all shrink-0 cursor-pointer',
+                  'flex items-center gap-2 min-h-11 px-4 py-2 rounded-xl font-body text-sm whitespace-nowrap transition-all shrink-0 cursor-pointer',
                   activeTab === id
                     ? 'bg-surface-high text-primary'
                     : 'text-on-surface-variant hover:bg-surface-high',
@@ -158,7 +158,7 @@ export default function SettingsPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={[
-                  'flex items-center gap-3 min-h-[44px] px-4 py-3 rounded-xl font-body text-[0.875rem] text-left transition-all cursor-pointer',
+                  'flex items-center gap-3 min-h-11 px-4 py-3 rounded-xl font-body text-sm text-left transition-all cursor-pointer',
                   activeTab === id
                     ? 'bg-surface-high text-primary'
                     : 'text-on-surface-variant hover:bg-surface-high',

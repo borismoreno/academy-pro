@@ -80,11 +80,11 @@ export default function SubscriptionFormDialog({
   }
 
   const selectClass =
-    "flex h-10 w-full rounded-xl border border-outline-variant/15 bg-surface-low px-3 py-2 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary";
+    "flex h-10 w-full rounded-xl border border-outline-variant/15 bg-surface-low px-3 py-2 font-body text-sm text-on-surface focus:outline-none focus:border-primary";
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-[440px] bg-surface-high border-outline-variant/15 rounded-3xl p-0 overflow-hidden shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
+      <DialogContent className="max-w-110 bg-surface-high border-outline-variant/15 rounded-3xl p-0 overflow-hidden shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
         {/* Top glow */}
         <div
           className="h-0.5 w-full"
@@ -97,7 +97,7 @@ export default function SubscriptionFormDialog({
               Editar suscripción
             </DialogTitle>
             {academy && (
-              <p className="font-body text-[0.875rem] text-on-surface-variant mt-1">
+              <p className="font-body text-sm text-on-surface-variant mt-1">
                 {academy.name}
               </p>
             )}
@@ -159,7 +159,7 @@ export default function SubscriptionFormDialog({
                 onChange={(e) => setEndsAt(e.target.value)}
               />
               {dateError && (
-                <p className="font-body text-[0.75rem] text-error-container">
+                <p className="font-body text-xs text-error-container">
                   {dateError}
                 </p>
               )}

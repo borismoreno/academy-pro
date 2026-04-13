@@ -34,7 +34,7 @@ export default function PlayerSelector({
               onClick={() => onSelect(player.id)}
               className={[
                 'flex flex-col items-center gap-1.5 px-4 py-2 rounded-2xl transition-all duration-200',
-                'min-h-[56px] focus:outline-none',
+                'min-h-14 focus:outline-none',
                 isSelected
                   ? 'bg-linear-to-br from-primary to-secondary text-on-primary font-medium'
                   : 'bg-surface-high text-on-surface-variant',
@@ -54,7 +54,7 @@ export default function PlayerSelector({
                 ) : (
                   <div
                     className={[
-                      'w-full h-full flex items-center justify-center font-display font-bold text-[0.75rem]',
+                      'w-full h-full flex items-center justify-center font-display font-bold text-xs',
                       isSelected ? 'bg-on-primary/20 text-on-primary' : 'bg-surface-highest text-primary',
                     ].join(' ')}
                   >

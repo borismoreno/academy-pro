@@ -19,7 +19,7 @@ const POSITIONS = [
 ];
 
 const FILTER_SELECT_CLASS =
-  'bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2 font-body text-[0.875rem] text-on-surface-variant focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer';
+  'bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2 font-body text-sm text-on-surface-variant focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer';
 
 export default function PlayersPage() {
   const role = useAuthStore((state) => state.role);

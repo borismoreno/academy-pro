@@ -39,7 +39,7 @@ export default function NotificationRow({ notification }: NotificationRowProps) 
   return (
     <div
       className={[
-        'flex items-start gap-4 px-4 py-4 rounded-xl min-h-[64px] transition-all duration-300',
+        'flex items-start gap-4 px-4 py-4 rounded-xl min-h-16 transition-all duration-300',
         isUnread
           ? 'bg-surface-high border-l-[3px] border-primary'
           : 'bg-surface-highest border-l-[3px] border-transparent',
@@ -56,13 +56,13 @@ export default function NotificationRow({ notification }: NotificationRowProps) 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p
-          className={`font-body text-[0.875rem] font-medium leading-snug ${
+          className={`font-body text-sm font-medium leading-snug ${
             isUnread ? 'text-on-surface' : 'text-on-surface-variant'
           }`}
         >
           {notification.title}
         </p>
-        <p className="font-body text-[0.875rem] text-on-surface-variant line-clamp-2 mt-0.5">
+        <p className="font-body text-sm text-on-surface-variant line-clamp-2 mt-0.5">
           {notification.message}
         </p>
         <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mt-1">

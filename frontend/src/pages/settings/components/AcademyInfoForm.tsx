@@ -65,7 +65,7 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {/* Nombre */}
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-[0.875rem] text-on-surface-variant">
+          <label className="font-body text-sm text-on-surface-variant">
             Nombre de la academia <span className="text-error-container">*</span>
           </label>
           <Input
@@ -75,14 +75,14 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
             placeholder="Nombre de la academia"
           />
           {errors.name && (
-            <p className="font-body text-[0.75rem] text-error-container">{errors.name}</p>
+            <p className="font-body text-xs text-error-container">{errors.name}</p>
           )}
         </div>
 
         {/* Ciudad / Dirección */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-[0.875rem] text-on-surface-variant">
+            <label className="font-body text-sm text-on-surface-variant">
               Ciudad <span className="text-error-container">*</span>
             </label>
             <Input
@@ -92,11 +92,11 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
               placeholder="Ciudad"
             />
             {errors.city && (
-              <p className="font-body text-[0.75rem] text-error-container">{errors.city}</p>
+              <p className="font-body text-xs text-error-container">{errors.city}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-[0.875rem] text-on-surface-variant">Dirección</label>
+            <label className="font-body text-sm text-on-surface-variant">Dirección</label>
             <Input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -109,7 +109,7 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
         {/* Teléfono / Email */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-[0.875rem] text-on-surface-variant">Teléfono</label>
+            <label className="font-body text-sm text-on-surface-variant">Teléfono</label>
             <Input
               type="tel"
               value={phone}
@@ -119,7 +119,7 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-[0.875rem] text-on-surface-variant">
+            <label className="font-body text-sm text-on-surface-variant">
               Correo electrónico
             </label>
             <Input
@@ -136,7 +136,7 @@ export default function AcademyInfoForm({ academy, onSubmit, isLoading }: Props)
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+            className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
           >
             {isLoading && <LoadingSpinner size="sm" />}
             Guardar cambios

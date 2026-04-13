@@ -89,7 +89,7 @@ export default function LoginPage() {
             con precisión.
           </h1>
 
-          <p className="font-body text-[0.875rem] text-on-surface-variant leading-relaxed">
+          <p className="font-body text-sm text-on-surface-variant leading-relaxed">
             La plataforma todo-en-uno para academias de fútbol. Jugadores,
             asistencia, evaluaciones y más.
           </p>
@@ -138,7 +138,7 @@ export default function LoginPage() {
               <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
                 Bienvenido
               </h2>
-              <p className="font-body text-[0.875rem] text-on-surface-variant mt-1">
+              <p className="font-body text-sm text-on-surface-variant mt-1">
                 Inicia sesión para continuar
               </p>
             </div>
@@ -206,7 +206,7 @@ export default function LoginPage() {
                 <div className="flex justify-end">
                   <Link
                     to="/forgot-password"
-                    className="font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+                    className="font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
                   >
                     Olvidé mi contraseña
                   </Link>
@@ -229,7 +229,7 @@ export default function LoginPage() {
             </form>
 
             {/* Link to contact */}
-            <p className="font-body text-[0.875rem] text-on-surface-variant text-center mt-6">
+            <p className="font-body text-sm text-on-surface-variant text-center mt-6">
               ¿No tienes una cuenta?{" "}
               <Link
                 to="/register"

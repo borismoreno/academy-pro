@@ -20,7 +20,7 @@ import { inviteUser } from '@/services/settings.service';
 import type { InviteUserData } from '@/services/settings.service';
 
 const SELECT_CLASS =
-  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50';
+  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50';
 
 function extractErrorMessage(error: unknown): string {
   if (error !== null && typeof error === 'object' && 'response' in error) {
@@ -99,7 +99,7 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Email */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Correo electrónico <span className="text-error-container">*</span>
         </label>
         <Input
@@ -114,13 +114,13 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
           required
         />
         {emailError && (
-          <p className="font-body text-[0.75rem] text-error-container">{emailError}</p>
+          <p className="font-body text-xs text-error-container">{emailError}</p>
         )}
       </div>
 
       {/* Role */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Rol <span className="text-error-container">*</span>
         </label>
         <select
@@ -137,7 +137,7 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
       {/* Player link — only for parent */}
       {role === 'parent' && (
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-[0.875rem] text-on-surface-variant">
+          <label className="font-body text-sm text-on-surface-variant">
             Vincular a un jugador (opcional)
           </label>
           <select
@@ -159,7 +159,7 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
       <button
         type="submit"
         disabled={mutation.isPending}
-        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
       >
         {mutation.isPending && <LoadingSpinner size="sm" />}
         Enviar invitación
@@ -191,10 +191,10 @@ export default function InviteUserSheet({ open, onOpenChange, onSuccess }: Props
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-[440px] p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-110 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -209,7 +209,7 @@ export default function InviteUserSheet({ open, onOpenChange, onSuccess }: Props
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

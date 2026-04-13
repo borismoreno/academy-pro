@@ -34,7 +34,7 @@ export default function Sidebar() {
     <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-65 bg-surface-lowest z-10 flex-col">
       {/* Top: Logo + Academy name */}
       <div className="px-6 pt-8 pb-6">
-        <span className="font-display text-[1.25rem] font-bold text-primary tracking-tight">
+        <span className="font-display text-xl font-bold text-primary tracking-tight">
           AcademyPro
         </span>
         {academyName && (
@@ -64,7 +64,7 @@ export default function Sidebar() {
                   ].join(" ")}
                 >
                   <item.Icon size={18} />
-                  <span className="font-body text-[0.875rem]">
+                  <span className="font-body text-sm">
                     {item.label}
                   </span>
                 </NavLink>
@@ -78,12 +78,12 @@ export default function Sidebar() {
       <div className="px-4 py-6 flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-surface-high flex items-center justify-center shrink-0">
-            <span className="font-display text-[0.75rem] font-bold text-primary">
+            <span className="font-display text-xs font-bold text-primary">
               {initials}
             </span>
           </div>
           <div className="min-w-0">
-            <p className="font-body text-[0.875rem] text-on-surface truncate">
+            <p className="font-body text-sm text-on-surface truncate">
               {user?.fullName ?? "—"}
             </p>
             <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
@@ -97,7 +97,7 @@ export default function Sidebar() {
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-transparent text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
         >
           <LogOut size={16} />
-          <span className="font-body text-[0.875rem]">Cerrar sesión</span>
+          <span className="font-body text-sm">Cerrar sesión</span>
         </button>
       </div>
     </aside>

@@ -58,7 +58,7 @@ export default function OwnerPlanLimitsPage() {
             </div>
 
             {limits.length === 0 ? (
-              <p className="font-body text-[0.875rem] text-on-surface-variant px-4">
+              <p className="font-body text-sm text-on-surface-variant px-4">
                 No hay límites configurados para este plan.
               </p>
             ) : (

@@ -16,11 +16,11 @@ export default function RegisterPage() {
           }}
         />
         <div
-          className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full opacity-5"
+          className="absolute -bottom-32 -right-32 w-125 h-[500px] rounded-full opacity-5"
           style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
         />
         <div
-          className="absolute -top-24 -left-24 w-[300px] h-[300px] rounded-full opacity-5"
+          className="absolute -top-24 -left-24 w-75 h-[300px] rounded-full opacity-5"
           style={{ background: "linear-gradient(135deg, #00f4fe, #bcf521)" }}
         />
 
@@ -48,7 +48,7 @@ export default function RegisterPage() {
             nivel.
           </h1>
 
-          <p className="font-body text-[0.875rem] text-on-surface-variant leading-relaxed">
+          <p className="font-body text-sm text-on-surface-variant leading-relaxed">
             La plataforma todo-en-uno para academias de fútbol. Jugadores,
             asistencia, evaluaciones y más.
           </p>
@@ -102,7 +102,7 @@ export default function RegisterPage() {
             </h2>
 
             {/* Body */}
-            <p className="font-body text-[0.875rem] text-on-surface-variant text-center mb-8 leading-relaxed">
+            <p className="font-body text-sm text-on-surface-variant text-center mb-8 leading-relaxed">
               AcademyPro está disponible por invitación. Contáctanos y te
               agregaremos a la plataforma.
             </p>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 href="https://wa.me/593000000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[44px]"
+                className="min-h-11"
               >
                 <Button
                   variant="primary"
@@ -129,7 +129,7 @@ export default function RegisterPage() {
               {/* Email button */}
               <a
                 href="mailto:marketing@cancha360.com"
-                className="min-h-[44px]"
+                className="min-h-11"
               >
                 <Button
                   variant="secondary"
@@ -143,7 +143,7 @@ export default function RegisterPage() {
               </a>
             </div>
 
-            <p className="font-body text-[0.875rem] text-on-surface-variant text-center mt-6">
+            <p className="font-body text-sm text-on-surface-variant text-center mt-6">
               ¿Ya tienes una cuenta?{" "}
               <Link
                 to="/login"

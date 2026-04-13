@@ -68,7 +68,7 @@ export default function AttendanceList({
   return (
     <div className="flex flex-col gap-4">
       {/* Counter */}
-      <p className="font-body text-[0.875rem] text-on-surface-variant">
+      <p className="font-body text-sm text-on-surface-variant">
         {presentCount} de {totalCount} presentes
       </p>
 
@@ -77,7 +77,7 @@ export default function AttendanceList({
         <button
           type="button"
           onClick={() => markAll(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
         >
           <Check size={14} />
           Marcar todos presentes
@@ -85,7 +85,7 @@ export default function AttendanceList({
         <button
           type="button"
           onClick={() => markAll(false)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
         >
           <X size={14} />
           Marcar todos ausentes
@@ -113,7 +113,7 @@ export default function AttendanceList({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
           {isSaving ? <LoadingSpinner size="sm" /> : null}
           Guardar asistencia

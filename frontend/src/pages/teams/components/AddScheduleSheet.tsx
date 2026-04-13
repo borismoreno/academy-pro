@@ -92,14 +92,14 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Day of week */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Día de entrenamiento
         </label>
         <select
           value={dayOfWeek}
           onChange={(e) => setDayOfWeek(e.target.value as DayOfWeek)}
           disabled={isPending}
-          className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-[0.875rem] text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
+          className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-sm text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
         >
           {DAY_OPTIONS.map((opt) => (
             <option
@@ -115,7 +115,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
       {/* Start time */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Hora de inicio
         </label>
         <Input
@@ -131,7 +131,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
       {/* End time */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Hora de fin
         </label>
         <Input
@@ -144,7 +144,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           disabled={isPending}
         />
         {timeError && (
-          <p className="font-body text-[0.75rem] text-error-container">
+          <p className="font-body text-xs text-error-container">
             {timeError}
           </p>
         )}
@@ -152,18 +152,18 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
       {/* Field */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Cancha
         </label>
         {fieldsLoading ? (
           <div className="flex items-center gap-2 py-2">
             <LoadingSpinner size="sm" />
-            <span className="font-body text-[0.875rem] text-on-surface-variant">
+            <span className="font-body text-sm text-on-surface-variant">
               Cargando canchas...
             </span>
           </div>
         ) : fields.length === 0 ? (
-          <p className="font-body text-[0.875rem] text-on-surface-variant">
+          <p className="font-body text-sm text-on-surface-variant">
             No hay canchas disponibles. Crea una cancha en Configuración.
           </p>
         ) : (
@@ -171,7 +171,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
             value={fieldId}
             onChange={(e) => setSelectedFieldId(e.target.value)}
             disabled={isPending}
-            className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-[0.875rem] text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
+            className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-sm text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
           >
             {fields.map((f) => (
               <option key={f.id} value={f.id} className="bg-surface-high">
@@ -244,7 +244,7 @@ export default function AddScheduleSheet({
         <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <TopGlow />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               Agregar horario
             </DialogTitle>
           </DialogHeader>
@@ -258,7 +258,7 @@ export default function AddScheduleSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             Agregar horario
           </SheetTitle>
         </SheetHeader>

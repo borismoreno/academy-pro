@@ -80,7 +80,7 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                 >
                   <div className="h-px w-full bg-linear-to-r from-primary to-secondary" />
                   <div className="p-4 space-y-1.5">
-                    <h4 className="font-display text-[1.25rem] font-semibold text-on-surface leading-tight truncate">
+                    <h4 className="font-display text-xl font-semibold text-on-surface leading-tight truncate">
                       {team.name}
                     </h4>
                     {team.category && (
@@ -122,7 +122,7 @@ export default function TeamsList({ teams, isLoading }: TeamsListProps) {
                           size={14}
                           className="text-on-surface-variant shrink-0"
                         />
-                        <span className="font-body text-[0.875rem] text-on-surface-variant truncate">
+                        <span className="font-body text-sm text-on-surface-variant truncate">
                           {primaryCoach.user.fullName}
                         </span>
                       </div>

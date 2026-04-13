@@ -155,7 +155,7 @@ export default function OwnerDashboardPage() {
               <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-2">
                 Free
               </p>
-              <p className="font-display text-[3rem] font-bold text-primary leading-none">
+              <p className="font-display text-5xl font-bold text-primary leading-none">
                 {stats?.academiesByPlan?.free ?? 0}
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function OwnerDashboardPage() {
               <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-2">
                 Pro
               </p>
-              <p className="font-display text-[3rem] font-bold text-primary leading-none">
+              <p className="font-display text-5xl font-bold text-primary leading-none">
                 {stats?.academiesByPlan?.pro ?? 0}
               </p>
             </div>
@@ -193,7 +193,7 @@ export default function OwnerDashboardPage() {
               <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-2">
                 Enterprise
               </p>
-              <p className="font-display text-[3rem] font-bold text-primary leading-none">
+              <p className="font-display text-5xl font-bold text-primary leading-none">
                 {stats?.academiesByPlan?.enterprise ?? 0}
               </p>
             </div>

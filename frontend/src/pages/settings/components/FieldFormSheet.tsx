@@ -85,7 +85,7 @@ function FormContent({ field, onClose }: FormContentProps) {
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Nombre */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Nombre de la cancha <span className="text-error-container">*</span>
         </label>
         <Input
@@ -99,13 +99,13 @@ function FormContent({ field, onClose }: FormContentProps) {
           required
         />
         {nameError && (
-          <p className="font-body text-[0.75rem] text-error-container">{nameError}</p>
+          <p className="font-body text-xs text-error-container">{nameError}</p>
         )}
       </div>
 
       {/* Ubicación */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Ubicación
         </label>
         <Input
@@ -120,7 +120,7 @@ function FormContent({ field, onClose }: FormContentProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
       >
         {isPending && <LoadingSpinner size="sm" />}
         {isEditMode ? 'Guardar cambios' : 'Agregar cancha'}
@@ -130,7 +130,7 @@ function FormContent({ field, onClose }: FormContentProps) {
         type="button"
         onClick={onClose}
         disabled={isPending}
-        className="w-full flex items-center justify-center h-11 rounded-xl font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50 cursor-pointer"
+        className="w-full flex items-center justify-center h-11 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50 cursor-pointer"
       >
         Cancelar
       </button>
@@ -161,10 +161,10 @@ export default function FieldFormSheet({ open, onOpenChange, field }: Props) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-[440px] p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-110 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -182,7 +182,7 @@ export default function FieldFormSheet({ open, onOpenChange, field }: Props) {
       >
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

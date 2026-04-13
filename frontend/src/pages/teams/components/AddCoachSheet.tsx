@@ -131,10 +131,10 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-body text-[0.875rem] text-on-surface truncate">
+                <p className="font-body text-sm text-on-surface truncate">
                   {coach.fullName}
                 </p>
-                <p className="font-body text-[0.75rem] text-on-surface-variant truncate">
+                <p className="font-body text-xs text-on-surface-variant truncate">
                   {coach.email}
                 </p>
               </div>
@@ -149,7 +149,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
       {/* isPrimary toggle */}
       <div className="flex items-center justify-between min-h-11">
-        <span className="font-body text-[0.875rem] text-on-surface-variant">
+        <span className="font-body text-sm text-on-surface-variant">
           Entrenador principal
         </span>
         <button
@@ -231,7 +231,7 @@ export default function AddCoachSheet({
         <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <TopGlow />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               Agregar entrenador
             </DialogTitle>
           </DialogHeader>
@@ -245,7 +245,7 @@ export default function AddCoachSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             Agregar entrenador
           </SheetTitle>
         </SheetHeader>

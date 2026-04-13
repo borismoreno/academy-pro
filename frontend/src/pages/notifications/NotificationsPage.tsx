@@ -87,7 +87,7 @@ export default function NotificationsPage() {
     <button
       onClick={handleMarkAllAsRead}
       disabled={markAllAsReadMutation.isPending}
-      className="flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl bg-transparent font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+      className="flex items-center gap-2 min-h-11 px-4 py-2 rounded-xl bg-transparent font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
     >
       <CheckCheck size={16} />
       Marcar todas como leídas
@@ -103,7 +103,7 @@ export default function NotificationsPage() {
         <button
           onClick={() => setActiveTab('all')}
           className={[
-            'min-h-[44px] px-4 py-2 rounded-xl font-body text-[0.875rem] transition-all',
+            'min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all',
             activeTab === 'all'
               ? 'bg-gradient-to-br from-primary to-secondary text-on-primary font-medium'
               : 'bg-surface-highest text-on-surface-variant',
@@ -114,7 +114,7 @@ export default function NotificationsPage() {
         <button
           onClick={() => setActiveTab('unread')}
           className={[
-            'min-h-[44px] px-4 py-2 rounded-xl font-body text-[0.875rem] transition-all',
+            'min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all',
             activeTab === 'unread'
               ? 'bg-gradient-to-br from-primary to-secondary text-on-primary font-medium'
               : 'bg-surface-highest text-on-surface-variant',

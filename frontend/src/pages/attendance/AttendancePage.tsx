@@ -11,7 +11,7 @@ import SessionCard from "./components/SessionCard";
 import SessionFormSheet from "./components/SessionFormSheet";
 
 const SELECT_CLASS =
-  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
+  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
 
 function getCurrentMonth(): string {
   const now = new Date();
@@ -74,7 +74,7 @@ export default function AttendancePage() {
           canRegister ? (
             <button
               onClick={() => setSheetOpen(true)}
-              className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap"
             >
               Registrar sesión
             </button>

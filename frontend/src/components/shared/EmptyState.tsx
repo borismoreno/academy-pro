@@ -14,7 +14,7 @@ export default function EmptyState({ message, icon, action }: EmptyStateProps) {
           {icon}
         </div>
       )}
-      <p className="font-body text-[0.875rem] text-on-surface-variant max-w-xs">{message}</p>
+      <p className="font-body text-sm text-on-surface-variant max-w-xs">{message}</p>
       {action && <div>{action}</div>}
     </div>
   );

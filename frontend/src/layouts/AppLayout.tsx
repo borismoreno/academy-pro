@@ -25,16 +25,16 @@ export default function AppLayout() {
 
       {/* Main content area
           Mobile/tablet : no left margin (sidebar is hidden)
-          Desktop (lg+)  : ml-[260px] to clear the sidebar */}
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px]">
+          Desktop (lg+)  : ml-65 to clear the sidebar */}
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-65">
         {/* Sticky glassmorphism topbar */}
         <Topbar pageTitle={pageTitle} />
 
         {/* Scrollable page content
             Mobile/tablet : pb-16 (64px) to clear the bottom nav bar
-            Tablet sm+    : pb-[72px] to clear the taller bottom nav
+            Tablet sm+    : pb-18 to clear the taller bottom nav
             Desktop lg+   : pb-0 (no bottom nav) */}
-        <main className="flex-1 overflow-y-auto p-6 pb-20 sm:pb-[88px] lg:p-8 lg:pb-8">
+        <main className="flex-1 overflow-y-auto p-6 pb-20 sm:pb-22 lg:p-8 lg:pb-8">
           <Outlet />
         </main>
       </div>

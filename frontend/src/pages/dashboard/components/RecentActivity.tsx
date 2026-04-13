@@ -142,7 +142,7 @@ export default function RecentActivity({
 
                     {/* Description */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-[0.875rem] text-on-surface truncate">
+                      <p className="font-body text-sm text-on-surface truncate">
                         <span className="font-medium">
                           {item.data.player.fullName}
                         </span>
@@ -186,7 +186,7 @@ export default function RecentActivity({
 
                   {/* Description */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-[0.875rem] text-on-surface truncate">
+                    <p className="font-body text-sm text-on-surface truncate">
                       {"Sesión de "}
                       <span className="font-medium">{item.data.team.name}</span>
                       {` registrada el ${sessionDateStr}`}
@@ -214,7 +214,7 @@ export default function RecentActivity({
           {hasMore && (
             <button
               onClick={() => setShowAll((prev) => !prev)}
-              className="lg:hidden w-full min-h-11 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors"
+              className="lg:hidden w-full min-h-11 font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
             >
               {showAll ? "Ver menos" : "Ver toda la actividad"}
             </button>

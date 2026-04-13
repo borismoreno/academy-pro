@@ -77,7 +77,7 @@ export default function PortalRecentActivity({
         ) : feed.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 gap-3 text-center">
             <Activity size={40} className="text-on-surface-variant" />
-            <p className="font-body text-[0.875rem] text-on-surface-variant">
+            <p className="font-body text-sm text-on-surface-variant">
               Sin actividad reciente.
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function PortalRecentActivity({
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-[0.875rem] text-on-surface">
+                      <p className="font-body text-sm text-on-surface">
                         Sesión de entrenamiento el{' '}
                         {new Date(item.date).toLocaleDateString('es-EC')}
                       </p>
@@ -138,7 +138,7 @@ export default function PortalRecentActivity({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-[0.875rem] text-on-surface">
+                    <p className="font-body text-sm text-on-surface">
                       Nueva evaluación disponible
                     </p>
                     <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mt-0.5">

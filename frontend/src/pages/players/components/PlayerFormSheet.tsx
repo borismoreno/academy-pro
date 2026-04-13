@@ -31,7 +31,7 @@ function extractErrorMessage(error: unknown): string {
 const POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
 
 const SELECT_CLASS =
-  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 
 interface PlayerFormSheetProps {
   open: boolean;
@@ -146,7 +146,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Full name */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Nombre completo
         </label>
         <Input
@@ -159,13 +159,13 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           disabled={isPending}
         />
         {fullNameError && (
-          <p className="font-body text-[0.75rem] text-error-container">{fullNameError}</p>
+          <p className="font-body text-xs text-error-container">{fullNameError}</p>
         )}
       </div>
 
       {/* Birth date */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Fecha de nacimiento
         </label>
         <Input
@@ -178,13 +178,13 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           disabled={isPending}
         />
         {birthDateError && (
-          <p className="font-body text-[0.75rem] text-error-container">{birthDateError}</p>
+          <p className="font-body text-xs text-error-container">{birthDateError}</p>
         )}
       </div>
 
       {/* Position */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">Posición</label>
+        <label className="font-body text-sm text-on-surface-variant">Posición</label>
         <select
           value={position}
           onChange={(e) => setPosition(e.target.value)}
@@ -201,7 +201,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
 
       {/* Team */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">Equipo</label>
+        <label className="font-body text-sm text-on-surface-variant">Equipo</label>
         <select
           value={teamId}
           onChange={(e) => {
@@ -219,7 +219,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           ))}
         </select>
         {teamIdError && (
-          <p className="font-body text-[0.75rem] text-error-container">{teamIdError}</p>
+          <p className="font-body text-xs text-error-container">{teamIdError}</p>
         )}
       </div>
 
@@ -278,10 +278,10 @@ export default function PlayerFormSheet({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-[520px] p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-130 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <TopGlow />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -298,7 +298,7 @@ export default function PlayerFormSheet({
         className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0"
       >
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

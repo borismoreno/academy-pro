@@ -58,7 +58,7 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
               >
                 {Math.round(pct)}%
               </span>
-              <p className="mt-1 font-body text-[0.875rem] text-on-surface-variant">
+              <p className="mt-1 font-body text-sm text-on-surface-variant">
                 {summary!.totalPresent} de {summary!.totalSessions} sesiones
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
                     key={session.sessionId}
                     className="flex items-center justify-between min-h-11"
                   >
-                    <span className="font-body text-[0.875rem] text-on-surface-variant">
+                    <span className="font-body text-sm text-on-surface-variant">
                       {new Date(session.sessionDate).toLocaleDateString(
                         "es-EC",
                       )}

@@ -26,7 +26,7 @@ export default function UnauthorizedPage() {
             <h1 className="font-display text-[1.75rem] font-semibold text-on-surface leading-tight">
               Acceso no permitido
             </h1>
-            <p className="font-body text-[0.875rem] text-on-surface-variant leading-relaxed">
+            <p className="font-body text-sm text-on-surface-variant leading-relaxed">
               No tienes permiso para acceder a esta página.
             </p>
           </div>

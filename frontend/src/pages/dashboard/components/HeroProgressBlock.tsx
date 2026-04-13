@@ -116,7 +116,7 @@ export default function HeroProgressBlock() {
           </h2>
 
           {/* Description hidden on mobile — headline + CTA are enough */}
-          <p className="hidden lg:block font-body text-[0.875rem] text-on-surface-variant max-w-md">
+          <p className="hidden lg:block font-body text-sm text-on-surface-variant max-w-md">
             Consulta el historial de evaluaciones y el avance de cada jugador en
             tiempo real.
           </p>
@@ -132,7 +132,7 @@ export default function HeroProgressBlock() {
         </div>
 
         {/* Right side — decorative sparkline, hidden on mobile */}
-        <div className="hidden lg:flex lg:basis-[40%] lg:max-w-[320px] h-48 items-center justify-center">
+        <div className="hidden lg:flex lg:basis-[40%] lg:max-w-80 h-48 items-center justify-center">
           <PulseMonitorSvg />
         </div>
       </div>

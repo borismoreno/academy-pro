@@ -133,7 +133,7 @@ export default function OwnerSubscriptionsPage() {
             e.stopPropagation();
             setSelectedAcademy(row as AcademyWithSubscription);
           }}
-          className="font-body text-[0.875rem] text-primary hover:underline min-h-[44px] flex items-center"
+          className="font-body text-sm text-primary hover:underline min-h-11 flex items-center"
         >
           Editar
         </button>
@@ -142,7 +142,7 @@ export default function OwnerSubscriptionsPage() {
   ];
 
   const selectClass =
-    "h-10 rounded-xl border border-outline-variant/15 bg-surface-low px-3 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary";
+    "h-10 rounded-xl border border-outline-variant/15 bg-surface-low px-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary";
 
   return (
     <div className="space-y-6">

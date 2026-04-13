@@ -22,10 +22,10 @@ import type { CreateEvaluationData } from "@/services/evaluations.service";
 import MetricScoreInput from "./MetricScoreInput";
 
 const SELECT_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
 const TEXTAREA_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-[0.875rem] text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
 
 function todayAsISO(): string {
   const now = new Date();
@@ -168,7 +168,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
   if (activeMetrics.length === 0) {
     return (
       <div className="px-6 pb-8 flex flex-col gap-4">
-        <p className="font-body text-[0.875rem] text-on-surface-variant text-center py-8">
+        <p className="font-body text-sm text-on-surface-variant text-center py-8">
           No hay métricas de evaluación configuradas para esta academia. El
           director debe configurarlas antes de crear evaluaciones.
         </p>
@@ -181,7 +181,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
       {/* ── Basic info ── */}
       {/* Player */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Jugador
         </label>
         <select
@@ -202,7 +202,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
           ))}
         </select>
         {playerError && (
-          <p className="font-body text-[0.75rem] text-error-container">
+          <p className="font-body text-xs text-error-container">
             {playerError}
           </p>
         )}
@@ -210,7 +210,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
 
       {/* Date */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Fecha de evaluación
         </label>
         <Input
@@ -224,7 +224,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
 
       {/* Notes */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Notas del entrenador (opcional)
         </label>
         <textarea
@@ -258,7 +258,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
         </div>
 
         {scoresError && (
-          <p className="font-body text-[0.75rem] text-error-container">
+          <p className="font-body text-xs text-error-container">
             {scoresError}
           </p>
         )}
@@ -277,7 +277,7 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer sticky bottom-0"
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer sticky bottom-0"
       >
         {isPending ? <LoadingSpinner size="sm" /> : null}
         Guardar evaluación
@@ -318,10 +318,10 @@ export default function EvaluationFormSheet({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-[560px] p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
+        <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-140 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -336,7 +336,7 @@ export default function EvaluationFormSheet({
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

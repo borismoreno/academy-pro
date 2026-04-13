@@ -49,20 +49,20 @@ export default function PortalAttendanceSummary({
         </p>
 
         {!summary || summary.totalSessions === 0 ? (
-          <p className="font-body text-[0.875rem] text-on-surface-variant">Sin sesiones aún</p>
+          <p className="font-body text-sm text-on-surface-variant">Sin sesiones aún</p>
         ) : (
           <>
             {/* Big percentage */}
             <p
               className={[
-                'font-display text-[3rem] font-bold leading-none',
+                'font-display text-5xl font-bold leading-none',
                 scoreColor(summary.attendancePercentage),
               ].join(' ')}
             >
               {Math.round(summary.attendancePercentage)}%
             </p>
 
-            <p className="font-body text-[0.875rem] text-on-surface-variant">
+            <p className="font-body text-sm text-on-surface-variant">
               {summary.totalPresent} de {summary.totalSessions} sesiones
             </p>
 

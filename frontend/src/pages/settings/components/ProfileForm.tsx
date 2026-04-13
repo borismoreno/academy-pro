@@ -31,7 +31,7 @@ export default function ProfileForm() {
       {/* Sub-section A — Personal info */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-[0.875rem] text-on-surface-variant">
+          <label className="font-body text-sm text-on-surface-variant">
             Nombre completo <span className="text-error-container">*</span>
           </label>
           <Input
@@ -44,12 +44,12 @@ export default function ProfileForm() {
             placeholder="Tu nombre completo"
           />
           {nameError && (
-            <p className="font-body text-[0.75rem] text-error-container">{nameError}</p>
+            <p className="font-body text-xs text-error-container">{nameError}</p>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-[0.875rem] text-on-surface-variant">
+          <label className="font-body text-sm text-on-surface-variant">
             Correo electrónico
           </label>
           <Input
@@ -67,7 +67,7 @@ export default function ProfileForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+            className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
           >
             {isPending && <LoadingSpinner size="sm" />}
             Guardar cambios

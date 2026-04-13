@@ -36,7 +36,7 @@ export default function StatCard({ label, value, icon, trend }: StatCardProps) {
 
         {/* Trend */}
         {trend && (
-          <p className="mt-2 font-body text-[0.875rem] text-primary">{trend}</p>
+          <p className="mt-2 font-body text-sm text-primary">{trend}</p>
         )}
       </div>
     </div>

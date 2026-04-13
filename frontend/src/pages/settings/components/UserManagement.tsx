@@ -21,13 +21,13 @@ function MemberRow({ member }: { member: Member }) {
   return (
     <div className="flex items-center gap-3 px-4 py-3 bg-surface-high rounded-xl">
       <div className="w-9 h-9 rounded-full bg-surface-highest flex items-center justify-center shrink-0">
-        <span className="font-body text-[0.75rem] font-medium text-primary">
+        <span className="font-body text-xs font-medium text-primary">
           {getInitials(member.fullName)}
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-body text-[0.875rem] text-on-surface truncate">{member.fullName}</p>
-        <p className="font-body text-[0.875rem] text-on-surface-variant truncate">{member.email}</p>
+        <p className="font-body text-sm text-on-surface truncate">{member.fullName}</p>
+        <p className="font-body text-sm text-on-surface-variant truncate">{member.email}</p>
       </div>
       <span className="font-body text-[0.6875rem] bg-surface-highest text-on-surface-variant rounded-full px-2 py-1 shrink-0 whitespace-nowrap">
         {roleLabel(member.role)}
@@ -52,7 +52,7 @@ export default function UserManagement({ members, onInvite, isLoading }: Props) 
         <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">Usuarios</h2>
         <button
           onClick={onInvite}
-          className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-[0.875rem] bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap shrink-0"
+          className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap shrink-0"
         >
           Invitar usuario
         </button>
@@ -70,7 +70,7 @@ export default function UserManagement({ members, onInvite, isLoading }: Props) 
               Entrenadores
             </p>
             {coaches.length === 0 ? (
-              <p className="font-body text-[0.875rem] text-on-surface-variant">
+              <p className="font-body text-sm text-on-surface-variant">
                 No hay entrenadores invitados.
               </p>
             ) : (
@@ -88,7 +88,7 @@ export default function UserManagement({ members, onInvite, isLoading }: Props) 
               Padres y tutores
             </p>
             {parents.length === 0 ? (
-              <p className="font-body text-[0.875rem] text-on-surface-variant">
+              <p className="font-body text-sm text-on-surface-variant">
                 No hay padres invitados.
               </p>
             ) : (

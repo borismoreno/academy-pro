@@ -41,7 +41,7 @@ export default function EvaluationDetailPage() {
   if (!evaluation) {
     return (
       <div className="flex justify-center py-16">
-        <p className="font-body text-[0.875rem] text-on-surface-variant">
+        <p className="font-body text-sm text-on-surface-variant">
           Evaluación no encontrada.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function EvaluationDetailPage() {
           {/* Back */}
           <button
             onClick={() => navigate("/evaluations")}
-            className="self-start flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors -ml-1"
+            className="self-start flex items-center gap-1.5 font-body text-sm text-on-surface-variant hover:text-primary transition-colors -ml-1"
           >
             <ArrowLeft size={16} />
             Evaluaciones
@@ -99,7 +99,7 @@ export default function EvaluationDetailPage() {
               {/* Coach */}
               <div className="flex items-center gap-1.5">
                 <User size={14} className="text-on-surface-variant shrink-0" />
-                <span className="font-body text-[0.875rem] text-on-surface-variant">
+                <span className="font-body text-sm text-on-surface-variant">
                   Por {evaluation.coach.fullName}
                 </span>
               </div>
@@ -111,7 +111,7 @@ export default function EvaluationDetailPage() {
                     size={14}
                     className="text-on-surface-variant shrink-0"
                   />
-                  <span className="font-body text-[0.875rem] text-on-surface-variant">
+                  <span className="font-body text-sm text-on-surface-variant">
                     {teamName}
                   </span>
                 </div>
@@ -133,7 +133,7 @@ export default function EvaluationDetailPage() {
                 size={14}
                 className="text-on-surface-variant shrink-0 mt-0.5"
               />
-              <p className="font-body text-[0.875rem] text-on-surface-variant italic">
+              <p className="font-body text-sm text-on-surface-variant italic">
                 {evaluation.coachNotes}
               </p>
             </div>
@@ -153,7 +153,7 @@ export default function EvaluationDetailPage() {
             {evaluation.scores.map((score) => (
               <div key={score.id} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-body text-[0.875rem] text-on-surface flex-1">
+                  <span className="font-body text-sm text-on-surface flex-1">
                     {score.metricName}
                   </span>
                   <span className="font-display text-[1.75rem] font-bold text-primary leading-none w-12 text-right">
@@ -186,7 +186,7 @@ export default function EvaluationDetailPage() {
       {/* ── View player profile ── */}
       <button
         onClick={() => navigate(`/players/${evaluation.playerId}`)}
-        className="self-start flex items-center gap-2 h-11 px-5 rounded-xl font-body font-medium text-[0.875rem] bg-surface-highest text-primary hover:opacity-80 transition-opacity cursor-pointer"
+        className="self-start flex items-center gap-2 h-11 px-5 rounded-xl font-body font-medium text-sm bg-surface-highest text-primary hover:opacity-80 transition-opacity cursor-pointer"
       >
         Ver perfil del jugador
       </button>

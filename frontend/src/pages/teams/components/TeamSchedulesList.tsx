@@ -47,7 +47,7 @@ export default function TeamSchedulesList({
       <div className="flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="font-display text-[1.125rem] font-semibold text-on-surface">
+          <h3 className="font-display text-lg font-semibold text-on-surface">
             Horarios
           </h3>
           {isDirector && (
@@ -77,11 +77,11 @@ export default function TeamSchedulesList({
 
                 {/* Time */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-body text-[0.875rem] text-on-surface">
+                  <p className="font-body text-sm text-on-surface">
                     {s.startTime} – {s.endTime}
                   </p>
                   {s.field?.name && (
-                    <p className="font-body text-[0.75rem] text-on-surface-variant truncate">
+                    <p className="font-body text-xs text-on-surface-variant truncate">
                       {s.field.name}
                     </p>
                   )}

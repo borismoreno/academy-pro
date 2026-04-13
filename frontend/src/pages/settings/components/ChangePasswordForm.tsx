@@ -22,7 +22,7 @@ function PasswordInput({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-body text-[0.875rem] text-on-surface-variant">{label}</label>
+      <label className="font-body text-sm text-on-surface-variant">{label}</label>
       <div className="relative">
         <input
           type={show ? 'text' : 'password'}
@@ -30,7 +30,7 @@ function PasswordInput({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
-          className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 pr-12 font-body text-[0.875rem] text-on-surface border border-outline-variant/15 placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+          className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 pr-12 font-body text-sm text-on-surface border border-outline-variant/15 placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
         />
         <button
           type="button"
@@ -41,7 +41,7 @@ function PasswordInput({
           {show ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
       </div>
-      {error && <p className="font-body text-[0.75rem] text-error-container">{error}</p>}
+      {error && <p className="font-body text-xs text-error-container">{error}</p>}
     </div>
   );
 }
@@ -115,7 +115,7 @@ export default function ChangePasswordForm() {
         <button
           type="submit"
           disabled={isPending || !currentPassword || !newPassword || !confirmPassword}
-          className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-[0.875rem] bg-surface-highest text-primary transition-opacity hover:opacity-80 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          className="flex items-center gap-2 h-11 px-6 rounded-xl font-body font-semibold text-sm bg-surface-highest text-primary transition-opacity hover:opacity-80 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
           {isPending && <LoadingSpinner size="sm" />}
           Cambiar contraseña

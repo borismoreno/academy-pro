@@ -80,7 +80,7 @@ function FormBody({ team, onOpenChange }: FormBodyProps) {
   return (
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Nombre del equipo
         </label>
         <Input
@@ -93,14 +93,14 @@ function FormBody({ team, onOpenChange }: FormBodyProps) {
           disabled={isPending}
         />
         {nameError && (
-          <p className="font-body text-[0.75rem] text-error-container">
+          <p className="font-body text-xs text-error-container">
             {nameError}
           </p>
         )}
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-[0.875rem] text-on-surface-variant">
+        <label className="font-body text-sm text-on-surface-variant">
           Categoría
         </label>
         <Input
@@ -175,7 +175,7 @@ export default function TeamFormSheet({
         <DialogContent className="bg-surface-high border-0 rounded-3xl max-w-120 p-0 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] overflow-hidden">
           <TopGlow />
           <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+            <DialogTitle className="font-display text-xl font-semibold text-on-surface">
               {title}
             </DialogTitle>
           </DialogHeader>
@@ -190,7 +190,7 @@ export default function TeamFormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <SheetHeader className="px-6 pt-6 pb-0">
-          <SheetTitle className="font-display text-[1.25rem] font-semibold text-on-surface">
+          <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
           </SheetTitle>
         </SheetHeader>

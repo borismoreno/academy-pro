@@ -75,7 +75,7 @@ export default function LogoUploader({ currentLogoUrl, onUploadComplete }: Props
         type="button"
         onClick={handleButtonClick}
         disabled={uploadState === 'uploading'}
-        className="font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors min-h-[44px] px-3 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+        className="font-body text-sm text-on-surface-variant hover:text-primary transition-colors min-h-11 px-3 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
       >
         {previewUrl ? 'Cambiar logo' : 'Subir logo'}
       </button>

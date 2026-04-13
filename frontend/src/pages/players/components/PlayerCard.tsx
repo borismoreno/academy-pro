@@ -100,7 +100,7 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
               />
             ) : (
               <div className="shrink-0 w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center">
-                <span className="font-display text-[0.875rem] font-semibold text-primary">
+                <span className="font-display text-sm font-semibold text-primary">
                   {getInitials(player.fullName)}
                 </span>
               </div>
@@ -108,7 +108,7 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
 
             {/* Name + position chip */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-display text-[1.125rem] font-semibold text-on-surface leading-tight truncate">
+              <h3 className="font-display text-lg font-semibold text-on-surface leading-tight truncate">
                 {player.fullName}
               </h3>
               {player.position && (
@@ -150,14 +150,14 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
 
           {/* Team */}
           {player.team && (
-            <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+            <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
               <Users size={14} />
               <span>{player.team.name}</span>
             </div>
           )}
 
           {/* Age */}
-          <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+          <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
             <Calendar size={14} />
             <span>{age} años</span>
           </div>

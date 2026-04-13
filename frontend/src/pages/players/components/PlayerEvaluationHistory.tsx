@@ -50,7 +50,7 @@ export default function PlayerEvaluationHistory({
               {latestEvaluation.scores.map((score) => (
                 <div key={score.id} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-body text-[0.875rem] text-on-surface-variant">
+                    <span className="font-body text-sm text-on-surface-variant">
                       {score.metricName}
                     </span>
                     <span className="font-display text-[1.75rem] font-semibold text-primary leading-none">
@@ -69,7 +69,7 @@ export default function PlayerEvaluationHistory({
 
             <button
               onClick={() => navigate(`/evaluations?playerId=${playerId}`)}
-              className="self-start font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors min-h-11 flex items-center"
+              className="self-start font-body text-sm text-on-surface-variant hover:text-primary transition-colors min-h-11 flex items-center"
             >
               Ver historial completo →
             </button>

@@ -30,7 +30,7 @@ export default function MetricScoreInput({
     <div className="bg-surface-highest rounded-xl p-4 flex flex-col gap-3">
       {/* Top row: metric name + selected score */}
       <div className="flex items-center justify-between">
-        <span className="font-body text-[0.875rem] font-medium text-on-surface">
+        <span className="font-body text-sm font-medium text-on-surface">
           {metricName}
         </span>
         <span
@@ -52,7 +52,7 @@ export default function MetricScoreInput({
               type="button"
               onClick={() => onChange(s)}
               className={[
-                "min-w-[2.5rem] h-10 rounded-lg font-body text-[0.875rem] transition-all active:scale-95 cursor-pointer flex-1",
+                "min-w-10 h-10 rounded-lg font-body text-sm transition-all active:scale-95 cursor-pointer flex-1",
                 isSelected
                   ? "bg-linear-to-br from-primary to-secondary text-on-primary font-bold scale-110 shadow-[0px_4px_12px_rgba(188,245,33,0.3)]"
                   : `bg-surface-low border border-outline-variant/15 hover:bg-surface-high hover:text-on-surface ${getButtonNumberColor(s, false)}`,

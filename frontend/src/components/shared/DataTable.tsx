@@ -83,7 +83,7 @@ export default function DataTable<T extends Record<string, unknown>>({
               {columns.map((col) => (
                 <div
                   key={col.key}
-                  className="font-body text-[0.875rem] text-on-surface flex items-center"
+                  className="font-body text-sm text-on-surface flex items-center"
                 >
                   {col.render ? col.render(row) : String(row[col.key] ?? "—")}
                 </div>

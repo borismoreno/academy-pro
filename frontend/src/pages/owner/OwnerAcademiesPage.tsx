@@ -136,7 +136,7 @@ export default function OwnerAcademiesPage() {
         action={
           <Button
             variant="primary"
-            className="gap-2 min-h-[44px]"
+            className="gap-2 min-h-11"
             onClick={() => setDialogOpen(true)}
           >
             <Plus size={16} />

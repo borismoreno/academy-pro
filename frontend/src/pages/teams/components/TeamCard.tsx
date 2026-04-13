@@ -65,7 +65,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
         <div className="p-5 lg:p-6 flex flex-col gap-3">
           {/* Top row: name + dropdown */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-display text-[1.125rem] font-semibold text-on-surface leading-tight">
+            <h3 className="font-display text-lg font-semibold text-on-surface leading-tight">
               {team.name}
             </h3>
 
@@ -102,7 +102,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
           )}
 
           {/* Player count */}
-          <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+          <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
             <User size={14} />
             <span>
               {team.coaches.length}{" "}
@@ -112,7 +112,7 @@ export default function TeamCard({ team, role }: TeamCardProps) {
 
           {/* Head coach */}
           {headCoach && (
-            <div className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+            <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
               <User size={14} />
               <span>{headCoach.user.fullName}</span>
             </div>

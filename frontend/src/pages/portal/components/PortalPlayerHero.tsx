@@ -208,13 +208,13 @@ export default function PortalPlayerHero({ player, isLoading, selectedPlayerId }
 
             <div className="flex flex-wrap gap-4 mt-1">
               {player.team && (
-                <span className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+                <span className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                   <Users size={14} className="flex-shrink-0" />
                   {player.team.name}
                 </span>
               )}
 
-              <span className="flex items-center gap-1.5 font-body text-[0.875rem] text-on-surface-variant">
+              <span className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                 <Calendar size={14} className="flex-shrink-0" />
                 {age} años
               </span>

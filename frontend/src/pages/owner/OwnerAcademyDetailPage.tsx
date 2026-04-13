@@ -72,7 +72,7 @@ export default function OwnerAcademyDetailPage() {
       {/* Back button */}
       <button
         onClick={() => navigate("/owner/academies")}
-        className="flex items-center gap-2 font-body text-[0.875rem] text-on-surface-variant hover:text-primary transition-colors min-h-[44px]"
+        className="flex items-center gap-2 font-body text-sm text-on-surface-variant hover:text-primary transition-colors min-h-11"
       >
         <ArrowLeft size={16} />
         Academias
@@ -91,7 +91,7 @@ export default function OwnerAcademyDetailPage() {
                 {academy.name}
               </h1>
               {academy.city && (
-                <p className="font-body text-[0.875rem] text-on-surface-variant mt-2">
+                <p className="font-body text-sm text-on-surface-variant mt-2">
                   {academy.city}
                 </p>
               )}
@@ -112,7 +112,7 @@ export default function OwnerAcademyDetailPage() {
                 )}
               </div>
             </div>
-            <p className="font-body text-[0.875rem] text-on-surface-variant">
+            <p className="font-body text-sm text-on-surface-variant">
               Registrada el{" "}
               {new Date(academy.createdAt).toLocaleDateString("es-EC")}
             </p>
@@ -158,13 +158,13 @@ export default function OwnerAcademyDetailPage() {
                 )}
               </div>
             ) : (
-              <p className="font-body text-[0.875rem] text-on-surface-variant">
+              <p className="font-body text-sm text-on-surface-variant">
                 Sin suscripción activa.
               </p>
             )}
             <Button
               variant="secondary"
-              className="mt-6 min-h-[44px]"
+              className="mt-6 min-h-11"
               onClick={() => setSubscriptionDialogOpen(true)}
             >
               Editar suscripción
@@ -227,10 +227,10 @@ export default function OwnerAcademyDetailPage() {
                 key={member.userId}
                 className={`grid grid-cols-3 px-4 py-4 ${i % 2 === 0 ? "bg-surface-high" : "bg-surface-highest"}`}
               >
-                <span className="font-body text-[0.875rem] text-on-surface">
+                <span className="font-body text-sm text-on-surface">
                   {member.fullName}
                 </span>
-                <span className="font-body text-[0.875rem] text-on-surface-variant">
+                <span className="font-body text-sm text-on-surface-variant">
                   {member.email}
                 </span>
                 <span>
@@ -268,9 +268,9 @@ function StatRow({
     <div className="flex items-center justify-between gap-4 py-2">
       <div className="flex items-center gap-2 text-on-surface-variant">
         {icon}
-        <span className="font-body text-[0.875rem]">{label}</span>
+        <span className="font-body text-sm">{label}</span>
       </div>
-      <span className="font-body text-[0.875rem] font-medium text-on-surface">
+      <span className="font-body text-sm font-medium text-on-surface">
         {value}
       </span>
     </div>

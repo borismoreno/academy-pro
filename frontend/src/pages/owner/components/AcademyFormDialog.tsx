@@ -68,7 +68,7 @@ export default function AcademyFormDialog({ open, onClose }: AcademyFormDialogPr
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-[520px] bg-surface-high border-outline-variant/15 rounded-3xl p-0 overflow-hidden shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
+      <DialogContent className="max-w-130 bg-surface-high border-outline-variant/15 rounded-3xl p-0 overflow-hidden shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
         {/* Top glow */}
         <div
           className="h-0.5 w-full"
