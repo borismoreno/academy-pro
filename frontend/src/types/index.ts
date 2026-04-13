@@ -21,11 +21,19 @@ export interface User {
 export interface Academy {
   id: string;
   name: string;
-  city: string;
-  address: string;
-  phone: string;
+  city: string | null;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  logoUrl: string | null;
+}
+
+export interface Member {
+  userId: string;
+  fullName: string;
   email: string;
-  logoUrl: string;
+  isActive: boolean;
+  role: UserRole;
 }
 
 export interface Team {

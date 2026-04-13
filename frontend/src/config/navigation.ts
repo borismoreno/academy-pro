@@ -34,7 +34,7 @@ export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
   '/attendance':   ['academy_director', 'coach'],
   '/evaluations':  ['academy_director', 'coach'],
   '/notifications':['academy_director', 'coach', 'parent'],
-  '/settings':     ['academy_director'],
+  '/settings':     ['academy_director', 'coach', 'parent'],
   '/portal':       ['parent'],
 };
 
@@ -97,10 +97,12 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
     { label: 'Asistencia',     path: '/attendance',   Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
     { label: 'Evaluaciones',   path: '/evaluations',  Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
     { label: 'Notificaciones', path: '/notifications',Icon: Bell,            allowedRoles: ROUTE_PERMISSIONS['/notifications'] },
+    { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   parent: [
     { label: 'Mi hijo',        path: '/portal',       Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/portal'] },
     { label: 'Notificaciones', path: '/notifications',Icon: Bell,            allowedRoles: ROUTE_PERMISSIONS['/notifications'] },
+    { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   saas_owner: [
     { label: 'Dashboard',      path: '/dashboard',    Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
@@ -138,10 +140,11 @@ export function getBottomNavItems(role: UserRole): {
   }
 
   if (role === 'coach') {
-    // Primary: Dashboard, Jugadores, Asistencia, Evaluaciones, Notificaciones (5 tabs)
+    // Primary: Dashboard, Jugadores, Asistencia, Evaluaciones, Notificaciones (5 tabs) + overflow
     const primaryPaths = ['/dashboard', '/players', '/attendance', '/evaluations', '/notifications'];
     const primary = all.filter((item) => primaryPaths.includes(item.path));
-    return { primary, overflow: [] };
+    const overflow = all.filter((item) => !primaryPaths.includes(item.path));
+    return { primary, overflow };
   }
 
   // parent, saas_owner — show everything (≤ 5 items)

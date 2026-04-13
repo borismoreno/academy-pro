@@ -14,6 +14,8 @@ import { EmailService } from '../common/email/email.service.js';
 import { EvaluationsService } from '../modules/evaluations/evaluations.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { SelectAcademyDto } from './dto/select-academy.dto.js';
+import { UpdateProfileDto } from './dto/update-profile.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 import {
   AcademyInfo,
   AcademySelectionResponse,
@@ -226,6 +228,32 @@ export class AuthService {
       id: academyRole.academy.id,
       name: academyRole.academy.name,
       role: academyRole.role,
+    });
+  }
+
+  async updateProfile(
+    userId: string,
+    dto: UpdateProfileDto,
+  ): Promise<{ fullName: string; email: string }> {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { fullName: dto.fullName },
+    });
+    return { fullName: user.fullName, email: user.email };
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+    });
+    const isMatch = await bcrypt.compare(dto.currentPassword, user.passwordHash);
+    if (!isMatch) {
+      throw new BadRequestException('La contraseña actual es incorrecta');
+    }
+    const passwordHash = await bcrypt.hash(dto.newPassword, BCRYPT_ROUNDS);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
     });
   }
 

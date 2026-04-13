@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -12,6 +13,8 @@ import type { User } from '@prisma/client';
 import { AuthService } from './auth.service.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { SelectAcademyDto } from './dto/select-academy.dto.js';
+import { UpdateProfileDto } from './dto/update-profile.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ResendVerificationDto } from './dto/resend-verification.dto.js';
 import { Public } from './decorators/public.decorator.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
@@ -76,5 +79,27 @@ export class AuthController {
   ) {
     const data = await this.authService.selectAcademy(user, dto);
     return { data, message: 'Academia cambiada exitosamente' };
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('me')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @CurrentUser() user: JwtPayload,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    const data = await this.authService.updateProfile(user.sub, dto);
+    return { data, message: 'Perfil actualizado exitosamente' };
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('me/password')
+  @HttpCode(HttpStatus.OK)
+  async changePassword(
+    @CurrentUser() user: JwtPayload,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    await this.authService.changePassword(user.sub, dto);
+    return { data: null, message: 'Contraseña actualizada exitosamente' };
   }
 }
