@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { AddParentDto } from './dto/add-parent.dto.js';
 import { CreatePlayerDto } from './dto/create-player.dto.js';
 import { PlayerParentResponseDto, PlayerResponseDto } from './dto/player-response.dto.js';
@@ -70,7 +71,10 @@ function mapPlayerWithParents(player: PlayerWithTeamAndParents): PlayerResponseD
 
 @Injectable()
 export class PlayersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
+  ) {}
 
   async create(
     academyId: string,
@@ -78,6 +82,8 @@ export class PlayersService {
     role: Role,
     dto: CreatePlayerDto,
   ): Promise<PlayerResponseDto> {
+    await this.planGuard.validateLimit(academyId, 'players');
+
     const team = await this.prisma.team.findFirst({
       where: { id: dto.teamId, academyId, isActive: true },
     });

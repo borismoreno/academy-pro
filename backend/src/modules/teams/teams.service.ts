@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { AddCoachDto } from './dto/add-coach.dto.js';
 import { AddScheduleDto } from './dto/add-schedule.dto.js';
 import { CreateTeamDto } from './dto/create-team.dto.js';
@@ -42,7 +43,10 @@ function timeToMinutes(time: string): number {
 
 @Injectable()
 export class TeamsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
+  ) {}
 
   private mapTeam(team: TeamWithRelations): TeamResponseDto {
     return {
@@ -58,6 +62,8 @@ export class TeamsService {
   }
 
   async create(academyId: string, dto: CreateTeamDto): Promise<TeamResponseDto> {
+    await this.planGuard.validateLimit(academyId, 'teams');
+
     const duplicate = await this.prisma.team.findFirst({
       where: { academyId, name: dto.name, isActive: true },
     });

@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { InvitationStatus, Role } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { EmailService } from '../../common/email/email.service.js';
 import { CreateInvitationDto } from './dto/create-invitation.dto.js';
 import { AcceptInvitationDto } from './dto/accept-invitation.dto.js';
@@ -21,6 +22,7 @@ const INVITATION_TTL_HOURS = 48;
 export class InvitationsService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
     private readonly emailService: EmailService,
     private readonly config: ConfigService,
   ) {}
@@ -29,6 +31,10 @@ export class InvitationsService {
     dto.validate();
 
     const role = dto.role as unknown as Role;
+
+    if (dto.role === 'coach') {
+      await this.planGuard.validateLimit(academyId, 'coaches');
+    }
 
     if (dto.playerId) {
       const player = await this.prisma.player.findFirst({

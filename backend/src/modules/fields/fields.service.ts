@@ -1,14 +1,20 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { CreateFieldDto } from './dto/create-field.dto.js';
 import { FieldResponseDto } from './dto/field-response.dto.js';
 import { UpdateFieldDto } from './dto/update-field.dto.js';
 
 @Injectable()
 export class FieldsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
+  ) {}
 
   async create(academyId: string, dto: CreateFieldDto): Promise<FieldResponseDto> {
+    await this.planGuard.validateLimit(academyId, 'fields');
+
     const duplicate = await this.prisma.field.findFirst({
       where: { academyId, name: dto.name, isActive: true },
     });

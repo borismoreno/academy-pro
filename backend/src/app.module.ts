@@ -19,6 +19,7 @@ import { FieldsModule } from './modules/fields/fields.module.js';
 import { EmailModule } from './common/email/email.module.js';
 import { StorageModule } from './modules/storage/storage.module.js';
 import { OwnerModule } from './modules/owner/owner.module.js';
+import { PlanGuardModule } from './modules/plan-guard/plan-guard.module.js';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { OwnerModule } from './modules/owner/owner.module.js';
     FieldsModule,
     StorageModule,
     OwnerModule,
+    PlanGuardModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

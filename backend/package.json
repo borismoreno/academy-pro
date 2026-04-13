@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed:metrics": "ts-node --esm prisma/seeders/default-metrics.seeder.ts",
-    "seed:owner": "ts-node --esm prisma/seeders/owner.seeder.ts"
+    "seed:owner": "ts-node --esm prisma/seeders/owner.seeder.ts",
+    "seed:plan-limits": "ts-node --esm prisma/seeders/plan-limits.seeder.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1029.0",
