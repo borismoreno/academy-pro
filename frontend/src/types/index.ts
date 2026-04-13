@@ -203,3 +203,97 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
 }
+
+// ─── Owner (saas_owner) ───────────────────────────────────────────────────────
+
+export interface AcademiesByPlan {
+  free: number;
+  pro: number;
+  enterprise: number;
+}
+
+export interface OwnerStats {
+  totalAcademies: number;
+  activeAcademies: number;
+  totalPlayers: number;
+  totalUsers: number;
+  academiesByPlan: AcademiesByPlan;
+  newAcademiesThisMonth: number;
+  estimatedMRR: number;
+}
+
+export type SubscriptionPlan = 'free' | 'pro' | 'enterprise';
+export type SubscriptionStatus = 'active' | 'suspended' | 'cancelled';
+
+export interface AcademySubscription {
+  id: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  startsAt: string;
+  endsAt: string | null;
+  createdAt: string;
+}
+
+export interface AcademyDirectorInfo {
+  fullName: string;
+  email: string;
+}
+
+export interface AcademyWithSubscription {
+  id: string;
+  name: string;
+  city: string | null;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  logoUrl: string | null;
+  createdAt: string;
+  subscription: AcademySubscription | null;
+  director: AcademyDirectorInfo | null;
+  totalPlayers: number;
+  totalTeams: number;
+}
+
+export interface AcademyMemberDetail {
+  userId: string;
+  fullName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+export interface AcademyDetail extends AcademyWithSubscription {
+  members: AcademyMemberDetail[];
+  totalMembers: number;
+}
+
+export interface PlanLimit {
+  id: string;
+  plan: SubscriptionPlan;
+  resource: string;
+  maxCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PlanLimitsGrouped {
+  free: PlanLimit[];
+  pro: PlanLimit[];
+  enterprise: PlanLimit[];
+}
+
+export interface OwnerUserAcademyRole {
+  academyId: string;
+  academyName: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+export interface OwnerUser {
+  id: string;
+  fullName: string;
+  email: string;
+  isActive: boolean;
+  createdAt: string;
+  academyRoles: OwnerUserAcademyRole[];
+}

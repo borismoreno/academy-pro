@@ -18,6 +18,7 @@ import { InvitationsModule } from './modules/invitations/invitations.module.js';
 import { FieldsModule } from './modules/fields/fields.module.js';
 import { EmailModule } from './common/email/email.module.js';
 import { StorageModule } from './modules/storage/storage.module.js';
+import { OwnerModule } from './modules/owner/owner.module.js';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { StorageModule } from './modules/storage/storage.module.js';
     InvitationsModule,
     FieldsModule,
     StorageModule,
+    OwnerModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

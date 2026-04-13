@@ -228,14 +228,14 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {/* Link to register */}
+            {/* Link to contact */}
             <p className="font-body text-[0.875rem] text-on-surface-variant text-center mt-6">
               ¿No tienes una cuenta?{" "}
               <Link
                 to="/register"
                 className="text-primary hover:underline transition-colors"
               >
-                Crear cuenta
+                Solicitar acceso
               </Link>
             </p>
           </div>

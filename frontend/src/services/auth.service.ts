@@ -41,15 +41,15 @@ interface LoginData {
     email: string;
   };
   academy: {
-    id: string;
-    name: string;
+    id: string | null;   // null for saas_owner
+    name: string | null; // null for saas_owner
     role: UserRole;
   };
 }
 
 export interface AcademyInfo {
-  id: string;
-  name: string;
+  id: string | null;
+  name: string | null;
   role: UserRole;
 }
 

@@ -101,13 +101,13 @@ model Academy {
 model UserAcademyRole {
   id        String   @id @default(uuid())
   userId    String   @map("user_id")
-  academyId String   @map("academy_id")
+  academyId String?  @map("academy_id") // nullable — saas_owner has no academy context
   role      Role
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user    User    @relation(fields: [userId], references: [id])
-  academy Academy @relation(fields: [academyId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+  academy Academy? @relation(fields: [academyId], references: [id])
 
   @@unique([userId, academyId])
   @@map("user_academy_roles")
@@ -324,4 +324,16 @@ model Notification {
   academy Academy @relation(fields: [academyId], references: [id])
 
   @@map("notifications")
+}
+
+model PlanLimit {
+  id        String           @id @default(uuid())
+  plan      SubscriptionPlan
+  resource  String           // 'teams', 'players', 'coaches', 'fields'
+  maxCount  Int              @default(-1) @map("max_count") // -1 = unlimited
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  @@unique([plan, resource])
+  @@map("plan_limits")
 }

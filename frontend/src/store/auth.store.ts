@@ -15,7 +15,7 @@ interface AuthState {
   currentAcademyId: string | null;
   academyName: string | null;
   setAuth: (token: string, user: AuthUser, role: UserRole) => void;
-  setCurrentAcademy: (academyId: string, academyName?: string) => void;
+  setCurrentAcademy: (academyId: string | null, academyName?: string | null) => void;
   clearAuth: () => void;
 }
 
@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>()(
       academyName: null,
       setAuth: (token, user, role) => set({ token, user, role }),
       setCurrentAcademy: (academyId, academyName) =>
-        set({ currentAcademyId: academyId, ...(academyName !== undefined && { academyName }) }),
+        set({ currentAcademyId: academyId ?? null, ...(academyName !== undefined && { academyName: academyName ?? null }) }),
       clearAuth: () =>
         set({ token: null, user: null, role: null, currentAcademyId: null, academyName: null }),
     }),

@@ -1,8 +1,8 @@
 import { Role } from '@prisma/client';
 
 export interface AcademyInfo {
-  id: string;
-  name: string;
+  id: string | null;   // null for saas_owner (no academy context)
+  name: string | null; // null for saas_owner
   role: Role;
 }
 

@@ -25,6 +25,14 @@ import NotificationsPage from '@/pages/NotificationsPage';
 import SettingsPage from '@/pages/SettingsPage';
 import PortalPage from '@/pages/PortalPage';
 
+// Owner pages
+import OwnerDashboardPage from '@/pages/owner/OwnerDashboardPage';
+import OwnerAcademiesPage from '@/pages/owner/OwnerAcademiesPage';
+import OwnerAcademyDetailPage from '@/pages/owner/OwnerAcademyDetailPage';
+import OwnerSubscriptionsPage from '@/pages/owner/OwnerSubscriptionsPage';
+import OwnerPlanLimitsPage from '@/pages/owner/OwnerPlanLimitsPage';
+import OwnerUsersPage from '@/pages/owner/OwnerUsersPage';
+
 // Error pages
 import UnauthorizedPage from '@/pages/errors/UnauthorizedPage';
 
@@ -34,7 +42,7 @@ import PublicOnlyRoute from '@/components/shared/PublicOnlyRoute';
 
 /**
  * Root redirect:
- * - Authenticated → role-based default route (/dashboard or /portal)
+ * - Authenticated → role-based default route (/owner/dashboard, /dashboard, or /portal)
  * - Unauthenticated → /login
  */
 function RootRedirect() {
@@ -70,18 +78,26 @@ export default function App() {
          */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/dashboard"    element={<DashboardPage />} />
-            <Route path="/teams"        element={<TeamsPage />} />
-            <Route path="/teams/:id"    element={<TeamDetailPage />} />
-            <Route path="/players"      element={<PlayersPage />} />
-            <Route path="/players/:id" element={<PlayerDetailPage />} />
+            <Route path="/dashboard"       element={<DashboardPage />} />
+            <Route path="/teams"           element={<TeamsPage />} />
+            <Route path="/teams/:id"       element={<TeamDetailPage />} />
+            <Route path="/players"         element={<PlayersPage />} />
+            <Route path="/players/:id"     element={<PlayerDetailPage />} />
             <Route path="/attendance"      element={<AttendancePage />} />
             <Route path="/attendance/:id"  element={<SessionDetailPage />} />
             <Route path="/evaluations"     element={<EvaluationsPage />} />
             <Route path="/evaluations/:id" element={<EvaluationDetailPage />} />
-            <Route path="/notifications"element={<NotificationsPage />} />
-            <Route path="/settings"     element={<SettingsPage />} />
-            <Route path="/portal"       element={<PortalPage />} />
+            <Route path="/notifications"   element={<NotificationsPage />} />
+            <Route path="/settings"        element={<SettingsPage />} />
+            <Route path="/portal"          element={<PortalPage />} />
+
+            {/* Owner routes */}
+            <Route path="/owner/dashboard"     element={<OwnerDashboardPage />} />
+            <Route path="/owner/academies"     element={<OwnerAcademiesPage />} />
+            <Route path="/owner/academies/:id" element={<OwnerAcademyDetailPage />} />
+            <Route path="/owner/subscriptions" element={<OwnerSubscriptionsPage />} />
+            <Route path="/owner/plan-limits"   element={<OwnerPlanLimitsPage />} />
+            <Route path="/owner/users"         element={<OwnerUsersPage />} />
           </Route>
         </Route>
 

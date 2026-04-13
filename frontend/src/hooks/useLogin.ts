@@ -35,10 +35,10 @@ export function useLogin(options: UseLoginOptions = {}) {
       }
 
       const { accessToken, user, academy } = data;
-      const role: UserRole = academy.role;
+      const role: UserRole = academy.role as UserRole;
 
       setAuth(accessToken, user, role);
-      // Persist academy id and name so the Sidebar can display it
+      // Persist academy context — saas_owner has no academy (both null)
       setCurrentAcademy(academy.id, academy.name);
 
       // Determine where to send the user:

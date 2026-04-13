@@ -12,6 +12,7 @@ interface DataTableProps<T extends Record<string, unknown>> {
   data: T[];
   isLoading: boolean;
   emptyMessage?: string;
+  onRowClick?: (row: T) => void;
 }
 
 export default function DataTable<T extends Record<string, unknown>>({
@@ -19,6 +20,7 @@ export default function DataTable<T extends Record<string, unknown>>({
   data,
   isLoading,
   emptyMessage = "No hay datos disponibles.",
+  onRowClick,
 }: DataTableProps<T>) {
   return (
     <div className="w-full rounded-3xl overflow-hidden">
@@ -68,9 +70,11 @@ export default function DataTable<T extends Record<string, unknown>>({
           return (
             <div
               key={rowIndex}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
               className={[
                 "grid px-4 py-4 transition-colors hover:bg-surface-highest",
                 isEven ? "bg-surface-high" : "bg-surface-highest",
+                onRowClick ? "cursor-pointer" : "",
               ].join(" ")}
               style={{
                 gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`,

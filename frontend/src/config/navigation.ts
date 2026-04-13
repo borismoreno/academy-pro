@@ -6,6 +6,9 @@ import {
   BarChart2,
   Bell,
   Settings,
+  Building2,
+  CreditCard,
+  Sliders,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import type { UserRole } from '@/types';
@@ -28,14 +31,19 @@ export interface NavItemConfig {
  * ProtectedRoute reads this — never define permissions anywhere else.
  */
 export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
-  '/dashboard':    ['academy_director', 'coach'],
-  '/teams':        ['academy_director', 'coach'],
-  '/players':      ['academy_director', 'coach'],
-  '/attendance':   ['academy_director', 'coach'],
-  '/evaluations':  ['academy_director', 'coach'],
-  '/notifications':['academy_director', 'coach', 'parent'],
-  '/settings':     ['academy_director', 'coach', 'parent'],
-  '/portal':       ['parent'],
+  '/dashboard':         ['academy_director', 'coach'],
+  '/teams':             ['academy_director', 'coach'],
+  '/players':           ['academy_director', 'coach'],
+  '/attendance':        ['academy_director', 'coach'],
+  '/evaluations':       ['academy_director', 'coach'],
+  '/notifications':     ['academy_director', 'coach', 'parent'],
+  '/settings':          ['academy_director', 'coach', 'parent'],
+  '/portal':            ['parent'],
+  '/owner/dashboard':   ['saas_owner'],
+  '/owner/academies':   ['saas_owner'],
+  '/owner/subscriptions': ['saas_owner'],
+  '/owner/plan-limits': ['saas_owner'],
+  '/owner/users':       ['saas_owner'],
 };
 
 /**
@@ -69,7 +77,9 @@ export function isRouteAllowed(path: string, role: UserRole): boolean {
  * Returns the default landing path for a given role after login.
  */
 export function getDefaultRoute(role: UserRole): string {
-  return role === 'parent' ? '/portal' : '/dashboard';
+  if (role === 'parent') return '/portal';
+  if (role === 'saas_owner') return '/owner/dashboard';
+  return '/dashboard';
 }
 
 // ---------------------------------------------------------------------------
@@ -105,7 +115,11 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
     { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   saas_owner: [
-    { label: 'Dashboard',      path: '/dashboard',    Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
+    { label: 'Dashboard',       path: '/owner/dashboard',     Icon: LayoutDashboard, allowedRoles: ['saas_owner'] },
+    { label: 'Academias',       path: '/owner/academies',     Icon: Building2,       allowedRoles: ['saas_owner'] },
+    { label: 'Suscripciones',   path: '/owner/subscriptions', Icon: CreditCard,      allowedRoles: ['saas_owner'] },
+    { label: 'Límites de planes', path: '/owner/plan-limits', Icon: Sliders,         allowedRoles: ['saas_owner'] },
+    { label: 'Usuarios',        path: '/owner/users',         Icon: Users,           allowedRoles: ['saas_owner'] },
   ],
 };
 
@@ -123,7 +137,7 @@ export function getNavigationItems(role: UserRole): NavItemConfig[] {
  * academy_director (7 items) → 4 primary + overflow sheet
  * coach            (6 items) → 5 primary, no overflow
  * parent           (2 items) → 2 primary, no overflow
- * saas_owner       (1 item)  → 1 primary, no overflow
+ * saas_owner       (5 items) → 5 primary, no overflow
  */
 export function getBottomNavItems(role: UserRole): {
   primary: NavItemConfig[];

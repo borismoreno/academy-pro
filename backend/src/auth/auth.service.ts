@@ -117,11 +117,34 @@ export class AuthService {
       include: { academy: true },
     });
 
-    const academies: AcademyInfo[] = academyRoles.map((ar) => ({
-      id: ar.academy.id,
-      name: ar.academy.name,
-      role: ar.role,
-    }));
+    // saas_owner has no academy context — issue a global token immediately
+    const ownerRole = academyRoles.find((ar) => ar.role === Role.saas_owner);
+    if (ownerRole) {
+      const payload: JwtPayload = {
+        sub: user.id,
+        email: user.email,
+        academyId: null,
+        role: Role.saas_owner,
+      };
+      return {
+        accessToken: this.jwtService.sign(payload),
+        user: { id: user.id, fullName: user.fullName, email: user.email },
+        academy: { id: null, name: null, role: Role.saas_owner },
+      };
+    }
+
+    // Normal roles — must be tied to an academy
+    const academies: AcademyInfo[] = academyRoles
+      .filter((ar) => ar.academy !== null)
+      .map((ar) => ({
+        id: ar.academy!.id,
+        name: ar.academy!.name,
+        role: ar.role,
+      }));
+
+    if (academies.length === 0) {
+      throw new ForbiddenException('No tienes acceso a ninguna academia');
+    }
 
     if (academies.length === 1) {
       return this.buildTokenResponse(user, academies[0]);
@@ -225,8 +248,8 @@ export class AuthService {
     });
 
     return this.buildTokenResponse(user, {
-      id: academyRole.academy.id,
-      name: academyRole.academy.name,
+      id: academyRole.academy?.id ?? null,
+      name: academyRole.academy?.name ?? null,
       role: academyRole.role,
     });
   }
@@ -264,7 +287,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
-      academyId: academy.id,
+      academyId: academy.id ?? null,
       role: academy.role,
     };
 
