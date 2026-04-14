@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { DotProps } from "recharts";
 import {
   ResponsiveContainer,
   LineChart,
@@ -6,6 +7,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  ReferenceLine,
 } from "recharts";
 import { TrendingUp, TrendingDown, X } from "lucide-react";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
@@ -19,11 +21,20 @@ interface PortalProgressChartProps {
   isLoading: boolean;
 }
 
+interface MetricScore {
+  metricId: string;
+  metricName: string;
+  score: number;
+}
+
 interface ChartDataPoint {
   date: string;
   averageScore: number;
-  evaluation: EvaluationProgressItem;
+  metrics: MetricScore[];
+  evaluatedAt: string;
 }
+
+type ActiveDotProps = DotProps & { payload?: ChartDataPoint };
 
 function buildChartData(
   evaluations: EvaluationProgressItem[],
@@ -34,12 +45,14 @@ function buildChartData(
         new Date(a.evaluatedAt).getTime() - new Date(b.evaluatedAt).getTime(),
     )
     .map((ev) => {
-      const scores = ev.scores.map((s) => s.score);
+      const rawScores = ev.scores.map((s) => s.score);
       const avg =
-        scores.length > 0
-          ? Math.round(
-              (scores.reduce((a, b) => a + b, 0) / scores.length) * 10,
-            ) / 10
+        rawScores.length > 0
+          ? parseFloat(
+              (
+                rawScores.reduce((a, b) => a + b, 0) / rawScores.length
+              ).toFixed(1),
+            )
           : 0;
       return {
         date: new Date(ev.evaluatedAt).toLocaleDateString("es-EC", {
@@ -47,17 +60,42 @@ function buildChartData(
           month: "short",
         }),
         averageScore: avg,
-        evaluation: ev,
+        metrics: ev.scores.map((s) => ({
+          metricId: s.metricId,
+          metricName: s.metricName,
+          score: s.score,
+        })),
+        evaluatedAt: ev.evaluatedAt,
       };
     });
 }
 
-function getTrendColor(data: ChartDataPoint[]): string {
-  if (data.length < 2) return "#00f4fe";
-  const first = data[0].averageScore;
-  const last = data[data.length - 1].averageScore;
-  if (last > first) return "#bcf521";
-  if (last < first) return "#b92902";
+function calculateTrend(
+  data: ChartDataPoint[],
+): "positive" | "negative" | "neutral" {
+  if (data.length < 3) return "neutral";
+
+  const midpoint = Math.floor(data.length / 2);
+  const firstHalf = data.slice(0, midpoint);
+  const secondHalf = data.slice(midpoint);
+
+  const avgFirst =
+    firstHalf.reduce((sum, d) => sum + d.averageScore, 0) / firstHalf.length;
+  const avgSecond =
+    secondHalf.reduce((sum, d) => sum + d.averageScore, 0) / secondHalf.length;
+
+  const difference = avgSecond - avgFirst;
+
+  if (difference > 0.3) return "positive";
+  if (difference < -0.5) return "negative";
+  return "neutral";
+}
+
+function getTrendColor(
+  trend: "positive" | "negative" | "neutral",
+): string {
+  if (trend === "positive") return "#bcf521";
+  if (trend === "negative") return "#f97316";
   return "#00f4fe";
 }
 
@@ -65,9 +103,8 @@ export default function PortalProgressChart({
   progress,
   isLoading,
 }: PortalProgressChartProps) {
-  const [selectedPoint, setSelectedPoint] = useState<ChartDataPoint | null>(
-    null,
-  );
+  const [selectedEvaluation, setSelectedEvaluation] =
+    useState<ChartDataPoint | null>(null);
 
   if (isLoading) {
     return (
@@ -82,26 +119,26 @@ export default function PortalProgressChart({
 
   const evaluations = progress?.evaluations ?? [];
   const chartData = buildChartData(evaluations);
-  const trendColor = getTrendColor(chartData);
+  const trend = calculateTrend(chartData);
+  const trendColor = getTrendColor(trend);
 
-  const showTrendIndicator = chartData.length >= 3;
-  const isPositiveTrend =
-    chartData.length >= 2 &&
-    chartData[chartData.length - 1].averageScore > chartData[0].averageScore;
-  const isNegativeTrend =
-    chartData.length >= 2 &&
-    chartData[chartData.length - 1].averageScore < chartData[0].averageScore;
+  // Fix 1 — Dynamic Y axis
+  const scores = chartData.map((d) => d.averageScore);
+  const minScore = scores.length > 0 ? Math.min(...scores) : 0;
+  const maxScore = scores.length > 0 ? Math.max(...scores) : 10;
+  const yMin = Math.max(0, Math.floor(minScore) - 1);
+  const yMax = Math.min(10, Math.ceil(maxScore) + 1);
+  const tickCount = 4;
+  const step = Math.ceil((yMax - yMin) / (tickCount - 1));
+  const ticks = Array.from({ length: tickCount }, (_, i) =>
+    Math.min(yMin + i * step, yMax),
+  );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleChartClick(data: any) {
-    if (!data?.activePayload?.[0]) return;
-    const point = data.activePayload[0].payload as ChartDataPoint;
-    if (selectedPoint?.date === point.date) {
-      setSelectedPoint(null);
-    } else {
-      setSelectedPoint(point);
-    }
-  }
+  // Overall average reference line
+  const overallAverage =
+    scores.length > 0
+      ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+      : "0";
 
   return (
     <div className="bg-surface-high rounded-3xl overflow-hidden">
@@ -109,10 +146,28 @@ export default function PortalProgressChart({
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
       <div className="p-5">
-        {/* Header */}
-        <h3 className="font-display text-[1.75rem] font-semibold text-on-surface mb-4">
-          Evolución del rendimiento
-        </h3>
+        {/* Fix 3 — Header with inline trend indicator */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-[1.75rem] text-on-surface">
+            Evolución del rendimiento
+          </h2>
+          {trend !== "neutral" && chartData.length >= 3 && (
+            <div
+              className={`flex items-center gap-1 ${
+                trend === "positive" ? "text-primary" : "text-[#f97316]"
+              }`}
+            >
+              {trend === "positive" ? (
+                <TrendingUp size={14} />
+              ) : (
+                <TrendingDown size={14} />
+              )}
+              <span className="text-xs font-medium">
+                {trend === "positive" ? "En ascenso" : "Revisar"}
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* 0 evaluations */}
         {evaluations.length === 0 && (
@@ -141,35 +196,9 @@ export default function PortalProgressChart({
         {/* 2+ evaluations */}
         {evaluations.length >= 2 && (
           <>
-            {/* Trend indicator */}
-            {showTrendIndicator && (
-              <div className="flex items-center gap-1.5 mb-3">
-                {isPositiveTrend && (
-                  <>
-                    <TrendingUp size={16} className="text-primary" />
-                    <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-primary">
-                      Tendencia positiva
-                    </span>
-                  </>
-                )}
-                {isNegativeTrend && (
-                  <>
-                    <TrendingDown size={16} className="text-error-container" />
-                    <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-error-container">
-                      Necesita atención
-                    </span>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Chart */}
+            {/* Fix 1 + 4 — Chart with dynamic axis, activeDot click, and reference line */}
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart
-                data={chartData}
-                onClick={handleChartClick}
-                style={{ cursor: "pointer" }}
-              >
+              <LineChart data={chartData}>
                 <XAxis
                   dataKey="date"
                   tick={{ fill: "#adaaaa", fontSize: 11 }}
@@ -177,8 +206,8 @@ export default function PortalProgressChart({
                   tickLine={false}
                 />
                 <YAxis
-                  domain={[0, 10]}
-                  ticks={[0, 5, 10]}
+                  domain={[yMin, yMax]}
+                  ticks={ticks}
                   tick={{ fill: "#adaaaa", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
@@ -195,13 +224,41 @@ export default function PortalProgressChart({
                   itemStyle={{ color: trendColor, fontWeight: 600 }}
                   formatter={(value) => [`${value} / 10`, "Score"]}
                 />
+                <ReferenceLine
+                  y={parseFloat(overallAverage)}
+                  stroke="#adaaaa"
+                  strokeDasharray="4 4"
+                  strokeWidth={1}
+                  label={{
+                    value: `Promedio: ${overallAverage}`,
+                    position: "insideTopRight",
+                    fill: "#adaaaa",
+                    fontSize: 10,
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="averageScore"
                   stroke={trendColor}
                   strokeWidth={3}
                   dot={{ fill: trendColor, r: 5, strokeWidth: 0 }}
-                  activeDot={{ r: 8, fill: trendColor, strokeWidth: 0 }}
+                  activeDot={{
+                    r: 8,
+                    fill: trendColor,
+                    strokeWidth: 2,
+                    stroke: "#0e0e0e",
+                    onClick: (dotProps: DotProps) => {
+                      const point = (dotProps as ActiveDotProps).payload;
+                      if (point) {
+                        setSelectedEvaluation(
+                          selectedEvaluation?.date === point.date
+                            ? null
+                            : point,
+                        );
+                      }
+                    },
+                    style: { cursor: "pointer" },
+                  }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -215,61 +272,63 @@ export default function PortalProgressChart({
 
             {/* Expandable detail panel */}
             <div
-              className={[
-                "overflow-hidden transition-all duration-300",
-                selectedPoint ? "max-h-96" : "max-h-0",
-              ].join(" ")}
+              className={`overflow-hidden transition-all duration-300 ${
+                selectedEvaluation ? "max-h-96 mt-3" : "max-h-0"
+              }`}
             >
-              {selectedPoint && (
-                <div className="bg-surface-highest rounded-xl p-4 mt-3 relative">
-                  {/* Close button */}
+              <div className="bg-surface-highest rounded-xl p-4">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+                    {selectedEvaluation &&
+                      new Date(
+                        selectedEvaluation.evaluatedAt,
+                      ).toLocaleDateString("es-EC", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })}
+                  </p>
                   <button
                     type="button"
-                    onClick={() => setSelectedPoint(null)}
-                    className="absolute top-3 right-3 bg-transparent text-on-surface-variant hover:text-primary transition-colors p-1 rounded-xl"
-                    aria-label="Cerrar detalle"
+                    onClick={() => setSelectedEvaluation(null)}
+                    className="text-on-surface-variant hover:text-on-surface"
                   >
                     <X size={16} />
                   </button>
-
-                  {/* Date */}
-                  <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-3">
-                    {new Date(
-                      selectedPoint.evaluation.evaluatedAt,
-                    ).toLocaleDateString("es-EC", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                    })}
-                  </p>
-
-                  {/* Score list */}
-                  <div className="flex flex-col gap-3">
-                    {selectedPoint.evaluation.scores.map((score) => (
-                      <div key={score.id} className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-body text-[0.875rem] text-on-surface-variant">
-                            {score.metricName}
-                          </span>
-                          <span className="font-body text-[0.875rem] text-primary font-bold">
-                            {score.score}
-                          </span>
-                        </div>
-                        {/* Mini progress bar */}
-                        <div className="h-0.75 w-full rounded-full bg-surface-high overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-300"
-                            style={{
-                              width: `${(score.score / 10) * 100}%`,
-                              backgroundColor: trendColor,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
-              )}
+                {/* Score */}
+                <p
+                  className="font-display text-[2rem] font-bold mb-3"
+                  style={{ color: trendColor }}
+                >
+                  {selectedEvaluation?.averageScore}{" "}
+                  <span className="text-sm text-on-surface-variant font-body">
+                    / 10
+                  </span>
+                </p>
+                {/* Metric scores */}
+                <div className="flex flex-col gap-2">
+                  {selectedEvaluation?.metrics?.map((metric) => (
+                    <div key={metric.metricId}>
+                      <div className="flex justify-between mb-1">
+                        <span className="font-body text-[0.875rem] text-on-surface-variant">
+                          {metric.metricName}
+                        </span>
+                        <span className="font-body text-[0.875rem] font-medium text-on-surface">
+                          {metric.score}/10
+                        </span>
+                      </div>
+                      <div className="h-1 bg-surface-low rounded-full overflow-hidden">
+                        <div
+                          className="h-1 rounded-full bg-linear-to-r from-primary to-secondary"
+                          style={{ width: `${(metric.score / 10) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </>
         )}
