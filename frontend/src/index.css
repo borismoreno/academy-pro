@@ -54,8 +54,3 @@ html, body, #root {
   min-height: calc(var(--vh, 1vh) * 100);
 }
 
-/* Also support dvh for modern browsers that handle it correctly */
-@supports (height: 100dvh) {
-  .h-screen { height: 100dvh; }
-  .min-h-screen { min-height: 100dvh; }
-}
