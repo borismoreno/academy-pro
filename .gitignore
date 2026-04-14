@@ -37,3 +37,12 @@ backend/dist
 
 # Local files
 *.local
+
+# CLAUDE-IGNORE-START
+*.claude/*
+# Documentación interna
+CLAUDE.md
+backend/CLAUDE.md
+frontend/CLAUDE.md
+docs/PRD.md
+docs/design.md
