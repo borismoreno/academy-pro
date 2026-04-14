@@ -1,10 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {
-  Building2,
-  User,
-  TrendingUp,
-  DollarSign,
-} from "lucide-react";
+import { Building2, User, TrendingUp, DollarSign } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
 import DataTable from "@/components/shared/DataTable";
@@ -110,7 +105,7 @@ export default function OwnerDashboardPage() {
     <div className="space-y-8">
       <PageHeader
         title="Panel de control"
-        subtitle="Vista global de AcademyPro"
+        subtitle="Vista global de Cancha360"
       />
 
       {/* KPI grid */}
@@ -165,7 +160,9 @@ export default function OwnerDashboardPage() {
           <div className="bg-surface-high rounded-3xl overflow-hidden">
             <div
               className="h-0.5 w-full"
-              style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
+              style={{
+                background: "linear-gradient(135deg, #bcf521, #00f4fe)",
+              }}
             />
             <div className="p-6 text-center">
               <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-2">
@@ -187,7 +184,9 @@ export default function OwnerDashboardPage() {
           >
             <div
               className="h-0.5 w-full"
-              style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
+              style={{
+                background: "linear-gradient(135deg, #bcf521, #00f4fe)",
+              }}
             />
             <div className="p-6 text-center">
               <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mb-2">
@@ -211,7 +210,9 @@ export default function OwnerDashboardPage() {
           data={recentAcademies as AcademyRow[]}
           isLoading={academiesLoading}
           emptyMessage="No hay academias registradas."
-          onRowClick={(row) => navigate(`/owner/academies/${(row as AcademyRow).id}`)}
+          onRowClick={(row) =>
+            navigate(`/owner/academies/${(row as AcademyRow).id}`)
+          }
         />
       </div>
     </div>

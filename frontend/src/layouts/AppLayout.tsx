@@ -1,22 +1,22 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import Topbar from './Topbar';
-import BottomNav from './BottomNav';
+import { Outlet, useLocation } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
+import BottomNav from "./BottomNav";
 
 const ROUTE_TITLES: Record<string, string> = {
-  '/dashboard': 'Dashboard',
-  '/teams': 'Equipos',
-  '/players': 'Jugadores',
-  '/attendance': 'Asistencia',
-  '/evaluations': 'Evaluaciones',
-  '/notifications': 'Notificaciones',
-  '/settings': 'Configuración',
-  '/portal': 'Mi Hijo',
+  "/dashboard": "Dashboard",
+  "/teams": "Equipos",
+  "/players": "Jugadores",
+  "/attendance": "Asistencia",
+  "/evaluations": "Evaluaciones",
+  "/notifications": "Notificaciones",
+  "/settings": "Configuración",
+  "/portal": "Mi Hijo",
 };
 
 export default function AppLayout() {
   const location = useLocation();
-  const pageTitle = ROUTE_TITLES[location.pathname] ?? 'AcademyPro';
+  const pageTitle = ROUTE_TITLES[location.pathname] ?? "Cancha360";
 
   return (
     <div className="flex h-screen bg-surface-low overflow-hidden">

@@ -50,7 +50,7 @@ export class EmailService {
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <tr>
             <td style="background-color: #1a56db; padding: 32px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">AcademyPro</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Cancha360</h1>
             </td>
           </tr>
           <tr>
@@ -95,7 +95,7 @@ export class EmailService {
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {
-          Data: `Invitación a ${academyName} — AcademyPro`,
+          Data: `Invitación a ${academyName} — Cancha360`,
           Charset: 'UTF-8',
         },
         Body: {
@@ -116,14 +116,17 @@ export class EmailService {
     }
   }
 
-  async sendVerificationEmail(to: string, verificationUrl: string): Promise<void> {
+  async sendVerificationEmail(
+    to: string,
+    verificationUrl: string,
+  ): Promise<void> {
     const html = `
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verifica tu correo — AcademyPro</title>
+  <title>Verifica tu correo — Cancha360</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
@@ -132,14 +135,14 @@ export class EmailService {
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <tr>
             <td style="background-color: #1a56db; padding: 32px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">AcademyPro</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Cancha360</h1>
             </td>
           </tr>
           <tr>
             <td style="padding: 40px 32px;">
               <h2 style="color: #111827; margin: 0 0 16px 0;">Activa tu cuenta</h2>
               <p style="color: #374151; font-size: 16px; line-height: 1.5; margin: 0 0 8px 0;">
-                Gracias por registrarte en AcademyPro. Para completar tu registro y acceder a tu cuenta, confirma tu dirección de correo electrónico.
+                Gracias por registrarte en Cancha360. Para completar tu registro y acceder a tu cuenta, confirma tu dirección de correo electrónico.
               </p>
               <p style="color: #374151; font-size: 16px; line-height: 1.5; margin: 0 0 32px 0;">
                 Haz clic en el botón de abajo para verificar tu correo. Este enlace expira en <strong>24 horas</strong>.
@@ -160,7 +163,7 @@ export class EmailService {
           <tr>
             <td style="background-color: #f9fafb; padding: 24px 32px; text-align: center;">
               <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                Si no creaste una cuenta en AcademyPro, puedes ignorar este correo.
+                Si no creaste una cuenta en Cancha360, puedes ignorar este correo.
               </p>
             </td>
           </tr>
@@ -177,13 +180,13 @@ export class EmailService {
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {
-          Data: 'Verifica tu correo — AcademyPro',
+          Data: 'Verifica tu correo — Cancha360',
           Charset: 'UTF-8',
         },
         Body: {
           Html: { Data: html, Charset: 'UTF-8' },
           Text: {
-            Data: `Activa tu cuenta de AcademyPro verificando tu correo. El enlace expira en 24 horas: ${verificationUrl}`,
+            Data: `Activa tu cuenta de Cancha360 verificando tu correo. El enlace expira en 24 horas: ${verificationUrl}`,
             Charset: 'UTF-8',
           },
         },
@@ -205,7 +208,7 @@ export class EmailService {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Restablece tu contraseña — AcademyPro</title>
+  <title>Restablece tu contraseña — Cancha360</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
@@ -214,14 +217,14 @@ export class EmailService {
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <tr>
             <td style="background-color: #1a56db; padding: 32px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">AcademyPro</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Cancha360</h1>
             </td>
           </tr>
           <tr>
             <td style="padding: 40px 32px;">
               <h2 style="color: #111827; margin: 0 0 16px 0;">Restablece tu contraseña</h2>
               <p style="color: #374151; font-size: 16px; line-height: 1.5; margin: 0 0 8px 0;">
-                Recibimos una solicitud para restablecer la contraseña de tu cuenta de AcademyPro.
+                Recibimos una solicitud para restablecer la contraseña de tu cuenta de Cancha360.
               </p>
               <p style="color: #374151; font-size: 16px; line-height: 1.5; margin: 0 0 32px 0;">
                 Haz clic en el botón de abajo para crear una nueva contraseña. Este enlace expira en <strong>1 hora</strong>.
@@ -259,7 +262,7 @@ export class EmailService {
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {
-          Data: 'Restablece tu contraseña — AcademyPro',
+          Data: 'Restablece tu contraseña — Cancha360',
           Charset: 'UTF-8',
         },
         Body: {

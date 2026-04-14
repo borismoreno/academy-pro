@@ -15,7 +15,8 @@ export default function VerifyEmailPage() {
   const state = location.state as LocationState | null;
   const email = state?.email ?? "";
 
-  const { verifyEmailQuery, resendVerificationMutation } = useVerifyEmail(token);
+  const { verifyEmailQuery, resendVerificationMutation } =
+    useVerifyEmail(token);
 
   // Countdown state for resend cooldown
   const [countdown, setCountdown] = useState(0);
@@ -45,7 +46,7 @@ export default function VerifyEmailPage() {
 
           <div className="bg-surface-high rounded-b-3xl px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
             <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant self-start">
-              AcademyPro
+              Cancha360
             </span>
 
             {verifyEmailQuery.isPending && (
@@ -109,7 +110,7 @@ export default function VerifyEmailPage() {
 
         <div className="bg-surface-high rounded-b-3xl px-8 py-12 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex flex-col items-center text-center gap-6">
           <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant self-start">
-            AcademyPro
+            Cancha360
           </span>
 
           {/* Mail icon with gradient glow */}

@@ -16,18 +16,18 @@ export default function RegisterPage() {
           }}
         />
         <div
-          className="absolute -bottom-32 -right-32 w-125 h-[500px] rounded-full opacity-5"
+          className="absolute -bottom-32 -right-32 w-125 h-125 rounded-full opacity-5"
           style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
         />
         <div
-          className="absolute -top-24 -left-24 w-75 h-[300px] rounded-full opacity-5"
+          className="absolute -top-24 -left-24 w-75 h-75 rounded-full opacity-5"
           style={{ background: "linear-gradient(135deg, #00f4fe, #bcf521)" }}
         />
 
         <div className="relative z-10 max-w-md">
           <div className="mb-8">
             <span className="font-display text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-              AcademyPro
+              Cancha360
             </span>
           </div>
 
@@ -59,7 +59,10 @@ export default function RegisterPage() {
               { label: "Jugadores", value: "2.5K+" },
               { label: "Academias", value: "30+" },
             ].map((stat) => (
-              <div key={stat.label} className="bg-surface-high rounded-3xl px-5 py-3">
+              <div
+                key={stat.label}
+                className="bg-surface-high rounded-3xl px-5 py-3"
+              >
                 <div className="font-display text-[1.75rem] font-semibold text-primary leading-none">
                   {stat.value}
                 </div>
@@ -84,7 +87,7 @@ export default function RegisterPage() {
           <div className="bg-surface-high rounded-b-3xl px-8 py-10 shadow-[0px_24px_48px_rgba(0,0,0,0.5)]">
             {/* Mobile brand */}
             <span className="lg:hidden font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant block mb-4">
-              AcademyPro
+              Cancha360
             </span>
 
             {/* Icon */}
@@ -98,12 +101,12 @@ export default function RegisterPage() {
 
             {/* Headline */}
             <h2 className="font-display text-[1.75rem] font-semibold text-on-surface text-center mb-3">
-              Solicita acceso a AcademyPro
+              Solicita acceso a Cancha360
             </h2>
 
             {/* Body */}
             <p className="font-body text-sm text-on-surface-variant text-center mb-8 leading-relaxed">
-              AcademyPro está disponible por invitación. Contáctanos y te
+              Cancha360 está disponible por invitación. Contáctanos y te
               agregaremos a la plataforma.
             </p>
 
@@ -127,10 +130,7 @@ export default function RegisterPage() {
               </a>
 
               {/* Email button */}
-              <a
-                href="mailto:marketing@cancha360.com"
-                className="min-h-11"
-              >
+              <a href="mailto:marketing@cancha360.com" className="min-h-11">
                 <Button
                   variant="secondary"
                   size="lg"

@@ -50,7 +50,7 @@ function DecorativePanel() {
       <div className="relative z-10 max-w-md">
         <div className="mb-8">
           <span className="font-display text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-            AcademyPro
+            Cancha360
           </span>
         </div>
         <h1 className="font-display text-[3.5rem] font-bold text-on-surface leading-[1.1] mb-6">
@@ -353,7 +353,7 @@ export default function AcceptInvitationPage() {
 
           {/* Terms */}
           <p className="font-body text-[0.6875rem] text-on-surface-variant text-center mt-6">
-            Al crear tu cuenta aceptas los Términos y Condiciones de AcademyPro.
+            Al crear tu cuenta aceptas los Términos y Condiciones de Cancha360.
           </p>
         </CardShell>
       </div>

@@ -35,7 +35,7 @@ function DecorativePanel() {
       <div className="relative z-10 max-w-md">
         <div className="mb-8">
           <span className="font-display text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-            AcademyPro
+            Cancha360
           </span>
         </div>
         <h1 className="font-display text-[3.5rem] font-bold text-on-surface leading-[1.1] mb-6">
@@ -55,7 +55,7 @@ function DecorativePanel() {
           segura.
         </h1>
         <p className="font-body text-sm text-on-surface-variant leading-relaxed">
-          Crea una contraseña fuerte para proteger tu cuenta de AcademyPro.
+          Crea una contraseña fuerte para proteger tu cuenta de Cancha360.
         </p>
       </div>
     </div>

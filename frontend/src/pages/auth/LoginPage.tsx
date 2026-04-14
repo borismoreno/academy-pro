@@ -68,7 +68,7 @@ export default function LoginPage() {
           {/* Logo / brand mark */}
           <div className="mb-8">
             <span className="font-display text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-              AcademyPro
+              Cancha360
             </span>
           </div>
 
@@ -132,7 +132,7 @@ export default function LoginPage() {
             <div className="mb-8">
               {/* Mobile brand */}
               <span className="lg:hidden font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant block mb-4">
-                AcademyPro
+                Cancha360
               </span>
 
               <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">

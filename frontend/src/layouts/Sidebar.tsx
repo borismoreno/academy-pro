@@ -35,7 +35,7 @@ export default function Sidebar() {
       {/* Top: Logo + Academy name */}
       <div className="px-6 pt-8 pb-6">
         <span className="font-display text-xl font-bold text-primary tracking-tight">
-          AcademyPro
+          Cancha360
         </span>
         {academyName && (
           <p className="mt-1 font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
@@ -49,7 +49,7 @@ export default function Sidebar() {
         <ul className="flex flex-col gap-1">
           {navItems.map((item) => {
             const isActive =
-              item.path === '/dashboard'
+              item.path === "/dashboard"
                 ? location.pathname === item.path
                 : location.pathname.startsWith(item.path);
             return (
@@ -64,9 +64,7 @@ export default function Sidebar() {
                   ].join(" ")}
                 >
                   <item.Icon size={18} />
-                  <span className="font-body text-sm">
-                    {item.label}
-                  </span>
+                  <span className="font-body text-sm">{item.label}</span>
                 </NavLink>
               </li>
             );
