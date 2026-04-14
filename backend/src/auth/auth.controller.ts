@@ -16,6 +16,8 @@ import { SelectAcademyDto } from './dto/select-academy.dto.js';
 import { UpdateProfileDto } from './dto/update-profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { ResendVerificationDto } from './dto/resend-verification.dto.js';
+import { ForgotPasswordDto } from './dto/forgot-password.dto.js';
+import { ResetPasswordDto } from './dto/reset-password.dto.js';
 import { Public } from './decorators/public.decorator.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
 import { LocalGuard } from './guards/local.guard.js';
@@ -56,6 +58,22 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resendVerification(@Body() dto: ResendVerificationDto) {
     const { message } = await this.authService.resendVerification(dto.email);
+    return { message };
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    const { message } = await this.authService.forgotPassword(dto);
+    return { message };
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    const { message } = await this.authService.resetPassword(dto);
     return { message };
   }
 

@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import { toast } from '@/hooks/use-toast';
-import { usePlayerDetail } from '@/hooks/usePlayerDetail';
-import api from '@/services/api';
-import type { ApiResponse } from '@/types';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import { toast } from "@/hooks/use-toast";
+import { usePlayerDetail } from "@/hooks/usePlayerDetail";
+import api from "@/services/api";
+import type { ApiResponse } from "@/types";
 
 interface AcademyMember {
   userId: string;
@@ -31,21 +31,21 @@ interface AcademyMember {
 
 async function fetchParents(): Promise<AcademyMember[]> {
   const response = await api.get<ApiResponse<AcademyMember[]>>(
-    '/academies/members?role=parent',
+    "/academies/members?role=parent",
   );
   return response.data.data;
 }
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
-const RELATIONSHIP_OPTIONS = ['Padre', 'Madre', 'Tutor'];
+const RELATIONSHIP_OPTIONS = ["Padre", "Madre", "Tutor"];
 
 interface FormBodyProps {
   playerId: string;
@@ -56,13 +56,13 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
   const { addParentMutation } = usePlayerDetail(playerId);
 
   const { data: parents = [], isLoading } = useQuery({
-    queryKey: ['academy-parents'],
+    queryKey: ["academy-parents"],
     queryFn: fetchParents,
   });
 
-  const [search, setSearch] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [relationship, setRelationship] = useState('Padre');
+  const [search, setSearch] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [relationship, setRelationship] = useState("Padre");
 
   const filtered = parents.filter((p) =>
     p.fullName.toLowerCase().includes(search.toLowerCase()),
@@ -76,7 +76,7 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
       { userId: selectedUserId, relationship },
       {
         onSuccess: () => {
-          toast({ description: 'Padre/tutor vinculado correctamente' });
+          toast({ description: "Padre/tutor vinculado correctamente" });
           onOpenChange(false);
         },
       },
@@ -103,8 +103,8 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
           <EmptyState
             message={
               search
-                ? 'No se encontraron padres/tutores con ese nombre.'
-                : 'No hay padres o tutores registrados en esta academia.'
+                ? "No se encontraron padres/tutores con ese nombre."
+                : "No hay padres o tutores registrados en esta academia."
             }
           />
         ) : (
@@ -116,8 +116,8 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
               disabled={addParentMutation.isPending}
               className={`flex items-center gap-3 min-h-11 px-3 rounded-xl transition-colors text-left ${
                 selectedUserId === parent.userId
-                  ? 'bg-surface-highest'
-                  : 'hover:bg-surface-highest'
+                  ? "bg-surface-highest"
+                  : "hover:bg-surface-highest"
               }`}
             >
               <div className="shrink-0 w-8 h-8 rounded-full bg-surface-highest flex items-center justify-center">
@@ -191,8 +191,8 @@ function useIsDesktop(): boolean {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
     }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return isDesktop;
@@ -202,7 +202,7 @@ function TopGlow() {
   return (
     <div
       className="h-0.5 w-full"
-      style={{ background: 'linear-gradient(135deg, #bcf521, #00f4fe)' }}
+      style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
     />
   );
 }
@@ -219,7 +219,7 @@ export default function AddParentSheet({
   playerId,
 }: AddParentSheetProps) {
   const isDesktop = useIsDesktop();
-  const formKey = open ? playerId : 'closed';
+  const formKey = open ? playerId : "closed";
 
   if (isDesktop) {
     return (
@@ -231,7 +231,11 @@ export default function AddParentSheet({
               Vincular padre/tutor
             </DialogTitle>
           </DialogHeader>
-          <FormBody key={formKey} playerId={playerId} onOpenChange={onOpenChange} />
+          <FormBody
+            key={formKey}
+            playerId={playerId}
+            onOpenChange={onOpenChange}
+          />
         </DialogContent>
       </Dialog>
     );
@@ -239,16 +243,17 @@ export default function AddParentSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0"
-      >
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             Vincular padre/tutor
           </SheetTitle>
         </SheetHeader>
-        <FormBody key={formKey} playerId={playerId} onOpenChange={onOpenChange} />
+        <FormBody
+          key={formKey}
+          playerId={playerId}
+          onOpenChange={onOpenChange}
+        />
       </SheetContent>
     </Sheet>
   );

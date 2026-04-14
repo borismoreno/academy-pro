@@ -69,6 +69,24 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
   return response.data.data;
 }
 
+export async function forgotPassword(email: string): Promise<string> {
+  const response = await api.post<ApiResponse<null>>("/auth/forgot-password", {
+    email,
+  });
+  return response.data.message;
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<string> {
+  const response = await api.post<ApiResponse<null>>("/auth/reset-password", {
+    token,
+    password,
+  });
+  return response.data.message;
+}
+
 // ─── Invitations ─────────────────────────────────────────────────────────────
 
 /**

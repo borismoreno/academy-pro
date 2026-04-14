@@ -151,7 +151,7 @@ export default function AcceptInvitationPage() {
               </p>
               <Link to="/login" className="mt-2 w-full">
                 <Button
-                  variant="ghost"
+                  variant="tertiary"
                   className="w-full font-body text-[0.875rem] text-on-surface-variant hover:text-primary rounded-xl"
                 >
                   Ir al inicio

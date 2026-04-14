@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +17,8 @@ import { RegisterDto } from './dto/register.dto.js';
 import { SelectAcademyDto } from './dto/select-academy.dto.js';
 import { UpdateProfileDto } from './dto/update-profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
+import { ForgotPasswordDto } from './dto/forgot-password.dto.js';
+import { ResetPasswordDto } from './dto/reset-password.dto.js';
 import {
   AcademyInfo,
   AcademySelectionResponse,
@@ -278,6 +281,72 @@ export class AuthService {
       where: { id: userId },
       data: { passwordHash },
     });
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto): Promise<{ message: string }> {
+    const GENERIC_RESPONSE = {
+      message:
+        'Si el correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.',
+    };
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (user) {
+      const token = randomUUID();
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+      await this.prisma.passwordResetToken.create({
+        data: { userId: user.id, token, expiresAt },
+      });
+
+      const frontendUrl = this.config.getOrThrow<string>('app.frontendUrl');
+      const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+      await this.emailService.sendPasswordResetEmail(dto.email, resetUrl);
+    }
+
+    return GENERIC_RESPONSE;
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
+    const record = await this.prisma.passwordResetToken.findUnique({
+      where: { token: dto.token },
+    });
+
+    if (!record) {
+      throw new NotFoundException('Token inválido o expirado.');
+    }
+
+    if (record.expiresAt < new Date()) {
+      throw new BadRequestException(
+        'El enlace ha expirado. Solicita uno nuevo.',
+      );
+    }
+
+    if (record.usedAt !== null) {
+      throw new BadRequestException(
+        'Este enlace ya fue utilizado. Solicita uno nuevo.',
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: record.userId },
+        data: { passwordHash },
+      }),
+      this.prisma.passwordResetToken.update({
+        where: { id: record.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
+
+    return {
+      message:
+        'Contraseña restablecida correctamente. Ya puedes iniciar sesión.',
+    };
   }
 
   private buildTokenResponse(

@@ -64,13 +64,14 @@ model User {
   createdAt                  DateTime  @default(now()) @map("created_at")
   updatedAt                  DateTime  @updatedAt @map("updated_at")
 
-  academyRoles       UserAcademyRole[]
-  invitationsSent    Invitation[]      @relation("InvitedBy")
-  teamCoaches        TeamCoach[]
-  playerParents      PlayerParent[]
-  attendanceSessions AttendanceSession[]
-  evaluations        Evaluation[]
-  notifications      Notification[]
+  academyRoles        UserAcademyRole[]
+  invitationsSent     Invitation[]      @relation("InvitedBy")
+  teamCoaches         TeamCoach[]
+  playerParents       PlayerParent[]
+  attendanceSessions  AttendanceSession[]
+  evaluations         Evaluation[]
+  notifications       Notification[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -324,6 +325,19 @@ model Notification {
   academy Academy @relation(fields: [academyId], references: [id])
 
   @@map("notifications")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
 }
 
 model PlanLimit {

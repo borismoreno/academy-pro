@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { toast } from '@/hooks/use-toast';
-import { useFields } from '@/hooks/useFields';
-import type { Field } from '@/types';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { toast } from "@/hooks/use-toast";
+import { useFields } from "@/hooks/useFields";
+import type { Field } from "@/types";
 
 function useIsDesktop(): boolean {
   const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
@@ -23,8 +23,8 @@ function useIsDesktop(): boolean {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
     }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   return isDesktop;
 }
@@ -39,22 +39,23 @@ interface FormContentProps {
 function FormContent({ field, onClose }: FormContentProps) {
   const isEditMode = field !== null;
 
-  const [name, setName] = useState(field?.name ?? '');
-  const [location, setLocation] = useState(field?.location ?? '');
-  const [nameError, setNameError] = useState('');
+  const [name, setName] = useState(field?.name ?? "");
+  const [location, setLocation] = useState(field?.location ?? "");
+  const [nameError, setNameError] = useState("");
 
   const { createFieldMutation, updateFieldMutation } = useFields();
-  const isPending = createFieldMutation.isPending || updateFieldMutation.isPending;
+  const isPending =
+    createFieldMutation.isPending || updateFieldMutation.isPending;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmedName = name.trim();
 
     if (trimmedName.length < 2) {
-      setNameError('El nombre debe tener al menos 2 caracteres');
+      setNameError("El nombre debe tener al menos 2 caracteres");
       return;
     }
-    setNameError('');
+    setNameError("");
 
     const data = {
       name: trimmedName,
@@ -66,7 +67,7 @@ function FormContent({ field, onClose }: FormContentProps) {
         { id: field.id, data },
         {
           onSuccess: () => {
-            toast({ description: 'Cancha actualizada correctamente' });
+            toast({ description: "Cancha actualizada correctamente" });
             onClose();
           },
         },
@@ -74,7 +75,7 @@ function FormContent({ field, onClose }: FormContentProps) {
     } else {
       createFieldMutation.mutate(data, {
         onSuccess: () => {
-          toast({ description: 'Cancha agregada correctamente' });
+          toast({ description: "Cancha agregada correctamente" });
           onClose();
         },
       });
@@ -92,7 +93,7 @@ function FormContent({ field, onClose }: FormContentProps) {
           value={name}
           onChange={(e) => {
             setName(e.target.value);
-            if (nameError) setNameError('');
+            if (nameError) setNameError("");
           }}
           placeholder="Ej: Cancha Principal"
           disabled={isPending}
@@ -123,7 +124,7 @@ function FormContent({ field, onClose }: FormContentProps) {
         className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
       >
         {isPending && <LoadingSpinner size="sm" />}
-        {isEditMode ? 'Guardar cambios' : 'Agregar cancha'}
+        {isEditMode ? "Guardar cambios" : "Agregar cancha"}
       </button>
 
       <button
@@ -148,11 +149,11 @@ interface Props {
 
 export default function FieldFormSheet({ open, onOpenChange, field }: Props) {
   const isDesktop = useIsDesktop();
-  const title = field ? 'Editar cancha' : 'Agregar cancha';
+  const title = field ? "Editar cancha" : "Agregar cancha";
 
   const content = (
     <FormContent
-      key={field?.id ?? 'new'}
+      key={field?.id ?? "new"}
       field={field}
       onClose={() => onOpenChange(false)}
     />
@@ -176,10 +177,7 @@ export default function FieldFormSheet({ open, onOpenChange, field }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0"
-      >
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-xl font-semibold text-on-surface">

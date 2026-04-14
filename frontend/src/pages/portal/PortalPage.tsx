@@ -1,16 +1,16 @@
-import { Users } from 'lucide-react';
-import { useAuthStore } from '@/store/auth.store';
-import { usePortal } from '@/hooks/usePortal';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import PlayerSelector from './components/PlayerSelector';
-import PortalPlayerHero from './components/PortalPlayerHero';
-import PortalAttendanceSummary from './components/PortalAttendanceSummary';
-import PortalEvaluationSummary from './components/PortalEvaluationSummary';
-import PortalRecentActivity from './components/PortalRecentActivity';
+import { Users } from "lucide-react";
+import { useAuthStore } from "@/store/auth.store";
+import { usePortal } from "@/hooks/usePortal";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import PlayerSelector from "./components/PlayerSelector";
+import PortalPlayerHero from "./components/PortalPlayerHero";
+import PortalAttendanceSummary from "./components/PortalAttendanceSummary";
+import PortalEvaluationSummary from "./components/PortalEvaluationSummary";
+import PortalRecentActivity from "./components/PortalRecentActivity";
 
 function getFirstName(fullName: string): string {
-  return fullName.split(' ')[0];
+  return fullName.split(" ")[0];
 }
 
 export default function PortalPage() {
@@ -32,7 +32,7 @@ export default function PortalPage() {
       {/* Welcome header */}
       <div className="pb-4">
         <h1 className="font-display text-[1.75rem] font-semibold text-on-surface">
-          Hola, {user ? getFirstName(user.fullName) : ''}
+          Hola, {user ? getFirstName(user.fullName) : ""}
         </h1>
         <p className="font-body text-sm text-on-surface-variant mt-1">
           Aquí está el progreso de tu hijo/a
@@ -72,7 +72,11 @@ export default function PortalPage() {
           )}
 
           {/* Player hero */}
-          <PortalPlayerHero player={player} isLoading={isLoadingDetail} selectedPlayerId={selectedPlayerId} />
+          <PortalPlayerHero
+            player={player}
+            isLoading={isLoadingDetail}
+            selectedPlayerId={selectedPlayerId ?? undefined}
+          />
 
           {/* Stats grid — 2 columns */}
           <div className="grid grid-cols-2 gap-4">

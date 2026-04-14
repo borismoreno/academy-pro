@@ -1,37 +1,42 @@
-import { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { toast } from '@/hooks/use-toast';
-import { useTeams } from '@/hooks/useTeams';
-import { createPlayer, updatePlayer } from '@/services/players.service';
-import type { PlayerResponse, CreatePlayerData, UpdatePlayerData } from '@/services/players.service';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { toast } from "@/hooks/use-toast";
+import { useTeams } from "@/hooks/useTeams";
+import { createPlayer, updatePlayer } from "@/services/players.service";
+import type {
+  PlayerResponse,
+  CreatePlayerData,
+  UpdatePlayerData,
+} from "@/services/players.service";
 
 function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === 'object' && 'response' in error) {
+  if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message) return axiosError.response.data.message;
+    if (axiosError.response?.data?.message)
+      return axiosError.response.data.message;
   }
-  return 'Ha ocurrido un error inesperado';
+  return "Ha ocurrido un error inesperado";
 }
 
-const POSITIONS = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
+const POSITIONS = ["Portero", "Defensa", "Mediocampista", "Delantero"];
 
 const SELECT_CLASS =
-  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
 interface PlayerFormSheetProps {
   open: boolean;
@@ -53,24 +58,28 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   // Normalize ISO date string to YYYY-MM-DD for the date input
   const initialBirthDate = player?.birthDate
     ? player.birthDate.substring(0, 10)
-    : '';
+    : "";
 
-  const [fullName, setFullName] = useState(player?.fullName ?? '');
+  const [fullName, setFullName] = useState(player?.fullName ?? "");
   const [birthDate, setBirthDate] = useState(initialBirthDate);
-  const [position, setPosition] = useState(player?.position ?? 'Portero');
-  const [teamId, setTeamId] = useState(player?.teamId ?? '');
+  const [position, setPosition] = useState(player?.position ?? "Portero");
+  const [teamId, setTeamId] = useState(player?.teamId ?? "");
 
-  const [fullNameError, setFullNameError] = useState('');
-  const [birthDateError, setBirthDateError] = useState('');
-  const [teamIdError, setTeamIdError] = useState('');
+  const [fullNameError, setFullNameError] = useState("");
+  const [birthDateError, setBirthDateError] = useState("");
+  const [teamIdError, setTeamIdError] = useState("");
 
   const createMutation = useMutation({
     mutationFn: (data: CreatePlayerData) => createPlayer(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['players'] });
+      queryClient.invalidateQueries({ queryKey: ["players"] });
     },
     onError: (error: unknown) => {
-      toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
+      toast({
+        title: "Error",
+        description: extractErrorMessage(error),
+        variant: "destructive",
+      });
     },
   });
 
@@ -78,11 +87,15 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
     mutationFn: ({ id, data }: { id: string; data: UpdatePlayerData }) =>
       updatePlayer(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['players'] });
-      queryClient.invalidateQueries({ queryKey: ['player', player?.id] });
+      queryClient.invalidateQueries({ queryKey: ["players"] });
+      queryClient.invalidateQueries({ queryKey: ["player", player?.id] });
     },
     onError: (error: unknown) => {
-      toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
+      toast({
+        title: "Error",
+        description: extractErrorMessage(error),
+        variant: "destructive",
+      });
     },
   });
 
@@ -91,22 +104,22 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   function validate(): boolean {
     let valid = true;
     if (fullName.trim().length < 2) {
-      setFullNameError('El nombre debe tener al menos 2 caracteres');
+      setFullNameError("El nombre debe tener al menos 2 caracteres");
       valid = false;
     } else {
-      setFullNameError('');
+      setFullNameError("");
     }
     if (!birthDate) {
-      setBirthDateError('La fecha de nacimiento es obligatoria');
+      setBirthDateError("La fecha de nacimiento es obligatoria");
       valid = false;
     } else {
-      setBirthDateError('');
+      setBirthDateError("");
     }
     if (!teamId) {
-      setTeamIdError('Selecciona un equipo');
+      setTeamIdError("Selecciona un equipo");
       valid = false;
     } else {
-      setTeamIdError('');
+      setTeamIdError("");
     }
     return valid;
   }
@@ -127,7 +140,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         { id: player.id, data },
         {
           onSuccess: () => {
-            toast({ description: 'Jugador actualizado correctamente' });
+            toast({ description: "Jugador actualizado correctamente" });
             onOpenChange(false);
           },
         },
@@ -135,7 +148,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
     } else {
       createMutation.mutate(data, {
         onSuccess: () => {
-          toast({ description: 'Jugador agregado correctamente' });
+          toast({ description: "Jugador agregado correctamente" });
           onOpenChange(false);
         },
       });
@@ -153,13 +166,15 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           value={fullName}
           onChange={(e) => {
             setFullName(e.target.value);
-            if (fullNameError) setFullNameError('');
+            if (fullNameError) setFullNameError("");
           }}
           placeholder="Ej. Carlos Andrade"
           disabled={isPending}
         />
         {fullNameError && (
-          <p className="font-body text-xs text-error-container">{fullNameError}</p>
+          <p className="font-body text-xs text-error-container">
+            {fullNameError}
+          </p>
         )}
       </div>
 
@@ -173,18 +188,22 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           value={birthDate}
           onChange={(e) => {
             setBirthDate(e.target.value);
-            if (birthDateError) setBirthDateError('');
+            if (birthDateError) setBirthDateError("");
           }}
           disabled={isPending}
         />
         {birthDateError && (
-          <p className="font-body text-xs text-error-container">{birthDateError}</p>
+          <p className="font-body text-xs text-error-container">
+            {birthDateError}
+          </p>
         )}
       </div>
 
       {/* Position */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">Posición</label>
+        <label className="font-body text-sm text-on-surface-variant">
+          Posición
+        </label>
         <select
           value={position}
           onChange={(e) => setPosition(e.target.value)}
@@ -201,12 +220,14 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
 
       {/* Team */}
       <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">Equipo</label>
+        <label className="font-body text-sm text-on-surface-variant">
+          Equipo
+        </label>
         <select
           value={teamId}
           onChange={(e) => {
             setTeamId(e.target.value);
-            if (teamIdError) setTeamIdError('');
+            if (teamIdError) setTeamIdError("");
           }}
           disabled={isPending}
           className={SELECT_CLASS}
@@ -219,14 +240,21 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           ))}
         </select>
         {teamIdError && (
-          <p className="font-body text-xs text-error-container">{teamIdError}</p>
+          <p className="font-body text-xs text-error-container">
+            {teamIdError}
+          </p>
         )}
       </div>
 
       <div className="flex flex-col gap-3 pt-2">
-        <Button type="submit" variant="primary" className="w-full" disabled={isPending}>
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full"
+          disabled={isPending}
+        >
           {isPending ? <LoadingSpinner size="sm" /> : null}
-          {isEditMode ? 'Guardar cambios' : 'Agregar jugador'}
+          {isEditMode ? "Guardar cambios" : "Agregar jugador"}
         </Button>
         <Button
           type="button"
@@ -249,8 +277,8 @@ function useIsDesktop(): boolean {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
     }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return isDesktop;
@@ -260,7 +288,7 @@ function TopGlow() {
   return (
     <div
       className="h-0.5 w-full"
-      style={{ background: 'linear-gradient(135deg, #bcf521, #00f4fe)' }}
+      style={{ background: "linear-gradient(135deg, #bcf521, #00f4fe)" }}
     />
   );
 }
@@ -272,8 +300,8 @@ export default function PlayerFormSheet({
 }: PlayerFormSheetProps) {
   const isEditMode = player !== null;
   const isDesktop = useIsDesktop();
-  const title = isEditMode ? 'Editar jugador' : 'Agregar jugador';
-  const formKey = open ? (player?.id ?? 'new') : 'closed';
+  const title = isEditMode ? "Editar jugador" : "Agregar jugador";
+  const formKey = open ? (player?.id ?? "new") : "closed";
 
   if (isDesktop) {
     return (
@@ -293,10 +321,7 @@ export default function PlayerFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0"
-      >
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[90vh] overflow-y-auto p-0">
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-xl font-semibold text-on-surface">
             {title}
