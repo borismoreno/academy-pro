@@ -1,5 +1,5 @@
 import api from "./api";
-import type { ApiResponse, UserRole } from "@/types";
+import type { ApiResponse, InvitationDetails, UserRole } from "@/types";
 
 interface RegisterPayload {
   fullName: string;
@@ -67,4 +67,41 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
     payload,
   );
   return response.data.data;
+}
+
+// ─── Invitations ─────────────────────────────────────────────────────────────
+
+/**
+ * GET /invitations/accept?token=xxx
+ * Validates the invitation token and returns invitation details.
+ * Endpoint is @Public — no auth header required.
+ */
+export async function validateInvitationToken(
+  token: string,
+): Promise<InvitationDetails> {
+  const response = await api.get<ApiResponse<Omit<InvitationDetails, "playerId">>>(
+    "/invitations/accept",
+    { params: { token } },
+  );
+  // Backend does not return playerId in the preview response — default to null
+  return { ...response.data.data, playerId: null };
+}
+
+interface AcceptInvitationPayload {
+  token: string;
+  fullName: string;
+  password: string;
+}
+
+/**
+ * POST /invitations/accept
+ * Creates the user account and links them to the academy.
+ * Returns only a confirmation message — no JWT.
+ * Caller must follow up with login() to obtain a token.
+ */
+export async function acceptInvitation(
+  payload: AcceptInvitationPayload,
+): Promise<string> {
+  const response = await api.post<ApiResponse<null>>("/invitations/accept", payload);
+  return response.data.message;
 }

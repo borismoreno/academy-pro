@@ -276,6 +276,16 @@ export interface PlanLimit {
   updatedAt: string;
 }
 
+// ─── Invitations ─────────────────────────────────────────────────────────────
+
+export interface InvitationDetails {
+  email: string;
+  role: UserRole;
+  academyName: string;
+  /** The backend preview endpoint does not return playerId; always null for now */
+  playerId: string | null;
+}
+
 export interface PlanLimitsGrouped {
   free: PlanLimit[];
   pro: PlanLimit[];

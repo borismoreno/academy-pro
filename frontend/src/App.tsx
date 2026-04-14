@@ -8,8 +8,8 @@ import AppLayout from '@/layouts/AppLayout';
 // Auth (public)
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
-import VerifyEmailPage from '@/pages/auth/VerifyEmailPage';
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
+import AcceptInvitationPage from '@/pages/auth/AcceptInvitationPage';
 
 // Protected pages
 import DashboardPage from '@/pages/DashboardPage';
@@ -64,8 +64,8 @@ export default function App() {
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/invitations/accept" element={<AcceptInvitationPage />} />
         </Route>
 
         {/* Error page — accessible without auth so the redirect lands correctly */}
