@@ -30,4 +30,5 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
+CMD ["sh", "-c", "find /app -name 'main.js' 2>/dev/null && ls -la /app/dist 2>/dev/null || echo 'dist NOT FOUND'"]
 CMD ["node", "dist/main"]
