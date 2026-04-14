@@ -121,7 +121,7 @@ export default function AcceptInvitationPage() {
   // ── State A: Loading ────────────────────────────────────────────────────────
   if (!isInvalid && isValidating) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-low">
+      <div className="flex items-center justify-center bg-surface-low" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="font-body text-[0.875rem] text-on-surface-variant">
@@ -135,7 +135,7 @@ export default function AcceptInvitationPage() {
   // ── State B: Invalid / Expired ──────────────────────────────────────────────
   if (isInvalid) {
     return (
-      <div className="min-h-screen flex bg-surface-low">
+      <div className="flex bg-surface-low" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
         <DecorativePanel />
         <div className="flex-1 flex items-center justify-center p-6 lg:p-16">
           <CardShell>

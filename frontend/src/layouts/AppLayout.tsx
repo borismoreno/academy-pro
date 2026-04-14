@@ -19,14 +19,14 @@ export default function AppLayout() {
   const pageTitle = ROUTE_TITLES[location.pathname] ?? "Cancha360";
 
   return (
-    <div className="flex h-screen bg-surface-low overflow-hidden">
+    <div className="flex overflow-hidden bg-surface-low" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       {/* Fixed sidebar — desktop only (hidden on mobile/tablet) */}
       <Sidebar />
 
       {/* Main content area
           Mobile/tablet : no left margin (sidebar is hidden)
           Desktop (lg+)  : ml-65 to clear the sidebar */}
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-65">
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-65" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
         {/* Sticky glassmorphism topbar */}
         <Topbar pageTitle={pageTitle} />
 
