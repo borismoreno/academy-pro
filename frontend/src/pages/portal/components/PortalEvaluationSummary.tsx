@@ -1,6 +1,6 @@
-import { Lock } from 'lucide-react';
-import type { EvaluationProgress } from '@/services/portal.service';
-import type { EvaluationScoreItem } from '@/services/players.service';
+import { Lock, TrendingUp, TrendingDown } from "lucide-react";
+import type { EvaluationProgress } from "@/services/portal.service";
+import type { EvaluationScoreItem } from "@/services/players.service";
 
 interface PortalEvaluationSummaryProps {
   progress: EvaluationProgress | undefined;
@@ -41,7 +41,8 @@ function UpgradePromptCard() {
         </p>
 
         <p className="font-body text-sm text-on-surface-variant">
-          Las evaluaciones detalladas de tu hijo están disponibles en el plan Pro. Habla con el director de la academia para actualizarlo.
+          Las evaluaciones detalladas de tu hijo están disponibles en el plan
+          Pro. Habla con el director de la academia para actualizarlo.
         </p>
       </div>
     </div>
@@ -54,9 +55,10 @@ function averageScore(scores: EvaluationScoreItem[]): number {
 }
 
 function assessment(avg: number): { text: string; color: string } {
-  if (avg >= 8) return { text: '¡Rendimiento sobresaliente!', color: 'text-primary' };
-  if (avg >= 6) return { text: 'Buen rendimiento', color: 'text-secondary' };
-  return { text: 'Necesita atención', color: 'text-error-container' };
+  if (avg >= 8)
+    return { text: "¡Rendimiento sobresaliente!", color: "text-primary" };
+  if (avg >= 6) return { text: "Buen rendimiento", color: "text-secondary" };
+  return { text: "Necesita atención", color: "text-error-container" };
 }
 
 export default function PortalEvaluationSummary({
@@ -99,37 +101,66 @@ export default function PortalEvaluationSummary({
               {avg.toFixed(1)}
             </p>
 
-            {/* Date */}
-            <p className="font-body text-sm text-on-surface-variant">
-              {new Date(latest!.evaluatedAt).toLocaleDateString('es-EC')}
+            {/* Score bar */}
+            <div className="w-full h-1.5 bg-surface-highest rounded-full">
+              <div
+                className="h-full bg-linear-to-r from-primary to-secondary rounded-full"
+                style={{ width: `${(avg / 10) * 100}%` }}
+              />
+            </div>
+            <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant text-right -mt-1">
+              / 10
             </p>
 
-            {/* Top metric */}
-            {topMetric && (
-              <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-                Mejor área:{' '}
-                <span className="text-primary font-medium normal-case tracking-normal">
-                  {topMetric.metricName}
-                </span>
-              </p>
-            )}
+            {/* Date */}
+            <p className="font-body text-sm text-on-surface-variant">
+              {new Date(latest!.evaluatedAt).toLocaleDateString("es-EC")}
+            </p>
 
-            {/* Weak metric — only show if different from top */}
-            {weakMetric && weakMetric.metricId !== topMetric?.metricId && (
-              <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-                A mejorar:{' '}
-                <span className="text-error-container font-medium normal-case tracking-normal">
-                  {weakMetric.metricName}
-                </span>
-              </p>
+            {/* Metric badges */}
+            {(topMetric || weakMetric) && (
+              <div className="flex flex-col gap-2">
+                {/* Best area badge */}
+                {topMetric && (
+                  <div className="flex items-center gap-2 bg-primary/20 border border-primary/30 rounded-xl px-3 py-2">
+                    <TrendingUp size={14} className="text-primary shrink-0" />
+                    <div>
+                      <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+                        Mejor área
+                      </p>
+                      <p className="font-body text-[0.875rem] font-medium text-primary">
+                        {topMetric.metricName}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Weak area badge — only show if different from top */}
+                {weakMetric && weakMetric.metricId !== topMetric?.metricId && (
+                  <div className="flex items-center gap-2 bg-error-container/20 border border-error-container/30 rounded-xl px-3 py-2">
+                    <TrendingDown
+                      size={14}
+                      className="text-error-container shrink-0"
+                    />
+                    <div>
+                      <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+                        A mejorar
+                      </p>
+                      <p className="font-body text-[0.875rem] font-medium text-error-container">
+                        {weakMetric.metricName}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Assessment */}
             <p
               className={[
-                'font-body text-[0.6875rem] uppercase tracking-[0.05em]',
+                "font-body text-[0.6875rem] uppercase tracking-[0.05em]",
                 assessment(avg).color,
-              ].join(' ')}
+              ].join(" ")}
             >
               {assessment(avg).text}
             </p>

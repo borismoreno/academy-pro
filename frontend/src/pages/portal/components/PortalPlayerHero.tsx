@@ -73,6 +73,7 @@ function PlayerAvatar({
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<
     string | null | undefined
   >(photoUrl);
@@ -140,11 +141,15 @@ function PlayerAvatar({
   }
 
   return (
-    <div className="flex flex-col items-center gap-1.5 shrink-0">
+    <div className="group flex flex-col items-center gap-1.5 shrink-0">
       <div className="relative" style={{ width: 80, height: 80 }}>
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => {
+            setShowHint(true);
+            setTimeout(() => setShowHint(false), 2000);
+            fileInputRef.current?.click();
+          }}
           className="rounded-full overflow-hidden flex items-center justify-center bg-surface-highest w-full h-full focus:outline-none"
           aria-label="Cambiar foto del jugador"
         >
@@ -162,13 +167,29 @@ function PlayerAvatar({
         {!uploading && (
           <button
             type="button"
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => {
+              setShowHint(true);
+              setTimeout(() => setShowHint(false), 2000);
+              fileInputRef.current?.click();
+            }}
             className="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-1.5 cursor-pointer shadow-[0px_2px_8px_rgba(0,0,0,0.4)] hover:bg-secondary transition-colors"
             aria-label="Subir foto"
           >
             <Camera size={16} />
           </button>
         )}
+
+        {/* Hover / tap hint tooltip */}
+        <span
+          className={[
+            "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-1",
+            "bg-surface-highest text-on-surface-variant text-xs rounded-lg px-2 py-1 whitespace-nowrap",
+            "pointer-events-none transition-opacity duration-300",
+            showHint ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+          ].join(" ")}
+        >
+          Cambiar foto
+        </span>
 
         <input
           ref={fileInputRef}
@@ -178,11 +199,6 @@ function PlayerAvatar({
           onChange={handleFileChange}
         />
       </div>
-
-      {/* Mobile hint */}
-      <p className="sm:hidden font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
-        Toca para cambiar la foto
-      </p>
     </div>
   );
 }
@@ -217,7 +233,7 @@ export default function PortalPlayerHero({
 
           {/* Info */}
           <div className="flex flex-col gap-2 min-w-0">
-            <h2 className="font-display text-[3.5rem] font-bold text-on-surface leading-none truncate">
+            <h2 className="font-display text-[2rem] lg:text-[3.5rem] font-bold text-on-surface leading-tight wrap-break-word">
               {player.fullName}
             </h2>
 
