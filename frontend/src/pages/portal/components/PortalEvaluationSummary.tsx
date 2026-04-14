@@ -71,7 +71,13 @@ export default function PortalEvaluationSummary({
   if (isForbidden) return <UpgradePromptCard />;
 
   const hasEvaluations = progress && progress.evaluations.length > 0;
-  const latest = hasEvaluations ? progress.evaluations[0] : null;
+  const latest = hasEvaluations
+    ? [...progress.evaluations].sort(
+        (a, b) =>
+          new Date(b.evaluatedAt).getTime() - new Date(a.evaluatedAt).getTime(),
+      )[0]
+    : null;
+  // const latest = hasEvaluations ? progress.evaluations[0] : null;
   const avg = latest ? averageScore(latest.scores) : 0;
   const topMetric = latest
     ? [...latest.scores].sort((a, b) => b.score - a.score)[0]

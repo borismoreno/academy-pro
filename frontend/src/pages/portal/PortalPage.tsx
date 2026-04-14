@@ -8,6 +8,7 @@ import PortalPlayerHero from "./components/PortalPlayerHero";
 import PortalAttendanceSummary from "./components/PortalAttendanceSummary";
 import PortalEvaluationSummary from "./components/PortalEvaluationSummary";
 import PortalRecentActivity from "./components/PortalRecentActivity";
+import PortalProgressChart from "./components/PortalProgressChart";
 
 function getFirstName(fullName: string): string {
   return fullName.split(" ")[0];
@@ -90,6 +91,12 @@ export default function PortalPage() {
               isForbidden={isProgressForbidden}
             />
           </div>
+
+          {/* Progress chart — full width */}
+          <PortalProgressChart
+            progress={evaluationProgress}
+            isLoading={isLoadingDetail}
+          />
 
           {/* Recent activity — full width */}
           <PortalRecentActivity

@@ -179,16 +179,16 @@ function PlayerAvatar({
           </button>
         )}
 
-        {/* Hover / tap hint tooltip */}
+        {/* Tap hint tooltip — only visible briefly after tap */}
         <span
           className={[
             "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-1",
             "bg-surface-highest text-on-surface-variant text-xs rounded-lg px-2 py-1 whitespace-nowrap",
             "pointer-events-none transition-opacity duration-300",
-            showHint ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+            showHint ? "opacity-100" : "opacity-0",
           ].join(" ")}
         >
-          Cambiar foto
+          Toca para cambiar la foto
         </span>
 
         <input
