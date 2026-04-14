@@ -113,7 +113,7 @@ export default function RegisterPage() {
             <div className="flex flex-col gap-3">
               {/* WhatsApp button */}
               <a
-                href="https://wa.me/593000000000"
+                href="https://wa.me/593992703156?text=Hola%20Cancha360%2C%20estoy%20interesado%20en%20solicitar%20acceso%20a%20la%20plataforma."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="min-h-11"
