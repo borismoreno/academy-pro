@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { PrismaClient, Role } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import * as bcrypt from 'bcrypt';
 
 // Requires DATABASE_URL to be set in the environment (.env file or explicit variable).
@@ -12,12 +11,7 @@ const OWNER_PASSWORD = 'ChangeMe123!';
 const BCRYPT_ROUNDS = 10;
 
 async function main(): Promise<void> {
-  const connectionString = process.env['DATABASE_URL'];
-  if (!connectionString) {
-    throw new Error('DATABASE_URL no está configurado');
-  }
-  const adapter = new PrismaNeon({ connectionString });
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient();
 
   try {
     const existing = await prisma.user.findUnique({

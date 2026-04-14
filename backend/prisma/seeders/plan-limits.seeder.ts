@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { PrismaClient, SubscriptionPlan } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
 
 // Seeds plan_limits table with resource caps per subscription plan.
 // Uses upsert — safe to run multiple times without creating duplicates.
@@ -43,13 +42,7 @@ const LIMITS: PlanLimitSeed[] = [
 ];
 
 async function main(): Promise<void> {
-  const connectionString = process.env['DATABASE_URL'];
-  if (!connectionString) {
-    throw new Error('DATABASE_URL no está configurado');
-  }
-
-  const adapter = new PrismaNeon({ connectionString });
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient();
 
   try {
     for (const limit of LIMITS) {
