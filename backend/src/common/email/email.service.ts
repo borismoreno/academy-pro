@@ -12,6 +12,7 @@ const ROLE_LABELS: Record<string, string> = {
 export class EmailService {
   private readonly ses: SESClient;
   private readonly fromEmail: string;
+  private readonly fromName: string;
   private readonly logger = new Logger(EmailService.name);
 
   constructor(private readonly config: ConfigService) {
@@ -20,6 +21,7 @@ export class EmailService {
     const secretAccessKey = config.getOrThrow<string>('app.awsSecretAccessKey');
 
     this.fromEmail = config.getOrThrow<string>('app.awsSesFromEmail');
+    this.fromName = config.getOrThrow<string>('app.awsSesName');
 
     this.ses = new SESClient({
       region,
@@ -91,7 +93,7 @@ export class EmailService {
     `.trim();
 
     const command = new SendEmailCommand({
-      Source: this.fromEmail,
+      Source: `${this.fromName} <${this.fromEmail}>`,
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {
@@ -176,7 +178,7 @@ export class EmailService {
     `.trim();
 
     const command = new SendEmailCommand({
-      Source: this.fromEmail,
+      Source: `${this.fromName} <${this.fromEmail}>`,
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {
@@ -258,7 +260,7 @@ export class EmailService {
     `.trim();
 
     const command = new SendEmailCommand({
-      Source: this.fromEmail,
+      Source: `${this.fromName} <${this.fromEmail}>`,
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: {

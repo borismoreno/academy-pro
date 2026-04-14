@@ -26,6 +26,11 @@ export const appConfig = registerAs('app', () => {
     throw new Error('AWS_SES_FROM_EMAIL environment variable is required');
   }
 
+  const awsSesName = process.env.AWS_SES_NAME;
+  if (!awsSesName) {
+    throw new Error('AWS_SES_NAME environment variable is required');
+  }
+
   const awsS3BucketName = process.env.AWS_S3_BUCKET_NAME;
   if (!awsS3BucketName) {
     throw new Error('AWS_S3_BUCKET_NAME environment variable is required');
@@ -45,6 +50,7 @@ export const appConfig = registerAs('app', () => {
     awsAccessKeyId,
     awsSecretAccessKey,
     awsSesFromEmail,
+    awsSesName,
     awsS3BucketName,
   };
 });
