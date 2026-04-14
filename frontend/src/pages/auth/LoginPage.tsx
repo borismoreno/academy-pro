@@ -40,8 +40,22 @@ export default function LoginPage() {
     login({ email, password });
   }
 
+  useEffect(() => {
+    const viewport = document.querySelector('meta[name=viewport]')
+    if (viewport) {
+      viewport.setAttribute('content',
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content'
+      )
+    }
+    return () => {
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0')
+      }
+    }
+  }, [])
+
   return (
-    <div className="flex bg-surface-low" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className="flex bg-surface-low overflow-y-auto" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       {/* Left decorative panel — desktop only */}
       <div className="hidden lg:flex lg:w-1/2 bg-surface-lowest relative overflow-hidden flex-col items-center justify-center p-16">
         {/* Background gradient accent */}

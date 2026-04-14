@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   LockKeyhole,
@@ -125,6 +125,20 @@ function SuccessState() {
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ResetPasswordPage() {
+  useEffect(() => {
+    const viewport = document.querySelector('meta[name=viewport]')
+    if (viewport) {
+      viewport.setAttribute('content',
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content'
+      )
+    }
+    return () => {
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0')
+      }
+    }
+  }, [])
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
