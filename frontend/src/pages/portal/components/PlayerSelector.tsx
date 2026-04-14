@@ -1,4 +1,4 @@
-import type { PlayerResponse } from '@/services/portal.service';
+import type { PlayerResponse } from "@/services/portal.service";
 
 interface PlayerSelectorProps {
   players: PlayerResponse[];
@@ -8,10 +8,10 @@ interface PlayerSelectorProps {
 
 function getInitials(fullName: string): string {
   return fullName
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -24,7 +24,7 @@ export default function PlayerSelector({
 
   return (
     <div className="overflow-x-auto scrollbar-hide">
-      <div className="flex gap-3 pb-2" style={{ minWidth: 'max-content' }}>
+      <div className="flex gap-3 pb-2" style={{ minWidth: "max-content" }}>
         {players.map((player) => {
           const isSelected = player.id === selectedPlayerId;
 
@@ -33,16 +33,16 @@ export default function PlayerSelector({
               key={player.id}
               onClick={() => onSelect(player.id)}
               className={[
-                'flex flex-col items-center gap-1.5 px-4 py-2 rounded-2xl transition-all duration-200',
-                'min-h-14 focus:outline-none',
+                "flex flex-col items-center gap-1.5 px-4 py-2 rounded-2xl transition-all duration-200",
+                "min-h-14 focus:outline-none",
                 isSelected
-                  ? 'bg-linear-to-br from-primary to-secondary text-on-primary font-medium'
-                  : 'bg-surface-high text-on-surface-variant',
-              ].join(' ')}
+                  ? "bg-linear-to-br from-primary to-secondary text-on-primary font-medium"
+                  : "bg-surface-high text-on-surface-variant",
+              ].join(" ")}
             >
               {/* Avatar */}
               <div
-                className="rounded-full flex items-center justify-center overflow-hidden flex-shrink-0"
+                className="rounded-full flex items-center justify-center overflow-hidden shrink-0"
                 style={{ width: 36, height: 36 }}
               >
                 {player.photoUrl ? (
@@ -54,9 +54,11 @@ export default function PlayerSelector({
                 ) : (
                   <div
                     className={[
-                      'w-full h-full flex items-center justify-center font-display font-bold text-xs',
-                      isSelected ? 'bg-on-primary/20 text-on-primary' : 'bg-surface-highest text-primary',
-                    ].join(' ')}
+                      "w-full h-full flex items-center justify-center font-display font-bold text-xs",
+                      isSelected
+                        ? "bg-on-primary/20 text-on-primary"
+                        : "bg-surface-highest text-primary",
+                    ].join(" ")}
                   >
                     {getInitials(player.fullName)}
                   </div>
@@ -65,7 +67,7 @@ export default function PlayerSelector({
 
               {/* First name */}
               <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] leading-none">
-                {player.fullName.split(' ')[0]}
+                {player.fullName.split(" ")[0]}
               </span>
             </button>
           );

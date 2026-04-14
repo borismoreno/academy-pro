@@ -1,12 +1,12 @@
-import { useRef, useState } from 'react';
-import { Users, Calendar, TrendingUp, Camera } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/auth.store';
-import { toast } from '@/hooks/use-toast';
-import { uploadFile } from '@/services/storage.service';
-import { updatePlayerPhoto } from '@/services/players.service';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import type { PlayerResponse } from '@/services/portal.service';
+import { useRef, useState } from "react";
+import { Users, Calendar, TrendingUp, Camera } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth.store";
+import { toast } from "@/hooks/use-toast";
+import { uploadFile } from "@/services/storage.service";
+import { updatePlayerPhoto } from "@/services/players.service";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import type { PlayerResponse } from "@/services/portal.service";
 
 interface PortalPlayerHeroProps {
   player: PlayerResponse | undefined;
@@ -27,10 +27,10 @@ function calculateAge(birthDate: string): number {
 
 function getInitials(fullName: string): string {
   return fullName
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase();
 }
 
@@ -40,7 +40,10 @@ function SkeletonHero() {
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
       <div className="p-6">
         <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-          <div className="rounded-full bg-surface-highest flex-shrink-0" style={{ width: 80, height: 80 }} />
+          <div
+            className="rounded-full bg-surface-highest shrink-0"
+            style={{ width: 80, height: 80 }}
+          />
           <div className="flex-1 space-y-3">
             <div className="h-8 w-48 bg-surface-highest rounded" />
             <div className="h-5 w-24 bg-surface-highest rounded-full" />
@@ -60,19 +63,30 @@ interface PlayerAvatarProps {
   selectedPlayerId: string | undefined;
 }
 
-function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId }: PlayerAvatarProps) {
+function PlayerAvatar({
+  photoUrl,
+  fullName,
+  isParent,
+  playerId,
+  selectedPlayerId,
+}: PlayerAvatarProps) {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null | undefined>(photoUrl);
+  const [currentPhotoUrl, setCurrentPhotoUrl] = useState<
+    string | null | undefined
+  >(photoUrl);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      toast({ description: 'La imagen no debe superar los 2MB', variant: 'destructive' });
-      e.target.value = '';
+      toast({
+        description: "La imagen no debe superar los 2MB",
+        variant: "destructive",
+      });
+      e.target.value = "";
       return;
     }
 
@@ -83,14 +97,19 @@ function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId
       const publicUrl = await uploadFile(file);
       await updatePlayerPhoto(playerId, publicUrl);
       setCurrentPhotoUrl(publicUrl);
-      queryClient.invalidateQueries({ queryKey: ['portal-player', selectedPlayerId] });
-      toast({ description: 'Foto actualizada correctamente' });
+      queryClient.invalidateQueries({
+        queryKey: ["portal-player", selectedPlayerId],
+      });
+      toast({ description: "Foto actualizada correctamente" });
     } catch {
-      toast({ description: 'Error al actualizar la foto. Intenta de nuevo.', variant: 'destructive' });
+      toast({
+        description: "Error al actualizar la foto. Intenta de nuevo.",
+        variant: "destructive",
+      });
       setCurrentPhotoUrl(previousUrl);
     } finally {
       setUploading(false);
-      e.target.value = '';
+      e.target.value = "";
     }
   }
 
@@ -103,7 +122,7 @@ function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId
   ) : (
     <span
       className="font-display font-bold text-primary leading-none"
-      style={{ fontSize: '2rem' }}
+      style={{ fontSize: "2rem" }}
     >
       {getInitials(fullName)}
     </span>
@@ -112,7 +131,7 @@ function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId
   if (!isParent) {
     return (
       <div
-        className="rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center bg-surface-highest"
+        className="rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-surface-highest"
         style={{ width: 80, height: 80 }}
       >
         {avatarContent}
@@ -121,7 +140,7 @@ function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId
   }
 
   return (
-    <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
+    <div className="flex flex-col items-center gap-1.5 shrink-0">
       <div className="relative" style={{ width: 80, height: 80 }}>
         <button
           type="button"
@@ -168,9 +187,13 @@ function PlayerAvatar({ photoUrl, fullName, isParent, playerId, selectedPlayerId
   );
 }
 
-export default function PortalPlayerHero({ player, isLoading, selectedPlayerId }: PortalPlayerHeroProps) {
+export default function PortalPlayerHero({
+  player,
+  isLoading,
+  selectedPlayerId,
+}: PortalPlayerHeroProps) {
   const role = useAuthStore((s) => s.role);
-  const isParent = role === 'parent';
+  const isParent = role === "parent";
 
   if (isLoading || !player) return <SkeletonHero />;
 
@@ -209,13 +232,13 @@ export default function PortalPlayerHero({ player, isLoading, selectedPlayerId }
             <div className="flex flex-wrap gap-4 mt-1">
               {player.team && (
                 <span className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
-                  <Users size={14} className="flex-shrink-0" />
+                  <Users size={14} className="shrink-0" />
                   {player.team.name}
                 </span>
               )}
 
               <span className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
-                <Calendar size={14} className="flex-shrink-0" />
+                <Calendar size={14} className="shrink-0" />
                 {age} años
               </span>
             </div>
