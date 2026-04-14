@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.store';
 import { getDefaultRoute } from '@/config/navigation';
@@ -5,41 +6,50 @@ import { getDefaultRoute } from '@/config/navigation';
 // Layouts
 import AppLayout from '@/layouts/AppLayout';
 
-// Auth (public)
-import LoginPage from '@/pages/auth/LoginPage';
-import RegisterPage from '@/pages/auth/RegisterPage';
-import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
-import AcceptInvitationPage from '@/pages/auth/AcceptInvitationPage';
-
-// Protected pages
-import DashboardPage from '@/pages/DashboardPage';
-import TeamsPage from '@/pages/TeamsPage';
-import TeamDetailPage from '@/pages/teams/TeamDetailPage';
-import PlayersPage from '@/pages/PlayersPage';
-import PlayerDetailPage from '@/pages/players/PlayerDetailPage';
-import AttendancePage from '@/pages/attendance/AttendancePage';
-import SessionDetailPage from '@/pages/attendance/SessionDetailPage';
-import EvaluationsPage from '@/pages/evaluations/EvaluationsPage';
-import EvaluationDetailPage from '@/pages/evaluations/EvaluationDetailPage';
-import NotificationsPage from '@/pages/NotificationsPage';
-import SettingsPage from '@/pages/SettingsPage';
-import PortalPage from '@/pages/PortalPage';
-
-// Owner pages
-import OwnerDashboardPage from '@/pages/owner/OwnerDashboardPage';
-import OwnerAcademiesPage from '@/pages/owner/OwnerAcademiesPage';
-import OwnerAcademyDetailPage from '@/pages/owner/OwnerAcademyDetailPage';
-import OwnerSubscriptionsPage from '@/pages/owner/OwnerSubscriptionsPage';
-import OwnerPlanLimitsPage from '@/pages/owner/OwnerPlanLimitsPage';
-import OwnerUsersPage from '@/pages/owner/OwnerUsersPage';
-
-// Error pages
-import UnauthorizedPage from '@/pages/errors/UnauthorizedPage';
-
 // Route guards
 import ProtectedRoute from '@/components/shared/ProtectedRoute';
 import PublicOnlyRoute from '@/components/shared/PublicOnlyRoute';
+
+// Auth (public)
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
+const AcceptInvitationPage = lazy(() => import('@/pages/auth/AcceptInvitationPage'));
+
+// Protected pages
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const TeamsPage = lazy(() => import('@/pages/TeamsPage'));
+const TeamDetailPage = lazy(() => import('@/pages/teams/TeamDetailPage'));
+const PlayersPage = lazy(() => import('@/pages/PlayersPage'));
+const PlayerDetailPage = lazy(() => import('@/pages/players/PlayerDetailPage'));
+const AttendancePage = lazy(() => import('@/pages/attendance/AttendancePage'));
+const SessionDetailPage = lazy(() => import('@/pages/attendance/SessionDetailPage'));
+const EvaluationsPage = lazy(() => import('@/pages/evaluations/EvaluationsPage'));
+const EvaluationDetailPage = lazy(() => import('@/pages/evaluations/EvaluationDetailPage'));
+const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
+const PortalPage = lazy(() => import('@/pages/PortalPage'));
+
+// Owner pages
+const OwnerDashboardPage = lazy(() => import('@/pages/owner/OwnerDashboardPage'));
+const OwnerAcademiesPage = lazy(() => import('@/pages/owner/OwnerAcademiesPage'));
+const OwnerAcademyDetailPage = lazy(() => import('@/pages/owner/OwnerAcademyDetailPage'));
+const OwnerSubscriptionsPage = lazy(() => import('@/pages/owner/OwnerSubscriptionsPage'));
+const OwnerPlanLimitsPage = lazy(() => import('@/pages/owner/OwnerPlanLimitsPage'));
+const OwnerUsersPage = lazy(() => import('@/pages/owner/OwnerUsersPage'));
+
+// Error pages
+const UnauthorizedPage = lazy(() => import('@/pages/errors/UnauthorizedPage'));
+
+const AppFallback = () => (
+  <div className="flex items-center justify-center h-screen bg-surface-low">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-on-surface-variant font-body">Cargando...</p>
+    </div>
+  </div>
+);
 
 /**
  * Root redirect:
@@ -60,6 +70,7 @@ function RootRedirect() {
 export default function App() {
   return (
     <BrowserRouter>
+      <Suspense fallback={<AppFallback />}>
       <Routes>
         {/* Auth pages — redirect away if already authenticated */}
         <Route element={<PublicOnlyRoute />}>
@@ -109,6 +120,7 @@ export default function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
