@@ -31,6 +31,26 @@ const STATUS_LABELS: Record<string, string> = {
 
 type AcademyRow = Record<string, unknown> & AcademyWithSubscription;
 
+function planChip(plan: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${PLAN_CHIP_CLASSES[plan] ?? "bg-surface-highest text-on-surface-variant"}`}
+    >
+      {PLAN_LABELS[plan] ?? plan}
+    </span>
+  );
+}
+
+function statusChip(status: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${STATUS_CHIP_CLASSES[status] ?? ""}`}
+    >
+      {STATUS_LABELS[status] ?? status}
+    </span>
+  );
+}
+
 export default function OwnerSubscriptionsPage() {
   const [planFilter, setPlanFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -64,30 +84,13 @@ export default function OwnerSubscriptionsPage() {
     {
       key: "plan",
       label: "Plan",
-      render: (row: AcademyRow) => {
-        const plan = row.subscription?.plan ?? "free";
-        return (
-          <span
-            className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${PLAN_CHIP_CLASSES[plan] ?? ""}`}
-          >
-            {PLAN_LABELS[plan] ?? plan}
-          </span>
-        );
-      },
+      render: (row: AcademyRow) => planChip(row.subscription?.plan ?? "free"),
     },
     {
       key: "status",
       label: "Estado",
-      render: (row: AcademyRow) => {
-        const s = row.subscription?.status ?? "active";
-        return (
-          <span
-            className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${STATUS_CHIP_CLASSES[s] ?? ""}`}
-          >
-            {STATUS_LABELS[s] ?? s}
-          </span>
-        );
-      },
+      render: (row: AcademyRow) =>
+        statusChip(row.subscription?.status ?? "active"),
     },
     {
       key: "startsAt",
@@ -110,7 +113,8 @@ export default function OwnerSubscriptionsPage() {
       label: "Días restantes",
       render: (row: AcademyRow) => {
         const days = getDaysRemaining(row.subscription?.endsAt);
-        if (days === null) return <span className="text-on-surface-variant">—</span>;
+        if (days === null)
+          return <span className="text-on-surface-variant">—</span>;
         return (
           <span
             className={
@@ -178,6 +182,46 @@ export default function OwnerSubscriptionsPage() {
         data={academies as AcademyRow[]}
         isLoading={isLoading}
         emptyMessage="No hay suscripciones que coincidan con los filtros."
+        mobileCard={(row) => {
+          const item = row as AcademyRow;
+          const plan = item.subscription?.plan ?? "free";
+          const status = item.subscription?.status ?? "active";
+          const days = getDaysRemaining(item.subscription?.endsAt);
+          return (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <p className="font-display text-[1.1rem] font-semibold text-on-surface">
+                  {String(item.name)}
+                </p>
+                {planChip(plan)}
+              </div>
+              <div className="flex items-center gap-2">
+                {statusChip(status)}
+                <p className="text-sm text-on-surface-variant">
+                  Vence:{" "}
+                  {item.subscription?.endsAt
+                    ? new Date(item.subscription.endsAt).toLocaleDateString(
+                        "es-EC",
+                      )
+                    : "—"}
+                </p>
+              </div>
+              <p
+                className={`text-sm font-medium ${days !== null && days < 30 ? "text-error-container" : "text-on-surface-variant"}`}
+              >
+                {days !== null ? `${days} días restantes` : "Sin vencimiento"}
+              </p>
+              <button
+                onClick={() =>
+                  setSelectedAcademy(item as AcademyWithSubscription)
+                }
+                className="self-start text-sm text-primary font-medium min-h-[44px] flex items-center"
+              >
+                Editar suscripción →
+              </button>
+            </div>
+          );
+        }}
       />
 
       <SubscriptionFormDialog

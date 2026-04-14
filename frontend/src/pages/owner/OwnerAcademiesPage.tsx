@@ -35,6 +35,26 @@ const STATUS_LABELS: Record<string, string> = {
 
 type AcademyRow = Record<string, unknown> & AcademyWithSubscription;
 
+function planChip(plan: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${PLAN_CHIP_CLASSES[plan] ?? "bg-surface-highest text-on-surface-variant"}`}
+    >
+      {PLAN_LABELS[plan] ?? plan}
+    </span>
+  );
+}
+
+function statusChip(status: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${STATUS_CHIP_CLASSES[status] ?? ""}`}
+    >
+      {STATUS_LABELS[status] ?? status}
+    </span>
+  );
+}
+
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -74,30 +94,13 @@ export default function OwnerAcademiesPage() {
     {
       key: "plan",
       label: "Plan",
-      render: (row: AcademyRow) => {
-        const plan = row.subscription?.plan ?? "free";
-        return (
-          <span
-            className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${PLAN_CHIP_CLASSES[plan] ?? "bg-surface-highest text-on-surface-variant"}`}
-          >
-            {PLAN_LABELS[plan] ?? plan}
-          </span>
-        );
-      },
+      render: (row: AcademyRow) => planChip(row.subscription?.plan ?? "free"),
     },
     {
       key: "status",
       label: "Estado",
-      render: (row: AcademyRow) => {
-        const s = row.subscription?.status ?? "active";
-        return (
-          <span
-            className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${STATUS_CHIP_CLASSES[s] ?? ""}`}
-          >
-            {STATUS_LABELS[s] ?? s}
-          </span>
-        );
-      },
+      render: (row: AcademyRow) =>
+        statusChip(row.subscription?.status ?? "active"),
     },
     {
       key: "director",
@@ -164,7 +167,57 @@ export default function OwnerAcademiesPage() {
         data={academies as AcademyRow[]}
         isLoading={isLoading}
         emptyMessage="No se encontraron academias."
-        onRowClick={(row) => navigate(`/owner/academies/${(row as AcademyRow).id}`)}
+        onRowClick={(row) =>
+          navigate(`/owner/academies/${(row as AcademyRow).id}`)
+        }
+        mobileCard={(row) => {
+          const academy = row as AcademyRow;
+          const plan = academy.subscription?.plan ?? "free";
+          const status = academy.subscription?.status ?? "active";
+          return (
+            <div
+              onClick={() =>
+                navigate(`/owner/academies/${String(academy.id)}`)
+              }
+              className="cursor-pointer"
+            >
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <div>
+                  <p className="font-display text-[1.1rem] font-semibold text-on-surface">
+                    {String(academy.name)}
+                  </p>
+                  <p className="text-sm text-on-surface-variant">
+                    {String(academy.city ?? "—")}
+                  </p>
+                </div>
+                {planChip(plan)}
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                {statusChip(status)}
+                <p className="text-sm text-on-surface-variant truncate">
+                  {academy.director
+                    ? String(
+                        (academy.director as { email: string }).email,
+                      )
+                    : "—"}
+                </p>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-xs text-on-surface-variant">
+                  {String(academy.totalPlayers ?? 0)} jugadores
+                </span>
+                <span className="text-xs text-on-surface-variant">
+                  {String(academy.totalTeams ?? 0)} equipos
+                </span>
+                <span className="text-xs text-on-surface-variant">
+                  {new Date(academy.createdAt as string).toLocaleDateString(
+                    "es-EC",
+                  )}
+                </span>
+              </div>
+            </div>
+          );
+        }}
       />
 
       <AcademyFormDialog

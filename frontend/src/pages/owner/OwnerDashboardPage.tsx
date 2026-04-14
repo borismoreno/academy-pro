@@ -41,6 +41,26 @@ function PlanChip({ plan }: { plan: string }) {
   );
 }
 
+function planChip(plan: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${PLAN_CHIP_CLASSES[plan] ?? "bg-surface-highest text-on-surface-variant"}`}
+    >
+      {PLAN_LABELS[plan] ?? plan}
+    </span>
+  );
+}
+
+function statusChip(status: string) {
+  return (
+    <span
+      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-3 py-1 ${STATUS_CHIP_CLASSES[status] ?? ""}`}
+    >
+      {STATUS_LABELS[status] ?? status}
+    </span>
+  );
+}
+
 type AcademyRow = Record<string, unknown> & AcademyWithSubscription;
 
 const recentColumns = [
@@ -213,6 +233,38 @@ export default function OwnerDashboardPage() {
           onRowClick={(row) =>
             navigate(`/owner/academies/${(row as AcademyRow).id}`)
           }
+          mobileCard={(row) => {
+            const academy = row as AcademyRow;
+            return (
+              <div
+                onClick={() =>
+                  navigate(`/owner/academies/${String(academy.id)}`)
+                }
+                className="flex items-start justify-between gap-3 cursor-pointer"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-[1.1rem] font-semibold text-on-surface truncate">
+                    {String(academy.name)}
+                  </p>
+                  <p className="text-sm text-on-surface-variant">
+                    {String(academy.city ?? "—")}
+                  </p>
+                  <div className="flex gap-3 mt-1">
+                    <span className="text-xs text-on-surface-variant">
+                      {String(academy.totalPlayers ?? 0)} jugadores
+                    </span>
+                    <span className="text-xs text-on-surface-variant">
+                      {String(academy.totalTeams ?? 0)} equipos
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                  {planChip(academy.subscription?.plan ?? "free")}
+                  {statusChip(academy.subscription?.status ?? "active")}
+                </div>
+              </div>
+            );
+          }}
         />
       </div>
     </div>

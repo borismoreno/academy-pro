@@ -117,6 +117,44 @@ export default function OwnerUsersPage() {
         data={users as UserRow[]}
         isLoading={isLoading}
         emptyMessage="No se encontraron usuarios."
+        mobileCard={(row) => {
+          const user = row as UserRow;
+          const uniqueRoles = [
+            ...new Set(user.academyRoles.map((r) => r.role)),
+          ] as UserRole[];
+          return (
+            <div className="flex items-start gap-3">
+              {/* Avatar */}
+              <div className="w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center text-primary font-display font-bold text-sm flex-shrink-0">
+                {String(user.fullName).charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-on-surface font-body text-[0.875rem] truncate">
+                  {String(user.fullName)}
+                </p>
+                <p className="text-sm text-on-surface-variant truncate">
+                  {String(user.email)}
+                </p>
+                <div className="flex gap-2 mt-1 flex-wrap">
+                  {uniqueRoles.map((role) => (
+                    <span
+                      key={role}
+                      className={`font-body text-[0.6875rem] uppercase tracking-[0.05em] rounded-full px-2 py-0.5 ${ROLE_CHIP_CLASSES[role] ?? "bg-surface-highest text-on-surface-variant"}`}
+                    >
+                      {ROLE_LABELS[role] ?? role}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-on-surface-variant mt-1">
+                  {user.academyRoles.length} academias ·{" "}
+                  {new Date(user.createdAt as string).toLocaleDateString(
+                    "es-EC",
+                  )}
+                </p>
+              </div>
+            </div>
+          );
+        }}
       />
     </div>
   );
