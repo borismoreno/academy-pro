@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-surface-low">
+    <div className="min-h-dvh flex bg-surface-low">
       {/* Left decorative panel — desktop only */}
       <div className="hidden lg:flex lg:w-1/2 bg-surface-lowest relative overflow-hidden flex-col items-center justify-center p-16">
         {/* Background gradient accent */}
