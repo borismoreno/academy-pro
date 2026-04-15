@@ -259,7 +259,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex bg-surface-low" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className="min-h-screen flex bg-surface-low">
       <DecorativePanel />
 
       <div className="flex-1 flex items-center justify-center p-6 lg:p-16">
