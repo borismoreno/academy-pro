@@ -75,14 +75,14 @@ function OptionList({
 }: OptionListProps) {
   const [isReadOnly, setIsReadOnly] = useState(() => preventAutoFocus ?? false);
 
-  useEffect(() => {
-    if (preventAutoFocus) {
-      const timer = setTimeout(() => {
-        setIsReadOnly(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [preventAutoFocus]);
+  // useEffect(() => {
+  //   if (preventAutoFocus) {
+  //     const timer = setTimeout(() => {
+  //       setIsReadOnly(false);
+  //     }, 600);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [preventAutoFocus]);
 
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase();
@@ -110,6 +110,12 @@ function OptionList({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={searchPlaceholder}
+          onTouchStart={() => {
+            if (isReadOnly) setIsReadOnly(false);
+          }}
+          onFocus={() => {
+            if (isReadOnly) setIsReadOnly(false);
+          }}
           className="w-full bg-surface-highest border-none rounded-xl pl-9 pr-9 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none"
         />
         {searchQuery && (
