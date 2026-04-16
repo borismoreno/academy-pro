@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { Bell } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
-import { useNotificationCount } from '@/hooks/useNotificationCount';
 import { useLogout } from '@/hooks/useLogout';
+import NotificationPanel from '@/components/notifications/NotificationPanel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,9 +23,7 @@ function getInitials(fullName: string): string {
 }
 
 export default function Topbar({ pageTitle }: TopbarProps) {
-  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
-  const { count } = useNotificationCount();
   const { logout } = useLogout();
 
   const initials = user ? getInitials(user.fullName) : '?';
@@ -41,19 +37,8 @@ export default function Topbar({ pageTitle }: TopbarProps) {
 
       {/* Right: notification bell + avatar */}
       <div className="flex items-center gap-4">
-        {/* Notification bell */}
-        <button
-          onClick={() => navigate('/notifications')}
-          className="relative p-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-highest transition-colors cursor-pointer"
-          aria-label="Notificaciones"
-        >
-          <Bell size={20} />
-          {count > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-primary text-on-primary rounded-full font-body text-[0.625rem] font-semibold flex items-center justify-center leading-none">
-              {count > 99 ? '99+' : count}
-            </span>
-          )}
-        </button>
+        {/* Notification panel (Popover on desktop, Sheet on mobile) */}
+        <NotificationPanel />
 
         {/* User avatar dropdown */}
         <DropdownMenu>

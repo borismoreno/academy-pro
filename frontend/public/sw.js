@@ -1,4 +1,6 @@
-const CACHE_NAME = 'cancha360-v1'
+const CACHE_VERSION = new Date().toISOString().split('T')[0].replace(/-/g, '')
+const CACHE_NAME = `cancha360-${CACHE_VERSION}`
+
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -20,7 +22,10 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames
           .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+          .map((name) => {
+            console.log('Deleting old cache:', name)
+            return caches.delete(name)
+          })
       )
     })
   )
@@ -28,21 +33,29 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-  // Only cache GET requests
   if (event.request.method !== 'GET') return
-
-  // Skip API calls — always fetch from network
   if (event.request.url.includes('/api/')) return
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) return cachedResponse
-      return fetch(event.request).catch(() => {
-        // Return index.html for navigation requests when offline
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html')
+    fetch(event.request)
+      .then((response) => {
+        // Clone and cache successful responses
+        if (response && response.status === 200) {
+          const responseClone = response.clone()
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone)
+          })
         }
+        return response
       })
-    })
+      .catch(() => {
+        // Fallback to cache when offline
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html')
+          }
+        })
+      })
   )
 })

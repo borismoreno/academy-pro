@@ -4,7 +4,6 @@ import {
   User,
   ClipboardList,
   BarChart2,
-  Bell,
   Settings,
   Building2,
   CreditCard,
@@ -92,27 +91,24 @@ export function getDefaultRoute(role: UserRole): string {
  */
 export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
   academy_director: [
-    { label: 'Dashboard',      path: '/dashboard',    Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
-    { label: 'Equipos',        path: '/teams',        Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
-    { label: 'Jugadores',      path: '/players',      Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
-    { label: 'Asistencia',     path: '/attendance',   Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
-    { label: 'Evaluaciones',   path: '/evaluations',  Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
-    { label: 'Notificaciones', path: '/notifications',Icon: Bell,            allowedRoles: ROUTE_PERMISSIONS['/notifications'] },
-    { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    { label: 'Dashboard',     path: '/dashboard',   Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
+    { label: 'Equipos',       path: '/teams',       Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
+    { label: 'Jugadores',     path: '/players',     Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
+    { label: 'Asistencia',    path: '/attendance',  Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
+    { label: 'Evaluaciones',  path: '/evaluations', Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
+    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   coach: [
-    { label: 'Dashboard',      path: '/dashboard',    Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
-    { label: 'Equipos',        path: '/teams',        Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
-    { label: 'Jugadores',      path: '/players',      Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
-    { label: 'Asistencia',     path: '/attendance',   Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
-    { label: 'Evaluaciones',   path: '/evaluations',  Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
-    { label: 'Notificaciones', path: '/notifications',Icon: Bell,            allowedRoles: ROUTE_PERMISSIONS['/notifications'] },
-    { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    { label: 'Dashboard',     path: '/dashboard',   Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
+    { label: 'Equipos',       path: '/teams',       Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
+    { label: 'Jugadores',     path: '/players',     Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
+    { label: 'Asistencia',    path: '/attendance',  Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
+    { label: 'Evaluaciones',  path: '/evaluations', Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
+    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   parent: [
-    { label: 'Mi hijo',        path: '/portal',       Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/portal'] },
-    { label: 'Notificaciones', path: '/notifications',Icon: Bell,            allowedRoles: ROUTE_PERMISSIONS['/notifications'] },
-    { label: 'Configuración',  path: '/settings',     Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    { label: 'Mi hijo',       path: '/portal',      Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/portal'] },
+    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
   ],
   saas_owner: [
     { label: 'Dashboard',       path: '/owner/dashboard',     Icon: LayoutDashboard, allowedRoles: ['saas_owner'] },
@@ -134,10 +130,12 @@ export function getNavigationItems(role: UserRole): NavItemConfig[] {
  * For bottom nav: primary tabs (always visible, max 5) + overflow tabs
  * (shown inside the "Más" sheet) per role.
  *
- * academy_director (7 items) → 4 primary + overflow sheet
- * coach            (6 items) → 5 primary, no overflow
+ * academy_director (6 items) → 5 primary + Configuración in overflow sheet
+ * coach            (6 items) → 5 primary + Configuración in overflow sheet
  * parent           (2 items) → 2 primary, no overflow
  * saas_owner       (5 items) → 5 primary, no overflow
+ *
+ * Notificaciones is no longer a nav item — it is accessed via the bell icon in the Topbar.
  */
 export function getBottomNavItems(role: UserRole): {
   primary: NavItemConfig[];
@@ -145,22 +143,14 @@ export function getBottomNavItems(role: UserRole): {
 } {
   const all = getNavigationItems(role);
 
-  if (role === 'academy_director') {
-    // Primary: Dashboard, Jugadores, Asistencia, Evaluaciones (4 tabs + "Más")
-    const primaryPaths = ['/dashboard', '/players', '/attendance', '/evaluations'];
+  if (role === 'academy_director' || role === 'coach') {
+    // Primary: Dashboard, Equipos, Jugadores, Asistencia, Evaluaciones (5 tabs + "Más" for Configuración)
+    const primaryPaths = ['/dashboard', '/teams', '/players', '/attendance', '/evaluations'];
     const primary = all.filter((item) => primaryPaths.includes(item.path));
     const overflow = all.filter((item) => !primaryPaths.includes(item.path));
     return { primary, overflow };
   }
 
-  if (role === 'coach') {
-    // Primary: Dashboard, Jugadores, Asistencia, Evaluaciones, Notificaciones (5 tabs) + overflow
-    const primaryPaths = ['/dashboard', '/players', '/attendance', '/evaluations', '/notifications'];
-    const primary = all.filter((item) => primaryPaths.includes(item.path));
-    const overflow = all.filter((item) => !primaryPaths.includes(item.path));
-    return { primary, overflow };
-  }
-
-  // parent, saas_owner — show everything (≤ 5 items)
+  // parent (2 items), saas_owner (5 items) — show everything directly
   return { primary: all, overflow: [] };
 }
