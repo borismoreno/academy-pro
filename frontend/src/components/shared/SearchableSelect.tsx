@@ -26,9 +26,7 @@ interface SearchableSelectProps {
 }
 
 function useIsDesktop(): boolean {
-  const [isDesktop, setIsDesktop] = useState(
-    () => window.innerWidth >= 1024,
-  );
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
   useEffect(() => {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
@@ -60,6 +58,7 @@ interface OptionListProps {
   isLoading?: boolean;
   listClassName: string;
   inputWrapperClassName: string;
+  isDesktop: boolean;
 }
 
 function OptionList({
@@ -72,10 +71,12 @@ function OptionList({
   isLoading,
   listClassName,
   inputWrapperClassName,
+  isDesktop,
 }: OptionListProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (!isDesktop) return;
     const id = setTimeout(() => inputRef.current?.focus(), 100);
     return () => clearTimeout(id);
   }, []);
@@ -226,6 +227,7 @@ export function SearchableSelect({
             isLoading={isLoading}
             inputWrapperClassName="px-3 pt-3 pb-2"
             listClassName="max-h-64 overflow-y-auto px-2 pb-2"
+            isDesktop={isDesktop}
           />
         </PopoverContent>
       </Popover>
@@ -246,6 +248,7 @@ export function SearchableSelect({
           isLoading={isLoading}
           inputWrapperClassName="px-4 pb-3"
           listClassName="flex-1 overflow-y-auto px-4 pb-6"
+          isDesktop={isDesktop}
         />
       </SheetContent>
     </Sheet>
