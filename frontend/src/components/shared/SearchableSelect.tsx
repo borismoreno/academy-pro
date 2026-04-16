@@ -246,7 +246,12 @@ export function SearchableSelect({
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{triggerButton}</SheetTrigger>
-      <SheetContent className="max-h-[80vh] flex flex-col border-none p-0">
+      <SheetContent
+        className="max-h-[80vh] flex flex-col border-none p-0"
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+      >
         <OptionList
           options={options}
           value={value}

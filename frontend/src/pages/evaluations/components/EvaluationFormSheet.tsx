@@ -21,7 +21,7 @@ import { createEvaluation } from "@/services/evaluations.service";
 import type { CreateEvaluationData } from "@/services/evaluations.service";
 import MetricScoreInput from "./MetricScoreInput";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
-import { useKeyboardOffset } from "@/hooks/useKeyboardOffset";
+// import { useKeyboardOffset } from "@/hooks/useKeyboardOffset";
 
 const TEXTAREA_CLASS =
   "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -291,7 +291,7 @@ export default function EvaluationFormSheet({
   defaultPlayerId,
 }: EvaluationFormSheetProps) {
   const isDesktop = useIsDesktop();
-  const keyboardOffset = useKeyboardOffset(); // Just to trigger re-render on keyboard open/close for better sheet positioning
+  // const keyboardOffset = useKeyboardOffset(); // Just to trigger re-render on keyboard open/close for better sheet positioning
 
   function handleSuccess() {
     onOpenChange(false);
@@ -325,15 +325,7 @@ export default function EvaluationFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0"
-        onOpenAutoFocus={(e) => {
-          e.preventDefault();
-        }}
-        style={{
-          paddingBottom: keyboardOffset,
-        }}
-      >
+      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0">
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-xl font-semibold text-on-surface">
