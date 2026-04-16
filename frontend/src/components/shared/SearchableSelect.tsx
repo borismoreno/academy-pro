@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, type RefObject } from "react";
 import { Search, SearchX, Check, ChevronDown, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -26,9 +26,7 @@ interface SearchableSelectProps {
 }
 
 function useIsDesktop(): boolean {
-  const [isDesktop, setIsDesktop] = useState(
-    () => window.innerWidth >= 1024,
-  );
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
   useEffect(() => {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
@@ -60,6 +58,7 @@ interface OptionListProps {
   isLoading?: boolean;
   listClassName: string;
   inputWrapperClassName: string;
+  inputRef?: RefObject<HTMLInputElement | null>;
 }
 
 function OptionList({
@@ -72,14 +71,8 @@ function OptionList({
   isLoading,
   listClassName,
   inputWrapperClassName,
+  inputRef,
 }: OptionListProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const id = setTimeout(() => inputRef.current?.focus(), 100);
-    return () => clearTimeout(id);
-  }, []);
-
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return options
@@ -100,7 +93,7 @@ function OptionList({
           className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
         />
         <input
-          ref={inputRef}
+          ref={inputRef ?? undefined}
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -176,18 +169,38 @@ export function SearchableSelect({
 }: SearchableSelectProps) {
   const isDesktop = useIsDesktop();
   const [open, setOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
+
+  useEffect(() => {
+    if (sheetOpen) {
+      // Wait for Sheet slide-up animation to complete before focusing
+      // iOS needs this delay to prevent keyboard from appearing before content is visible
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [sheetOpen]);
 
   function handleSelect(val: string) {
     onValueChange(val);
     setOpen(false);
+    setSheetOpen(false);
     setSearchQuery("");
   }
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
+    if (!next) setSearchQuery("");
+  }
+
+  function handleSheetOpenChange(next: boolean) {
+    setOpen(next);
+    setSheetOpen(next);
     if (!next) setSearchQuery("");
   }
 
@@ -233,7 +246,7 @@ export function SearchableSelect({
   }
 
   return (
-    <Sheet open={open} onOpenChange={handleOpenChange}>
+    <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetTrigger asChild>{triggerButton}</SheetTrigger>
       <SheetContent className="max-h-[80vh] flex flex-col border-none p-0">
         <OptionList
@@ -246,6 +259,7 @@ export function SearchableSelect({
           isLoading={isLoading}
           inputWrapperClassName="px-4 pb-3"
           listClassName="flex-1 overflow-y-auto px-4 pb-6"
+          inputRef={searchInputRef}
         />
       </SheetContent>
     </Sheet>
