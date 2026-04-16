@@ -51,3 +51,13 @@ html, body, #root {
   .min-h-screen { min-height: 100dvh; }
   .max-h-screen { max-height: 100dvh; }
 }
+
+/* PWA safe area support */
+#root {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Remove tap highlight on iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

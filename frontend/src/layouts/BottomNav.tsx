@@ -34,7 +34,7 @@ function TabButton({ item, isActive }: TabButtonProps) {
         />
         {/* Active dot indicator */}
         {isActive && (
-          <span className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+          <span className="absolute -bottom-1.75 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
         )}
       </div>
       <span
@@ -108,6 +108,7 @@ export default function BottomNav() {
           "h-16 sm:h-18",
           "px-2",
         ].join(" ")}
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         aria-label="Navegación principal"
       >
         {/* Primary tabs */}
@@ -139,7 +140,7 @@ export default function BottomNav() {
                 }
               />
               {overflowIsActive && (
-                <span className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                <span className="absolute -bottom-1.75 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
               )}
             </div>
             <span

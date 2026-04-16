@@ -34,7 +34,7 @@ export default function AppLayout() {
             Mobile/tablet : pb-16 (64px) to clear the bottom nav bar
             Tablet sm+    : pb-18 to clear the taller bottom nav
             Desktop lg+   : pb-0 (no bottom nav) */}
-        <main className="flex-1 overflow-y-auto p-6 pb-20 sm:pb-22 lg:p-8 lg:pb-8">
+        <main className="flex-1 overflow-y-auto p-6 pb-20 sm:pb-22 lg:p-8 lg:pb-8" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 5rem)' }}>
           <Outlet />
         </main>
       </div>
