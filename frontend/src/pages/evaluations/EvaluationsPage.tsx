@@ -101,9 +101,7 @@ export default function EvaluationsPage() {
               })),
             ]}
             value={playerFilter || "all"}
-            onValueChange={(val) =>
-              setPlayerFilter(val === "all" ? "" : val)
-            }
+            onValueChange={(val) => setPlayerFilter(val === "all" ? "" : val)}
             placeholder="Todos los jugadores"
             searchPlaceholder="Buscar jugador..."
             isLoading={isLoadingPlayers}

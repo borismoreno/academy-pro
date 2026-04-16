@@ -323,7 +323,12 @@ export default function EvaluationFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0">
+      <SheetContent
+        className="bg-surface-high border-0 rounded-t-3xl max-h-[95vh] overflow-y-auto p-0"
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+      >
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
         <SheetHeader className="px-6 pt-6 pb-0">
           <SheetTitle className="font-display text-xl font-semibold text-on-surface">
