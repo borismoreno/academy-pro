@@ -1,32 +1,32 @@
-import { useState } from 'react';
-import { Users } from 'lucide-react';
-import PageHeader from '@/components/shared/PageHeader';
-import EmptyState from '@/components/shared/EmptyState';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { Button } from '@/components/ui/button';
-import { usePlayers } from '@/hooks/usePlayers';
-import { useTeams } from '@/hooks/useTeams';
-import { useAuthStore } from '@/store/auth.store';
-import PlayerCard from './components/PlayerCard';
-import PlayerFormSheet from './components/PlayerFormSheet';
+import { useState } from "react";
+import { Users } from "lucide-react";
+import PageHeader from "@/components/shared/PageHeader";
+import EmptyState from "@/components/shared/EmptyState";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { Button } from "@/components/ui/button";
+import { usePlayers } from "@/hooks/usePlayers";
+import { useTeams } from "@/hooks/useTeams";
+import { useAuthStore } from "@/store/auth.store";
+import PlayerCard from "./components/PlayerCard";
+import PlayerFormSheet from "./components/PlayerFormSheet";
 
 const POSITIONS = [
-  { value: '', label: 'Todas las posiciones' },
-  { value: 'Portero', label: 'Portero' },
-  { value: 'Defensa', label: 'Defensa' },
-  { value: 'Mediocampista', label: 'Mediocampista' },
-  { value: 'Delantero', label: 'Delantero' },
+  { value: "", label: "Todas las posiciones" },
+  { value: "Portero", label: "Portero" },
+  { value: "Defensa", label: "Defensa" },
+  { value: "Mediocampista", label: "Mediocampista" },
+  { value: "Delantero", label: "Delantero" },
 ];
 
 const FILTER_SELECT_CLASS =
-  'bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2 font-body text-sm text-on-surface-variant focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer';
+  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2 font-body text-sm text-on-surface-variant focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
 
 export default function PlayersPage() {
   const role = useAuthStore((state) => state.role);
-  const canAdd = role === 'academy_director' || role === 'coach';
+  const canAdd = role === "academy_director" || role === "coach";
 
-  const [teamFilter, setTeamFilter] = useState('');
-  const [positionFilter, setPositionFilter] = useState('');
+  const [teamFilter, setTeamFilter] = useState("");
+  const [positionFilter, setPositionFilter] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
   const filters = {
@@ -43,7 +43,7 @@ export default function PlayersPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        title="Jugadores"
+        title=""
         action={
           canAdd ? (
             <Button
@@ -114,7 +114,11 @@ export default function PlayersPage() {
         </div>
       )}
 
-      <PlayerFormSheet open={createOpen} onOpenChange={setCreateOpen} player={null} />
+      <PlayerFormSheet
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        player={null}
+      />
     </div>
   );
 }

@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { DateSelector } from "@/components/shared/DateSelector";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePlayers } from "@/hooks/usePlayers";
@@ -209,18 +209,11 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
       </div>
 
       {/* Date */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Fecha de evaluación
-        </label>
-        <Input
-          type="date"
-          value={evaluatedAt}
-          onChange={(e) => setEvaluatedAt(e.target.value)}
-          disabled={isPending}
-          required
-        />
-      </div>
+      <DateSelector
+        label="Fecha de evaluación"
+        value={evaluatedAt}
+        onChange={(val) => setEvaluatedAt(val)}
+      />
 
       {/* Notes */}
       <div className="flex flex-col gap-1.5">

@@ -69,7 +69,7 @@ export default function AttendancePage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Asistencia"
+        title=""
         action={
           canRegister ? (
             <button

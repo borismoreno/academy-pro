@@ -12,9 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { TimeSelector } from "@/components/shared/TimeSelector";
 import { toast } from "@/hooks/use-toast";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
 import { getFields } from "@/services/fields.service";
@@ -114,37 +114,27 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
       </div>
 
       {/* Start time */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Hora de inicio
-        </label>
-        <Input
-          type="time"
-          value={startTime}
-          onChange={(e) => {
-            setStartTime(e.target.value);
-            if (timeError) setTimeError("");
-          }}
-          disabled={isPending}
-        />
-      </div>
+      <TimeSelector
+        label="Hora de inicio"
+        value={startTime}
+        onChange={(val) => {
+          setStartTime(val);
+          if (timeError) setTimeError("");
+        }}
+      />
 
       {/* End time */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Hora de fin
-        </label>
-        <Input
-          type="time"
+      <div className="flex flex-col gap-1">
+        <TimeSelector
+          label="Hora de fin"
           value={endTime}
-          onChange={(e) => {
-            setEndTime(e.target.value);
+          onChange={(val) => {
+            setEndTime(val);
             if (timeError) setTimeError("");
           }}
-          disabled={isPending}
         />
         {timeError && (
-          <p className="font-body text-xs text-error-container">
+          <p className="font-body text-xs text-error-container mt-1">
             {timeError}
           </p>
         )}

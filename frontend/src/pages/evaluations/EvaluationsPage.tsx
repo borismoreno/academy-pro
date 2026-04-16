@@ -60,7 +60,7 @@ export default function EvaluationsPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Evaluaciones"
+        title=""
         action={
           canEvaluate ? (
             <button

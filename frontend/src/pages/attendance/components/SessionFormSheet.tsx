@@ -13,8 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { DateSelector } from "@/components/shared/DateSelector";
 import { toast } from "@/hooks/use-toast";
 import { useTeams } from "@/hooks/useTeams";
 import {
@@ -143,18 +143,11 @@ function SessionForm({ onCreated }: SessionFormProps) {
       </div>
 
       {/* Session date */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Fecha de la sesión
-        </label>
-        <Input
-          type="date"
-          value={sessionDate}
-          onChange={(e) => setSessionDate(e.target.value)}
-          disabled={createMutation.isPending}
-          required
-        />
-      </div>
+      <DateSelector
+        label="Fecha de la sesión"
+        value={sessionDate}
+        onChange={(val) => setSessionDate(val)}
+      />
 
       {/* Notes */}
       <div className="flex flex-col gap-1.5">

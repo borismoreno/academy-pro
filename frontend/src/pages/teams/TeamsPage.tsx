@@ -32,7 +32,7 @@ export default function TeamsPage() {
   return (
     <div className="flex flex-col">
       <PageHeader
-        title="Equipos"
+        title=""
         action={
           isDirector ? (
             <Button

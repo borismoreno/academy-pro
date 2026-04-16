@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { DateSelector } from "@/components/shared/DateSelector";
 import { toast } from "@/hooks/use-toast";
 import { useTeams } from "@/hooks/useTeams";
 import { createPlayer, updatePlayer } from "@/services/players.service";
@@ -179,21 +180,21 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       </div>
 
       {/* Birth date */}
-      <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Fecha de nacimiento
-        </label>
-        <Input
-          type="date"
+      <div className="flex flex-col gap-1">
+        <DateSelector
+          label="Fecha de nacimiento"
           value={birthDate}
-          onChange={(e) => {
-            setBirthDate(e.target.value);
+          onChange={(val) => {
+            setBirthDate(val);
             if (birthDateError) setBirthDateError("");
           }}
-          disabled={isPending}
+          yearRange={{
+            min: new Date().getFullYear() - 80,
+            max: new Date().getFullYear() - 5,
+          }}
         />
         {birthDateError && (
-          <p className="font-body text-xs text-error-container">
+          <p className="font-body text-xs text-error-container mt-1">
             {birthDateError}
           </p>
         )}

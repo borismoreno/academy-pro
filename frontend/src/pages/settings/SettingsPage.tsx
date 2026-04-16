@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Building2, Users, BarChart2, User, MapPin } from 'lucide-react';
-import { useAuthStore } from '@/store/auth.store';
-import PageHeader from '@/components/shared/PageHeader';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { useSettings } from '@/hooks/useSettings';
-import AcademyInfoForm from './components/AcademyInfoForm';
-import UserManagement from './components/UserManagement';
-import EvaluationMetricsManager from './components/EvaluationMetricsManager';
-import ProfileForm from './components/ProfileForm';
-import InviteUserSheet from './components/InviteUserSheet';
-import FieldsManager from './components/FieldsManager';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Building2, Users, BarChart2, User, MapPin } from "lucide-react";
+import { useAuthStore } from "@/store/auth.store";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { useSettings } from "@/hooks/useSettings";
+import AcademyInfoForm from "./components/AcademyInfoForm";
+import UserManagement from "./components/UserManagement";
+import EvaluationMetricsManager from "./components/EvaluationMetricsManager";
+import ProfileForm from "./components/ProfileForm";
+import InviteUserSheet from "./components/InviteUserSheet";
+import FieldsManager from "./components/FieldsManager";
 
-type TabId = 'academia' | 'canchas' | 'usuarios' | 'metricas' | 'perfil';
+type TabId = "academia" | "canchas" | "usuarios" | "metricas" | "perfil";
 
 interface TabConfig {
   id: TabId;
@@ -21,24 +20,24 @@ interface TabConfig {
 }
 
 const DIRECTOR_TABS: TabConfig[] = [
-  { id: 'academia', label: 'Mi academia', Icon: Building2 },
-  { id: 'canchas', label: 'Canchas', Icon: MapPin },
-  { id: 'usuarios', label: 'Usuarios', Icon: Users },
-  { id: 'metricas', label: 'Métricas', Icon: BarChart2 },
-  { id: 'perfil', label: 'Mi perfil', Icon: User },
+  { id: "academia", label: "Mi academia", Icon: Building2 },
+  { id: "canchas", label: "Canchas", Icon: MapPin },
+  { id: "usuarios", label: "Usuarios", Icon: Users },
+  { id: "metricas", label: "Métricas", Icon: BarChart2 },
+  { id: "perfil", label: "Mi perfil", Icon: User },
 ];
 
 const PROFILE_ONLY_TABS: TabConfig[] = [
-  { id: 'perfil', label: 'Mi perfil', Icon: User },
+  { id: "perfil", label: "Mi perfil", Icon: User },
 ];
 
 export default function SettingsPage() {
   const role = useAuthStore((s) => s.role);
   const [searchParams] = useSearchParams();
 
-  const isDirector = role === 'academy_director';
+  const isDirector = role === "academy_director";
   const tabs = isDirector ? DIRECTOR_TABS : PROFILE_ONLY_TABS;
-  const defaultTab: TabId = isDirector ? 'academia' : 'perfil';
+  const defaultTab: TabId = isDirector ? "academia" : "perfil";
 
   const [activeTab, setActiveTab] = useState<TabId>(defaultTab);
   const [inviteSheetOpen, setInviteSheetOpen] = useState(false);
@@ -59,15 +58,15 @@ export default function SettingsPage() {
 
   // ?action=invite — navigate to usuarios tab and open sheet
   useEffect(() => {
-    if (searchParams.get('action') === 'invite' && isDirector) {
-      setActiveTab('usuarios');
+    if (searchParams.get("action") === "invite" && isDirector) {
+      setActiveTab("usuarios");
       setInviteSheetOpen(true);
     }
   }, [searchParams, isDirector]);
 
   function renderContent() {
     switch (activeTab) {
-      case 'academia':
+      case "academia":
         if (academyLoading) {
           return (
             <div className="flex justify-center py-16">
@@ -83,10 +82,10 @@ export default function SettingsPage() {
           />
         );
 
-      case 'canchas':
+      case "canchas":
         return <FieldsManager />;
 
-      case 'usuarios':
+      case "usuarios":
         return (
           <>
             <UserManagement
@@ -102,7 +101,7 @@ export default function SettingsPage() {
           </>
         );
 
-      case 'metricas':
+      case "metricas":
         return (
           <EvaluationMetricsManager
             metrics={metrics}
@@ -117,7 +116,7 @@ export default function SettingsPage() {
           />
         );
 
-      case 'perfil':
+      case "perfil":
         return <ProfileForm />;
 
       default:
@@ -127,9 +126,7 @@ export default function SettingsPage() {
 
   return (
     <div className="px-4 py-6 lg:px-8 lg:py-8">
-      <PageHeader title="Configuración" />
-
-      <div className="mt-6 flex flex-col lg:flex-row gap-6 lg:gap-8">
+      <div className="mt-2 flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* Tab list */}
         <div className="lg:w-48 lg:shrink-0">
           {/* Mobile: horizontal scroll */}
@@ -139,11 +136,11 @@ export default function SettingsPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={[
-                  'flex items-center gap-2 min-h-11 px-4 py-2 rounded-xl font-body text-sm whitespace-nowrap transition-all shrink-0 cursor-pointer',
+                  "flex items-center gap-2 min-h-11 px-4 py-2 rounded-xl font-body text-sm whitespace-nowrap transition-all shrink-0 cursor-pointer",
                   activeTab === id
-                    ? 'bg-surface-high text-primary'
-                    : 'text-on-surface-variant hover:bg-surface-high',
-                ].join(' ')}
+                    ? "bg-surface-high text-primary"
+                    : "text-on-surface-variant hover:bg-surface-high",
+                ].join(" ")}
               >
                 <Icon size={16} />
                 {label}
@@ -158,11 +155,11 @@ export default function SettingsPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={[
-                  'flex items-center gap-3 min-h-11 px-4 py-3 rounded-xl font-body text-sm text-left transition-all cursor-pointer',
+                  "flex items-center gap-3 min-h-11 px-4 py-3 rounded-xl font-body text-sm text-left transition-all cursor-pointer",
                   activeTab === id
-                    ? 'bg-surface-high text-primary'
-                    : 'text-on-surface-variant hover:bg-surface-high',
-                ].join(' ')}
+                    ? "bg-surface-high text-primary"
+                    : "text-on-surface-variant hover:bg-surface-high",
+                ].join(" ")}
               >
                 <Icon size={16} />
                 {label}
