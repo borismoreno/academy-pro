@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, type RefObject } from "react";
 import { Search, SearchX, Check, ChevronDown, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -58,7 +58,7 @@ interface OptionListProps {
   isLoading?: boolean;
   listClassName: string;
   inputWrapperClassName: string;
-  preventAutoFocus?: boolean;
+  inputRef?: RefObject<HTMLInputElement | null>;
 }
 
 function OptionList({
@@ -71,19 +71,8 @@ function OptionList({
   isLoading,
   listClassName,
   inputWrapperClassName,
-  preventAutoFocus,
+  inputRef,
 }: OptionListProps) {
-  const [isReadOnly, setIsReadOnly] = useState(() => preventAutoFocus ?? false);
-
-  useEffect(() => {
-    if (preventAutoFocus) {
-      const timer = setTimeout(() => {
-        setIsReadOnly(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [preventAutoFocus]);
-
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return options
@@ -104,9 +93,8 @@ function OptionList({
           className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
         />
         <input
+          ref={inputRef ?? undefined}
           type="text"
-          inputMode="search"
-          readOnly={isReadOnly}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={searchPlaceholder}
@@ -181,13 +169,27 @@ export function SearchableSelect({
 }: SearchableSelectProps) {
   const isDesktop = useIsDesktop();
   const [open, setOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
+
+  useEffect(() => {
+    if (sheetOpen) {
+      // Wait for Sheet slide-up animation to complete before focusing
+      // iOS needs this delay to prevent keyboard from appearing before content is visible
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [sheetOpen]);
 
   function handleSelect(val: string) {
     onValueChange(val);
     setOpen(false);
+    setSheetOpen(false);
     setSearchQuery("");
   }
 
@@ -198,6 +200,7 @@ export function SearchableSelect({
 
   function handleSheetOpenChange(next: boolean) {
     setOpen(next);
+    setSheetOpen(next);
     if (!next) setSearchQuery("");
   }
 
@@ -236,7 +239,6 @@ export function SearchableSelect({
             isLoading={isLoading}
             inputWrapperClassName="px-3 pt-3 pb-2"
             listClassName="max-h-64 overflow-y-auto px-2 pb-2"
-            preventAutoFocus={false}
           />
         </PopoverContent>
       </Popover>
@@ -257,7 +259,7 @@ export function SearchableSelect({
           isLoading={isLoading}
           inputWrapperClassName="px-4 pb-3"
           listClassName="flex-1 overflow-y-auto px-4 pb-6"
-          preventAutoFocus={true}
+          inputRef={searchInputRef}
         />
       </SheetContent>
     </Sheet>
