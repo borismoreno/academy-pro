@@ -20,9 +20,7 @@ import { useEvaluationMetrics } from "@/hooks/useEvaluationMetrics";
 import { createEvaluation } from "@/services/evaluations.service";
 import type { CreateEvaluationData } from "@/services/evaluations.service";
 import MetricScoreInput from "./MetricScoreInput";
-
-const SELECT_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const TEXTAREA_CLASS =
   "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -62,7 +60,7 @@ interface FormContentProps {
 
 function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
   const queryClient = useQueryClient();
-  const { players } = usePlayers();
+  const { players, isLoading: isLoadingPlayers } = usePlayers();
   const { metrics, isLoading: metricsLoading } = useEvaluationMetrics();
 
   const activePlayers = players.filter((p) => p.isActive);
@@ -184,23 +182,22 @@ function FormContent({ defaultPlayerId, onSuccess }: FormContentProps) {
         <label className="font-body text-sm text-on-surface-variant">
           Jugador
         </label>
-        <select
+        <SearchableSelect
+          options={activePlayers.map((p) => ({
+            value: p.id,
+            label: p.fullName,
+            subtitle: p.team?.name,
+          }))}
           value={playerId}
-          onChange={(e) => {
-            setPlayerId(e.target.value);
+          onValueChange={(val) => {
+            setPlayerId(val);
             if (playerError) setPlayerError("");
           }}
+          placeholder="Seleccionar jugador"
+          searchPlaceholder="Buscar jugador..."
+          isLoading={isLoadingPlayers}
           disabled={isPending}
-          className={SELECT_CLASS}
-        >
-          <option value="">Seleccionar jugador</option>
-          {activePlayers.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.fullName}
-              {p.team?.name ? ` — ${p.team.name}` : ""}
-            </option>
-          ))}
-        </select>
+        />
         {playerError && (
           <p className="font-body text-xs text-error-container">
             {playerError}

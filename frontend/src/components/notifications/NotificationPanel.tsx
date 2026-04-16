@@ -13,6 +13,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import NotificationRow from "@/pages/notifications/components/NotificationRow";
 import type { Notification } from "@/types";
 import { useNotificationCount } from "@/hooks/useNotificationCount";
+import { useQueryClient } from "@tanstack/react-query";
 
 // ---------------------------------------------------------------------------
 // PanelContent — shared inner content for both Popover and Sheet
@@ -134,6 +135,7 @@ export default function NotificationPanel() {
   const [open, setOpen] = useState(false);
   const isMobile = window.innerWidth < 1024;
   const hasMarkedRef = useRef(false);
+  const queryClient = useQueryClient();
 
   const { notifications, isLoading, markAllAsReadMutation } =
     useNotifications();
@@ -146,6 +148,12 @@ export default function NotificationPanel() {
         hasMarkedRef.current = true;
         markAllAsReadMutation.mutate();
       }
+      // Invalidate portal queries so parent portal refreshes
+      // This is a no-op for non-parent roles since these queries don't exist
+      queryClient.invalidateQueries({ queryKey: ["portal-player"] });
+      queryClient.invalidateQueries({ queryKey: ["portal-attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["portal-progress"] });
+      queryClient.invalidateQueries({ queryKey: ["my-players"] });
     } else {
       hasMarkedRef.current = false;
     }

@@ -12,10 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import EmptyState from "@/components/shared/EmptyState";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 import { toast } from "@/hooks/use-toast";
 import { usePlayerDetail } from "@/hooks/usePlayerDetail";
 import api from "@/services/api";
@@ -36,15 +35,6 @@ async function fetchParents(): Promise<AcademyMember[]> {
   return response.data.data;
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-}
-
 const RELATIONSHIP_OPTIONS = ["Padre", "Madre", "Tutor"];
 
 interface FormBodyProps {
@@ -55,18 +45,13 @@ interface FormBodyProps {
 function FormBody({ playerId, onOpenChange }: FormBodyProps) {
   const { addParentMutation } = usePlayerDetail(playerId);
 
-  const { data: parents = [], isLoading } = useQuery({
+  const { data: parents = [], isLoading: isLoadingParents } = useQuery({
     queryKey: ["academy-parents"],
     queryFn: fetchParents,
   });
 
-  const [search, setSearch] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
   const [relationship, setRelationship] = useState("Padre");
-
-  const filtered = parents.filter((p) =>
-    p.fullName.toLowerCase().includes(search.toLowerCase()),
-  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -85,61 +70,20 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
 
   return (
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
-      {/* Search */}
-      <Input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Buscar por nombre..."
+      {/* Parent selector */}
+      <SearchableSelect
+        options={parents.map((p) => ({
+          value: p.userId,
+          label: p.fullName,
+          subtitle: p.email,
+        }))}
+        value={selectedUserId}
+        onValueChange={setSelectedUserId}
+        placeholder="Seleccionar padre/tutor"
+        searchPlaceholder="Buscar por nombre o email..."
+        isLoading={isLoadingParents}
         disabled={addParentMutation.isPending}
       />
-
-      {/* Parent list */}
-      <div className="flex flex-col gap-1 max-h-60 overflow-y-auto -mx-1 px-1">
-        {isLoading ? (
-          <div className="flex justify-center py-6">
-            <LoadingSpinner size="md" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            message={
-              search
-                ? "No se encontraron padres/tutores con ese nombre."
-                : "No hay padres o tutores registrados en esta academia."
-            }
-          />
-        ) : (
-          filtered.map((parent) => (
-            <button
-              key={parent.userId}
-              type="button"
-              onClick={() => setSelectedUserId(parent.userId)}
-              disabled={addParentMutation.isPending}
-              className={`flex items-center gap-3 min-h-11 px-3 rounded-xl transition-colors text-left ${
-                selectedUserId === parent.userId
-                  ? "bg-surface-highest"
-                  : "hover:bg-surface-highest"
-              }`}
-            >
-              <div className="shrink-0 w-8 h-8 rounded-full bg-surface-highest flex items-center justify-center">
-                <span className="font-body text-[0.6875rem] font-semibold text-primary">
-                  {getInitials(parent.fullName)}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-body text-sm text-on-surface truncate">
-                  {parent.fullName}
-                </p>
-                <p className="font-body text-xs text-on-surface-variant truncate">
-                  {parent.email}
-                </p>
-              </div>
-              {selectedUserId === parent.userId && (
-                <div className="shrink-0 w-4 h-4 rounded-full bg-primary" />
-              )}
-            </button>
-          ))
-        )}
-      </div>
 
       {/* Relationship select */}
       <div className="flex flex-col gap-1.5">

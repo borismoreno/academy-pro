@@ -10,9 +10,7 @@ import { usePlayers } from "@/hooks/usePlayers";
 import { useEvaluations } from "@/hooks/useEvaluations";
 import EvaluationCard from "./components/EvaluationCard";
 import EvaluationFormSheet from "./components/EvaluationFormSheet";
-
-const SELECT_CLASS =
-  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 export default function EvaluationsPage() {
   const role = useAuthStore((s) => s.role);
@@ -26,11 +24,11 @@ export default function EvaluationsPage() {
     () => searchParams.get("playerId") ?? "",
   );
 
-  const { teams } = useTeams();
+  const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
 
   // Filter players by selected team
-  const { players } = usePlayers(
+  const { players, isLoading: isLoadingPlayers } = usePlayers(
     teamFilter ? { teamId: teamFilter } : undefined,
   );
   const activePlayers = players.filter((p) => p.isActive);
@@ -75,31 +73,42 @@ export default function EvaluationsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <select
-          value={teamFilter}
-          onChange={(e) => handleTeamChange(e.target.value)}
-          className={SELECT_CLASS}
-        >
-          <option value="">Todos los equipos</option>
-          {activeTeams.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={playerFilter}
-          onChange={(e) => setPlayerFilter(e.target.value)}
-          className={SELECT_CLASS}
-        >
-          <option value="">Todos los jugadores</option>
-          {activePlayers.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.fullName}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={[
+              { value: "all", label: "Todos los equipos" },
+              ...activeTeams.map((t) => ({
+                value: t.id,
+                label: t.name,
+                subtitle: t.category ?? undefined,
+              })),
+            ]}
+            value={teamFilter || "all"}
+            onValueChange={(val) => handleTeamChange(val === "all" ? "" : val)}
+            placeholder="Todos los equipos"
+            searchPlaceholder="Buscar equipo..."
+            isLoading={isLoadingTeams}
+          />
+        </div>
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={[
+              { value: "all", label: "Todos los jugadores" },
+              ...activePlayers.map((p) => ({
+                value: p.id,
+                label: p.fullName,
+                subtitle: p.team?.name,
+              })),
+            ]}
+            value={playerFilter || "all"}
+            onValueChange={(val) =>
+              setPlayerFilter(val === "all" ? "" : val)
+            }
+            placeholder="Todos los jugadores"
+            searchPlaceholder="Buscar jugador..."
+            isLoading={isLoadingPlayers}
+          />
+        </div>
       </div>
 
       {/* Content */}

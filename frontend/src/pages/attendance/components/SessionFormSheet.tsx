@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { DateSelector } from "@/components/shared/DateSelector";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 import { toast } from "@/hooks/use-toast";
 import { useTeams } from "@/hooks/useTeams";
 import {
@@ -27,9 +28,6 @@ import type {
 } from "@/services/attendance.service";
 import type { Session } from "@/types";
 import AttendanceList from "./AttendanceList";
-
-const SELECT_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
 const TEXTAREA_CLASS =
   "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -68,7 +66,7 @@ interface SessionFormProps {
 
 function SessionForm({ onCreated }: SessionFormProps) {
   const queryClient = useQueryClient();
-  const { teams } = useTeams();
+  const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
 
   const [teamId, setTeamId] = useState("");
@@ -119,22 +117,22 @@ function SessionForm({ onCreated }: SessionFormProps) {
         <label className="font-body text-sm text-on-surface-variant">
           Equipo
         </label>
-        <select
+        <SearchableSelect
+          options={activeTeams.map((t) => ({
+            value: t.id,
+            label: t.name,
+            subtitle: t.category ?? undefined,
+          }))}
           value={teamId}
-          onChange={(e) => {
-            setTeamId(e.target.value);
+          onValueChange={(val) => {
+            setTeamId(val);
             if (teamIdError) setTeamIdError("");
           }}
+          placeholder="Seleccionar equipo"
+          searchPlaceholder="Buscar equipo..."
+          isLoading={isLoadingTeams}
           disabled={createMutation.isPending}
-          className={SELECT_CLASS}
-        >
-          <option value="">Seleccionar equipo</option>
-          {activeTeams.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select>
+        />
         {teamIdError && (
           <p className="font-body text-xs text-error-container">
             {teamIdError}

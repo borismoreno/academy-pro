@@ -12,10 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import EmptyState from "@/components/shared/EmptyState";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 import { toast } from "@/hooks/use-toast";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
 import api from "@/services/api";
@@ -47,30 +46,16 @@ interface FormBodyProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-}
-
 function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addCoachMutation } = useTeamDetail(teamId);
 
-  const { data: coaches = [], isLoading } = useQuery({
+  const { data: coaches = [], isLoading: isLoadingCoaches } = useQuery({
     queryKey: ["academy-coaches"],
     queryFn: fetchCoaches,
   });
 
-  const [search, setSearch] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
   const [isPrimary, setIsPrimary] = useState(false);
-
-  const filtered = coaches.filter((c) =>
-    c.fullName.toLowerCase().includes(search.toLowerCase()),
-  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,63 +74,20 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
   return (
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
-      {/* Search */}
-      <Input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Buscar entrenador..."
+      {/* Coach selector */}
+      <SearchableSelect
+        options={coaches.map((c) => ({
+          value: c.userId,
+          label: c.fullName,
+          subtitle: c.email,
+        }))}
+        value={selectedUserId}
+        onValueChange={setSelectedUserId}
+        placeholder="Seleccionar entrenador"
+        searchPlaceholder="Buscar entrenador..."
+        isLoading={isLoadingCoaches}
         disabled={addCoachMutation.isPending}
       />
-
-      {/* Coach list */}
-      <div className="flex flex-col gap-1 max-h-64 overflow-y-auto -mx-1 px-1">
-        {isLoading ? (
-          <div className="flex justify-center py-6">
-            <LoadingSpinner size="md" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            message={
-              search
-                ? "No se encontraron entrenadores con ese nombre."
-                : "No hay entrenadores registrados en esta academia."
-            }
-          />
-        ) : (
-          filtered.map((coach) => (
-            <button
-              key={coach.userId}
-              type="button"
-              onClick={() => setSelectedUserId(coach.userId)}
-              disabled={addCoachMutation.isPending}
-              className={`flex items-center gap-3 min-h-11 px-3 rounded-xl transition-colors text-left ${
-                selectedUserId === coach.userId
-                  ? "bg-surface-highest"
-                  : "hover:bg-surface-highest"
-              }`}
-            >
-              {/* Avatar */}
-              <div className="shrink-0 w-8 h-8 rounded-full bg-surface-highest flex items-center justify-center">
-                <span className="font-body text-[0.6875rem] font-semibold text-primary">
-                  {getInitials(coach.fullName)}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-body text-sm text-on-surface truncate">
-                  {coach.fullName}
-                </p>
-                <p className="font-body text-xs text-on-surface-variant truncate">
-                  {coach.email}
-                </p>
-              </div>
-              {/* Selection indicator */}
-              {selectedUserId === coach.userId && (
-                <div className="shrink-0 w-4 h-4 rounded-full bg-primary" />
-              )}
-            </button>
-          ))
-        )}
-      </div>
 
       {/* isPrimary toggle */}
       <div className="flex items-center justify-between min-h-11">
