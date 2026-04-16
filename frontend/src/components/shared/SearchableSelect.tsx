@@ -58,7 +58,7 @@ interface OptionListProps {
   isLoading?: boolean;
   listClassName: string;
   inputWrapperClassName: string;
-  isDesktop: boolean;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 function OptionList({
@@ -71,15 +71,16 @@ function OptionList({
   isLoading,
   listClassName,
   inputWrapperClassName,
-  isDesktop,
+  inputRef,
 }: OptionListProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const internalRef = useRef<HTMLInputElement>(null);
+  const finalRef = inputRef ?? internalRef;
 
-  useEffect(() => {
-    if (!isDesktop) return;
-    const id = setTimeout(() => inputRef.current?.focus(), 100);
-    return () => clearTimeout(id);
-  }, []);
+  // useEffect(() => {
+  //   if (!isDesktop) return;
+  //   const id = setTimeout(() => inputRef.current?.focus(), 100);
+  //   return () => clearTimeout(id);
+  // }, [isDesktop]);
 
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase();
@@ -101,7 +102,7 @@ function OptionList({
           className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
         />
         <input
-          ref={inputRef}
+          ref={finalRef}
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -178,6 +179,7 @@ export function SearchableSelect({
   const isDesktop = useIsDesktop();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
 
@@ -189,7 +191,15 @@ export function SearchableSelect({
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (!next) setSearchQuery("");
+    if (!next) {
+      setSearchQuery("");
+      return;
+    }
+    if (!isDesktop) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
   }
 
   const triggerButton = (
@@ -227,7 +237,6 @@ export function SearchableSelect({
             isLoading={isLoading}
             inputWrapperClassName="px-3 pt-3 pb-2"
             listClassName="max-h-64 overflow-y-auto px-2 pb-2"
-            isDesktop={isDesktop}
           />
         </PopoverContent>
       </Popover>
@@ -248,7 +257,6 @@ export function SearchableSelect({
           isLoading={isLoading}
           inputWrapperClassName="px-4 pb-3"
           listClassName="flex-1 overflow-y-auto px-4 pb-6"
-          isDesktop={isDesktop}
         />
       </SheetContent>
     </Sheet>
