@@ -1,5 +1,6 @@
 import api from './api';
 import type { ApiResponse } from '@/types';
+import { compressImage } from '@/lib/imageCompressor';
 
 interface PresignedUrlResponse {
   presignedUrl: string;
@@ -34,7 +35,30 @@ async function uploadToS3(
 }
 
 export async function uploadFile(file: File): Promise<string> {
-  const { presignedUrl, publicUrl } = await getPresignedUrl(file.name, file.type);
-  await uploadToS3(presignedUrl, file, file.type);
-  return publicUrl;
+  // Compress image before uploading
+  // Only compress image files — skip if not an image
+  let fileToUpload = file
+
+  if (file.type.startsWith('image/')) {
+    try {
+      fileToUpload = await compressImage(file, {
+        maxSizeMB: 1.5,        // compress to max 1.5MB (below the 2MB backend limit)
+        maxWidthOrHeight: 1280, // max dimension 1280px — enough for profile photos
+        quality: 0.85,          // start at 85% quality
+      })
+    } catch (error) {
+      // If compression fails, try uploading the original
+      console.error('Image compression failed, uploading original:', error)
+      fileToUpload = file
+    }
+  }
+
+  const { presignedUrl, publicUrl } = await getPresignedUrl(
+    fileToUpload.name,
+    fileToUpload.type,
+  )
+
+  await uploadToS3(presignedUrl, fileToUpload, fileToUpload.type)
+
+  return publicUrl
 }

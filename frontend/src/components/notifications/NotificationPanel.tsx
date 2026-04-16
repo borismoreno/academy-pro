@@ -1,13 +1,18 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bell } from 'lucide-react';
-import { useNotifications } from '@/hooks/useNotifications';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import NotificationRow from '@/pages/notifications/components/NotificationRow';
-import type { Notification } from '@/types';
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Bell } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import NotificationRow from "@/pages/notifications/components/NotificationRow";
+import type { Notification } from "@/types";
+import { useNotificationCount } from "@/hooks/useNotificationCount";
 
 // ---------------------------------------------------------------------------
 // PanelContent — shared inner content for both Popover and Sheet
@@ -33,7 +38,10 @@ function PanelContent({
   const navigate = useNavigate();
 
   const limited = [...notifications]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
     .slice(0, 15);
 
   return (
@@ -61,7 +69,10 @@ function PanelContent({
           </div>
         )}
         {!isLoading && limited.length === 0 && (
-          <EmptyState icon={<Bell size={32} />} message="No tienes notificaciones." />
+          <EmptyState
+            icon={<Bell size={32} />}
+            message="No tienes notificaciones."
+          />
         )}
         {!isLoading && limited.length > 0 && (
           <div className="flex flex-col gap-2 p-3">
@@ -76,7 +87,7 @@ function PanelContent({
       <div className="border-t border-outline-variant/15 px-5 py-3 flex items-center justify-center">
         <button
           onClick={() => {
-            navigate('/notifications');
+            navigate("/notifications");
             onClose();
           }}
           className="font-body text-sm font-medium text-primary hover:opacity-80 transition-opacity cursor-pointer"
@@ -106,14 +117,14 @@ const BellTrigger = forwardRef<HTMLButtonElement, BellTriggerProps>(
     >
       <Bell size={20} />
       {unreadCount > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-primary text-on-primary rounded-full font-body text-[0.625rem] font-semibold flex items-center justify-center leading-none">
-          {unreadCount > 99 ? '99+' : unreadCount}
+        <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 px-1 bg-primary text-on-primary rounded-full font-body text-[0.625rem] font-semibold flex items-center justify-center leading-none">
+          {unreadCount > 99 ? "99+" : unreadCount}
         </span>
       )}
     </button>
   ),
 );
-BellTrigger.displayName = 'BellTrigger';
+BellTrigger.displayName = "BellTrigger";
 
 // ---------------------------------------------------------------------------
 // NotificationPanel — Popover on desktop, Sheet on mobile
@@ -124,7 +135,9 @@ export default function NotificationPanel() {
   const isMobile = window.innerWidth < 1024;
   const hasMarkedRef = useRef(false);
 
-  const { notifications, isLoading, unreadCount, markAllAsReadMutation } = useNotifications();
+  const { notifications, isLoading, markAllAsReadMutation } =
+    useNotifications();
+  const { count: unreadCount } = useNotificationCount();
 
   // Auto mark-all-as-read when panel opens (reset on close so it fires again next open)
   useEffect(() => {
