@@ -65,6 +65,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [birthDate, setBirthDate] = useState(initialBirthDate);
   const [position, setPosition] = useState(player?.position ?? "Portero");
   const [teamId, setTeamId] = useState(player?.teamId ?? "");
+  const [isActive, setIsActive] = useState(player?.isActive ?? true);
 
   const [fullNameError, setFullNameError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
@@ -134,6 +135,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       birthDate,
       position,
       teamId,
+      isActive,
     };
 
     if (isEditMode && player) {
@@ -246,6 +248,30 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           </p>
         )}
       </div>
+
+      {/* Active */}
+      {isEditMode && (
+        <div className="flex flex-col gap-1.5">
+          <label className="font-body text-sm text-on-surface-variant">
+            Activo
+          </label>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isActive}
+            onClick={() => setIsActive((prev) => !prev)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-50 ${
+              isActive ? "bg-primary" : "bg-surface-highest"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 rounded-full bg-on-primary transition-transform ${
+                isActive ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-col gap-3 pt-2">
         <Button

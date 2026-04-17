@@ -14,6 +14,7 @@ import { deletePlayer } from "@/services/players.service";
 import type { PlayerResponse } from "@/services/players.service";
 import type { UserRole } from "@/types";
 import PlayerFormSheet from "./PlayerFormSheet";
+import { usePlayers } from "@/hooks/usePlayers";
 
 function extractErrorMessage(error: unknown): string {
   if (error !== null && typeof error === "object" && "response" in error) {
@@ -52,14 +53,18 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [activateOpen, setActivateOpen] = useState(false);
+  const { updatePlayerMutation } = usePlayers();
 
-  const canEdit = role === "academy_director" || role === "coach";
+  const canEdit = role === "academy_director";
   const canDelete = role === "academy_director";
+  const canActivate = role === "academy_director";
 
   const deletePlayerMutation = useMutation({
     mutationFn: () => deletePlayer(player.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
+      queryClient.invalidateQueries({ queryKey: ["player", player.id] });
       setDeleteOpen(false);
     },
     onError: (error: unknown) => {
@@ -77,13 +82,33 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
     navigate(`/players/${player.id}`);
   }
 
+  function handleActivate() {
+    updatePlayerMutation.mutate(
+      { id: player.id, data: { isActive: true } },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["players"] });
+          queryClient.invalidateQueries({ queryKey: ["player", player.id] });
+          setActivateOpen(false);
+        },
+        onError: (error: unknown) => {
+          toast({
+            title: "Error",
+            description: extractErrorMessage(error),
+            variant: "destructive",
+          });
+        },
+      },
+    );
+  }
+
   const age = calculateAge(player.birthDate);
 
   return (
     <>
       <div
         onClick={handleCardClick}
-        className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
+        className={`bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer ${!player.isActive ? "opacity-50" : ""}`}
       >
         {/* Top glow */}
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
@@ -119,7 +144,7 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
             </div>
 
             {/* Dropdown — director or coach only */}
-            {(canEdit || canDelete) && (
+            {(canEdit || canDelete || canActivate) && (
               <div data-dropdown onClick={(e) => e.stopPropagation()}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -134,12 +159,20 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
                         Editar
                       </DropdownMenuItem>
                     )}
-                    {canDelete && (
+                    {player.isActive && canDelete && (
                       <DropdownMenuItem
                         onClick={() => setDeleteOpen(true)}
                         className="text-error-container hover:text-error-container"
                       >
                         Eliminar
+                      </DropdownMenuItem>
+                    )}
+                    {!player.isActive && canActivate && (
+                      <DropdownMenuItem
+                        onClick={() => setActivateOpen(true)}
+                        className="text-primary-container hover:text-primary-container"
+                      >
+                        Activar
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
@@ -161,6 +194,12 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
             <Calendar size={14} />
             <span>{age} años</span>
           </div>
+
+          {!player.isActive && (
+            <div className="mt-2 inline-flex items-center justify-center w-fit px-3 py-1 text-xs font-body text-secondary bg-error-container rounded-full">
+              Inactivo
+            </div>
+          )}
         </div>
       </div>
 
@@ -179,6 +218,16 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
         variant="destructive"
         onConfirm={() => deletePlayerMutation.mutate()}
         isLoading={deletePlayerMutation.isPending}
+      />
+      <ConfirmDialog
+        open={activateOpen}
+        onOpenChange={setActivateOpen}
+        title="¿Activar jugador?"
+        description={`¿Estás seguro de que deseas activar a ${player.fullName}?`}
+        confirmLabel="Activar"
+        variant="default"
+        onConfirm={handleActivate}
+        isLoading={updatePlayerMutation.isPending}
       />
     </>
   );

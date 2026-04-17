@@ -49,7 +49,7 @@ export default function RegisterPage() {
           </h1>
 
           <p className="font-body text-sm text-on-surface-variant leading-relaxed">
-            La plataforma todo-en-uno para academias de fútbol. Jugadores,
+            La plataforma todo-en-uno para academias deportivas. Jugadores,
             asistencia, evaluaciones y más.
           </p>
 

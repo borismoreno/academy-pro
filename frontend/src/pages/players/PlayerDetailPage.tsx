@@ -33,7 +33,7 @@ export default function PlayerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const role = useAuthStore((state) => state.role);
-  const canEdit = role === "academy_director" || role === "coach";
+  const canEdit = role === "academy_director";
 
   const { player, attendanceSummary, evaluationProgress, isLoading, isError } =
     usePlayerDetail(id ?? "");
@@ -126,6 +126,11 @@ export default function PlayerDetailPage() {
                         {new Date(player.birthDate).toLocaleDateString("es-EC")}
                       </span>
                     </div>
+                    {!player.isActive && (
+                      <div className="mt-2 inline-flex w-fit items-center justify-center px-3 py-1 text-xs font-body text-secondary bg-error-container rounded-full">
+                        Inactivo
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

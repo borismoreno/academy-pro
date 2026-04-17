@@ -1,4 +1,10 @@
-import { IsDateString, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 
 export class UpdatePlayerDto {
   @IsOptional()
@@ -22,4 +28,7 @@ export class UpdatePlayerDto {
   @IsOptional()
   @IsString()
   photoUrl?: string;
+
+  @IsOptional()
+  isActive?: boolean;
 }

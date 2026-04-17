@@ -23,7 +23,7 @@ const FILTER_SELECT_CLASS =
 
 export default function PlayersPage() {
   const role = useAuthStore((state) => state.role);
-  const canAdd = role === "academy_director" || role === "coach";
+  const canAdd = role === "academy_director";
 
   const [teamFilter, setTeamFilter] = useState("");
   const [positionFilter, setPositionFilter] = useState("");

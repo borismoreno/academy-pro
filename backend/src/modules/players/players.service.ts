@@ -9,7 +9,10 @@ import { PrismaService } from '../../prisma/prisma.service.js';
 import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { AddParentDto } from './dto/add-parent.dto.js';
 import { CreatePlayerDto } from './dto/create-player.dto.js';
-import { PlayerParentResponseDto, PlayerResponseDto } from './dto/player-response.dto.js';
+import {
+  PlayerParentResponseDto,
+  PlayerResponseDto,
+} from './dto/player-response.dto.js';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
 
 const playerInclude = {
@@ -31,7 +34,9 @@ const playerIncludeWithParents = {
   },
 } as const;
 
-type PlayerWithTeam = Prisma.PlayerGetPayload<{ include: typeof playerInclude }>;
+type PlayerWithTeam = Prisma.PlayerGetPayload<{
+  include: typeof playerInclude;
+}>;
 type PlayerWithTeamAndParents = Prisma.PlayerGetPayload<{
   include: typeof playerIncludeWithParents;
 }>;
@@ -52,7 +57,9 @@ function mapPlayer(player: PlayerWithTeam): PlayerResponseDto {
   };
 }
 
-function mapPlayerWithParents(player: PlayerWithTeamAndParents): PlayerResponseDto {
+function mapPlayerWithParents(
+  player: PlayerWithTeamAndParents,
+): PlayerResponseDto {
   return {
     id: player.id,
     academyId: player.academyId,
@@ -88,7 +95,9 @@ export class PlayersService {
       where: { id: dto.teamId, academyId, isActive: true },
     });
     if (!team) {
-      throw new NotFoundException('El equipo no existe o no pertenece a esta academia');
+      throw new NotFoundException(
+        'El equipo no existe o no pertenece a esta academia',
+      );
     }
 
     if (role === Role.coach) {
@@ -104,7 +113,9 @@ export class PlayersService {
       where: { teamId: dto.teamId, fullName: dto.fullName, isActive: true },
     });
     if (duplicate) {
-      throw new ConflictException('Ya existe un jugador con ese nombre en este equipo');
+      throw new ConflictException(
+        'Ya existe un jugador con ese nombre en este equipo',
+      );
     }
 
     const player = await this.prisma.player.create({
@@ -131,7 +142,7 @@ export class PlayersService {
   ): Promise<PlayerResponseDto[]> {
     const where: Prisma.PlayerWhereInput = {
       academyId,
-      isActive: true,
+      ...(role !== Role.academy_director && { isActive: true }),
       ...(teamId && { teamId }),
       ...(position && { position }),
       ...(role === Role.coach && {
@@ -215,7 +226,9 @@ export class PlayersService {
         dto.position !== undefined ||
         dto.teamId !== undefined;
       if (hasDisallowedFields) {
-        throw new ForbiddenException('Solo puedes actualizar la foto del jugador');
+        throw new ForbiddenException(
+          'Solo puedes actualizar la foto del jugador',
+        );
       }
 
       const updated = await this.prisma.player.update({
@@ -242,7 +255,9 @@ export class PlayersService {
         where: { id: dto.teamId, academyId, isActive: true },
       });
       if (!newTeam) {
-        throw new NotFoundException('El equipo no existe o no pertenece a esta academia');
+        throw new NotFoundException(
+          'El equipo no existe o no pertenece a esta academia',
+        );
       }
     }
 
@@ -257,7 +272,9 @@ export class PlayersService {
         },
       });
       if (duplicate) {
-        throw new ConflictException('Ya existe un jugador con ese nombre en este equipo');
+        throw new ConflictException(
+          'Ya existe un jugador con ese nombre en este equipo',
+        );
       }
     }
 
@@ -265,10 +282,13 @@ export class PlayersService {
       where: { id },
       data: {
         ...(dto.fullName !== undefined && { fullName: dto.fullName }),
-        ...(dto.birthDate !== undefined && { birthDate: new Date(dto.birthDate) }),
+        ...(dto.birthDate !== undefined && {
+          birthDate: new Date(dto.birthDate),
+        }),
         ...(dto.position !== undefined && { position: dto.position }),
         ...(dto.teamId !== undefined && { teamId: dto.teamId }),
         ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }),
+        ...(dto.isActive !== undefined && { isActive: dto.isActive }),
       },
       include: playerInclude,
     });
@@ -303,17 +323,26 @@ export class PlayersService {
     }
 
     const parentRole = await this.prisma.userAcademyRole.findFirst({
-      where: { userId: dto.userId, academyId, role: Role.parent, isActive: true },
+      where: {
+        userId: dto.userId,
+        academyId,
+        role: Role.parent,
+        isActive: true,
+      },
     });
     if (!parentRole) {
-      throw new NotFoundException('El usuario no es un padre/tutor de esta academia');
+      throw new NotFoundException(
+        'El usuario no es un padre/tutor de esta academia',
+      );
     }
 
     const existing = await this.prisma.playerParent.findFirst({
       where: { playerId, userId: dto.userId },
     });
     if (existing) {
-      throw new ConflictException('Este padre/tutor ya está vinculado a este jugador');
+      throw new ConflictException(
+        'Este padre/tutor ya está vinculado a este jugador',
+      );
     }
 
     return this.prisma.playerParent.create({
@@ -328,7 +357,11 @@ export class PlayersService {
     }) as Promise<PlayerParentResponseDto>;
   }
 
-  async removeParent(academyId: string, playerId: string, userId: string): Promise<void> {
+  async removeParent(
+    academyId: string,
+    playerId: string,
+    userId: string,
+  ): Promise<void> {
     const player = await this.prisma.player.findFirst({
       where: { id: playerId, academyId },
     });
@@ -340,7 +373,9 @@ export class PlayersService {
       where: { playerId, userId },
     });
     if (!link) {
-      throw new NotFoundException('El padre/tutor no está vinculado a este jugador');
+      throw new NotFoundException(
+        'El padre/tutor no está vinculado a este jugador',
+      );
     }
 
     await this.prisma.playerParent.delete({
