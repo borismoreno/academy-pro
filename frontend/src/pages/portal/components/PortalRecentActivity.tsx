@@ -122,7 +122,9 @@ export default function PortalRecentActivity({
                     <div className="flex-1 min-w-0">
                       <p className="font-body text-sm text-on-surface">
                         Sesión de entrenamiento el{" "}
-                        {new Date(item.date).toLocaleDateString("es-EC")}
+                        {new Date(item.date).toLocaleDateString("es-EC", {
+                          timeZone: "UTC",
+                        })}
                       </p>
                       <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mt-0.5">
                         {formatRelativeTime(item.date)}

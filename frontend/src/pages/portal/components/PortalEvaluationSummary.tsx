@@ -120,7 +120,9 @@ export default function PortalEvaluationSummary({
 
             {/* Date */}
             <p className="font-body text-sm text-on-surface-variant">
-              {new Date(latest!.evaluatedAt).toLocaleDateString("es-EC")}
+              {new Date(latest!.evaluatedAt).toLocaleDateString("es-EC", {
+                timeZone: "UTC",
+              })}
             </p>
 
             {/* Metric badges */}

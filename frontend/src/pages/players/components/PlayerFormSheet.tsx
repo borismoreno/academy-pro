@@ -24,6 +24,7 @@ import type {
   CreatePlayerData,
   UpdatePlayerData,
 } from "@/services/players.service";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 function extractErrorMessage(error: unknown): string {
   if (error !== null && typeof error === "object" && "response" in error) {
@@ -53,7 +54,7 @@ interface FormBodyProps {
 function FormBody({ player, onOpenChange }: FormBodyProps) {
   const isEditMode = player !== null;
   const queryClient = useQueryClient();
-  const { teams } = useTeams();
+  const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
 
   // Normalize ISO date string to YYYY-MM-DD for the date input
@@ -226,7 +227,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         <label className="font-body text-sm text-on-surface-variant">
           Equipo
         </label>
-        <select
+        {/* <select
           value={teamId}
           onChange={(e) => {
             setTeamId(e.target.value);
@@ -241,7 +242,23 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
               {team.name}
             </option>
           ))}
-        </select>
+        </select> */}
+        <SearchableSelect
+          options={activeTeams.map((t) => ({
+            value: t.id,
+            label: t.name,
+            subtitle: t.category ?? undefined,
+          }))}
+          value={teamId}
+          onValueChange={(val) => {
+            setTeamId(val);
+            if (teamIdError) setTeamIdError("");
+          }}
+          placeholder="Seleccionar equipo"
+          searchPlaceholder="Buscar equipo..."
+          isLoading={isLoadingTeams}
+          disabled={createMutation.isPending}
+        />
         {teamIdError && (
           <p className="font-body text-xs text-error-container">
             {teamIdError}

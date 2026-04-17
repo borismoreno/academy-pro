@@ -9,6 +9,7 @@ import { useTeams } from "@/hooks/useTeams";
 import { useAuthStore } from "@/store/auth.store";
 import PlayerCard from "./components/PlayerCard";
 import PlayerFormSheet from "./components/PlayerFormSheet";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const POSITIONS = [
   { value: "", label: "Todas las posiciones" },
@@ -37,8 +38,12 @@ export default function PlayersPage() {
   const { players, isLoading } = usePlayers(
     Object.keys(filters).length > 0 ? filters : undefined,
   );
-  const { teams } = useTeams();
+  const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
+
+  function handleTeamChange(teamId: string) {
+    setTeamFilter(teamId);
+  }
 
   return (
     <div className="flex flex-col">
@@ -59,7 +64,24 @@ export default function PlayersPage() {
 
       {/* Filters row */}
       <div className="flex flex-wrap gap-3 mb-6">
-        <select
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={[
+              { value: "all", label: "Todos los equipos" },
+              ...activeTeams.map((t) => ({
+                value: t.id,
+                label: t.name,
+                subtitle: t.category ?? undefined,
+              })),
+            ]}
+            value={teamFilter || "all"}
+            onValueChange={(val) => handleTeamChange(val === "all" ? "" : val)}
+            placeholder="Todos los equipos"
+            searchPlaceholder="Buscar equipo..."
+            isLoading={isLoadingTeams}
+          />
+        </div>
+        {/* <select
           value={teamFilter}
           onChange={(e) => setTeamFilter(e.target.value)}
           className={FILTER_SELECT_CLASS}
@@ -70,7 +92,7 @@ export default function PlayersPage() {
               {team.name}
             </option>
           ))}
-        </select>
+        </select> */}
 
         <select
           value={positionFilter}

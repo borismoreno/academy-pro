@@ -123,7 +123,12 @@ export default function PlayerDetailPage() {
                     <div className="flex items-center gap-1.5 font-body text-sm text-on-surface-variant">
                       <Calendar size={14} />
                       <span>
-                        {new Date(player.birthDate).toLocaleDateString("es-EC")}
+                        {new Date(player.birthDate).toLocaleDateString(
+                          "es-ES",
+                          {
+                            timeZone: "UTC",
+                          },
+                        )}
                       </span>
                     </div>
                     {!player.isActive && (

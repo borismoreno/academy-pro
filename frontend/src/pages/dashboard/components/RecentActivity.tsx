@@ -173,7 +173,7 @@ export default function RecentActivity({
               // session
               const sessionDateStr = new Date(
                 item.data.sessionDate,
-              ).toLocaleDateString("es-EC");
+              ).toLocaleDateString("es-EC", { timeZone: "UTC" });
               return (
                 <div
                   key={item.data.id}

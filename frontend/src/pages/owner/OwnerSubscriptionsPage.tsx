@@ -97,7 +97,9 @@ export default function OwnerSubscriptionsPage() {
       label: "Inicio",
       render: (row: AcademyRow) =>
         row.subscription?.startsAt
-          ? new Date(row.subscription.startsAt).toLocaleDateString("es-EC")
+          ? new Date(row.subscription.startsAt).toLocaleDateString("es-EC", {
+              timeZone: "UTC",
+            })
           : "—",
     },
     {
@@ -105,7 +107,9 @@ export default function OwnerSubscriptionsPage() {
       label: "Vencimiento",
       render: (row: AcademyRow) =>
         row.subscription?.endsAt
-          ? new Date(row.subscription.endsAt).toLocaleDateString("es-EC")
+          ? new Date(row.subscription.endsAt).toLocaleDateString("es-EC", {
+              timeZone: "UTC",
+            })
           : "—",
     },
     {
@@ -118,9 +122,7 @@ export default function OwnerSubscriptionsPage() {
         return (
           <span
             className={
-              days < 30
-                ? "font-medium text-error-container"
-                : "text-on-surface"
+              days < 30 ? "font-medium text-error-container" : "text-on-surface"
             }
           >
             {days}

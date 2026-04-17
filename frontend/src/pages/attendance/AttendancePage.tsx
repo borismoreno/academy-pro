@@ -9,6 +9,7 @@ import { useTeams } from "@/hooks/useTeams";
 import { useAttendance } from "@/hooks/useAttendance";
 import SessionCard from "./components/SessionCard";
 import SessionFormSheet from "./components/SessionFormSheet";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const SELECT_CLASS =
   "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
@@ -42,7 +43,7 @@ export default function AttendancePage() {
 
   const monthOptions = getLast6Months();
 
-  const { teams } = useTeams();
+  const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
 
   const filters = {
@@ -66,6 +67,10 @@ export default function AttendancePage() {
       new Date(b.sessionDate).getTime() - new Date(a.sessionDate).getTime(),
   );
 
+  function handleTeamChange(teamId: string) {
+    setTeamFilter(teamId);
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -85,18 +90,23 @@ export default function AttendancePage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         {/* Team filter */}
-        <select
-          value={teamFilter}
-          onChange={(e) => setTeamFilter(e.target.value)}
-          className={SELECT_CLASS}
-        >
-          <option value="">Todos los equipos</option>
-          {activeTeams.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={[
+              { value: "all", label: "Todos los equipos" },
+              ...activeTeams.map((t) => ({
+                value: t.id,
+                label: t.name,
+                subtitle: t.category ?? undefined,
+              })),
+            ]}
+            value={teamFilter || "all"}
+            onValueChange={(val) => handleTeamChange(val === "all" ? "" : val)}
+            placeholder="Todos los equipos"
+            searchPlaceholder="Buscar equipo..."
+            isLoading={isLoadingTeams}
+          />
+        </div>
 
         {/* Month filter */}
         <select

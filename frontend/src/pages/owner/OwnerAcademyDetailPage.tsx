@@ -147,13 +147,17 @@ export default function OwnerAcademyDetailPage() {
                 <StatRow
                   icon={<Building2 size={16} />}
                   label="Inicio"
-                  value={new Date(sub.startsAt).toLocaleDateString("es-EC")}
+                  value={new Date(sub.startsAt).toLocaleDateString("es-EC", {
+                    timeZone: "UTC",
+                  })}
                 />
                 {sub.endsAt && (
                   <StatRow
                     icon={<Building2 size={16} />}
                     label="Vencimiento"
-                    value={new Date(sub.endsAt).toLocaleDateString("es-EC")}
+                    value={new Date(sub.endsAt).toLocaleDateString("es-EC", {
+                      timeZone: "UTC",
+                    })}
                   />
                 )}
               </div>

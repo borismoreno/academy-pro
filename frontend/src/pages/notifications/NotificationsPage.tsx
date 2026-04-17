@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { Bell, CheckCheck } from 'lucide-react';
-import { useNotifications } from '@/hooks/useNotifications';
-import { toast } from '@/hooks/use-toast';
-import PageHeader from '@/components/shared/PageHeader';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import NotificationRow from './components/NotificationRow';
-import type { Notification } from '@/types';
+import { useEffect, useRef, useState } from "react";
+import { Bell, CheckCheck } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
+import { toast } from "@/hooks/use-toast";
+import PageHeader from "@/components/shared/PageHeader";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import EmptyState from "@/components/shared/EmptyState";
+import NotificationRow from "./components/NotificationRow";
+import type { Notification } from "@/types";
 
-type Tab = 'all' | 'unread';
+type Tab = "all" | "unread";
 
 function getDateLabel(dateString: string): string {
   const date = new Date(dateString);
@@ -20,13 +20,13 @@ function getDateLabel(dateString: string): string {
   const diff = toDay(now) - toDay(date);
   const ONE_DAY = 86400000;
 
-  if (diff === 0) return 'Hoy';
-  if (diff === ONE_DAY) return 'Ayer';
+  if (diff === 0) return "Hoy";
+  if (diff === ONE_DAY) return "Ayer";
 
-  return date.toLocaleDateString('es-EC', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
+  return date.toLocaleDateString("es-EC", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
   });
 }
 
@@ -49,7 +49,7 @@ function groupByDate(
 }
 
 export default function NotificationsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('all');
+  const [activeTab, setActiveTab] = useState<Tab>("all");
   const hasMarkedRef = useRef(false);
 
   const {
@@ -58,7 +58,7 @@ export default function NotificationsPage() {
     isError,
     unreadCount,
     markAllAsReadMutation,
-  } = useNotifications(activeTab === 'unread');
+  } = useNotifications(activeTab === "unread");
 
   // Auto mark-all-as-read on mount once if there are unread notifications
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function NotificationsPage() {
     markAllAsReadMutation.mutate(undefined, {
       onSuccess: () => {
         toast({
-          description: 'Todas las notificaciones fueron marcadas como leídas',
+          description: "Todas las notificaciones fueron marcadas como leídas",
         });
       },
     });
@@ -101,24 +101,24 @@ export default function NotificationsPage() {
       {/* Filter tabs */}
       <div className="flex gap-2 mb-6">
         <button
-          onClick={() => setActiveTab('all')}
+          onClick={() => setActiveTab("all")}
           className={[
-            'min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all',
-            activeTab === 'all'
-              ? 'bg-gradient-to-br from-primary to-secondary text-on-primary font-medium'
-              : 'bg-surface-highest text-on-surface-variant',
-          ].join(' ')}
+            "min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all",
+            activeTab === "all"
+              ? "bg-linear-to-br from-primary to-secondary text-on-primary font-medium"
+              : "bg-surface-highest text-on-surface-variant",
+          ].join(" ")}
         >
           Todas
         </button>
         <button
-          onClick={() => setActiveTab('unread')}
+          onClick={() => setActiveTab("unread")}
           className={[
-            'min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all',
-            activeTab === 'unread'
-              ? 'bg-gradient-to-br from-primary to-secondary text-on-primary font-medium'
-              : 'bg-surface-highest text-on-surface-variant',
-          ].join(' ')}
+            "min-h-11 px-4 py-2 rounded-xl font-body text-sm transition-all",
+            activeTab === "unread"
+              ? "bg-linear-to-br from-primary to-secondary text-on-primary font-medium"
+              : "bg-surface-highest text-on-surface-variant",
+          ].join(" ")}
         >
           No leídas
         </button>
@@ -128,16 +128,19 @@ export default function NotificationsPage() {
       {isLoading && <LoadingSpinner />}
 
       {!isLoading && isError && (
-        <EmptyState message="No se pudieron cargar las notificaciones." icon={<Bell size={48} />} />
+        <EmptyState
+          message="No se pudieron cargar las notificaciones."
+          icon={<Bell size={48} />}
+        />
       )}
 
       {!isLoading && !isError && notifications.length === 0 && (
         <EmptyState
           icon={<Bell size={48} />}
           message={
-            activeTab === 'unread'
-              ? 'No tienes notificaciones sin leer.'
-              : 'No tienes notificaciones.'
+            activeTab === "unread"
+              ? "No tienes notificaciones sin leer."
+              : "No tienes notificaciones."
           }
         />
       )}
@@ -151,7 +154,10 @@ export default function NotificationsPage() {
               </p>
               <div className="flex flex-col gap-3">
                 {items.map((notification) => (
-                  <NotificationRow key={notification.id} notification={notification} />
+                  <NotificationRow
+                    key={notification.id}
+                    notification={notification}
+                  />
                 ))}
               </div>
             </div>
