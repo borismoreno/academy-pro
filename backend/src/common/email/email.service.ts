@@ -6,6 +6,7 @@ import { Role } from '@prisma/client';
 const ROLE_LABELS: Record<string, string> = {
   coach: 'Entrenador',
   parent: 'Padre/Madre de familia',
+  academy_director: 'Director de Academia',
 };
 
 @Injectable()
