@@ -71,7 +71,7 @@ function DecorativePanel() {
           hoy mismo.
         </h1>
         <p className="font-body text-sm text-on-surface-variant leading-relaxed">
-          Has sido invitado a formar parte de una academia de fútbol. Crea tu
+          Has sido invitado a formar parte de una academia deportiva. Crea tu
           cuenta para acceder a la plataforma.
         </p>
       </div>
