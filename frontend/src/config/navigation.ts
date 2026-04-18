@@ -8,15 +8,19 @@ import {
   Building2,
   CreditCard,
   Sliders,
-} from 'lucide-react';
-import type { ComponentType } from 'react';
-import type { UserRole } from '@/types';
+} from "lucide-react";
+import type { ComponentType } from "react";
+import type { UserRole } from "@/types";
 
 export interface NavItemConfig {
   label: string;
   path: string;
   /** Lucide icon component — render with your preferred size */
-  Icon: ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
+  Icon: ComponentType<{
+    size?: number;
+    strokeWidth?: number;
+    className?: string;
+  }>;
   /** Roles that may access this route — single source of truth for route permissions */
   allowedRoles: UserRole[];
 }
@@ -30,19 +34,19 @@ export interface NavItemConfig {
  * ProtectedRoute reads this — never define permissions anywhere else.
  */
 export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
-  '/dashboard':         ['academy_director', 'coach'],
-  '/teams':             ['academy_director', 'coach'],
-  '/players':           ['academy_director', 'coach'],
-  '/attendance':        ['academy_director', 'coach'],
-  '/evaluations':       ['academy_director', 'coach'],
-  '/notifications':     ['academy_director', 'coach', 'parent'],
-  '/settings':          ['academy_director', 'coach', 'parent'],
-  '/portal':            ['parent'],
-  '/owner/dashboard':   ['saas_owner'],
-  '/owner/academies':   ['saas_owner'],
-  '/owner/subscriptions': ['saas_owner'],
-  '/owner/plan-limits': ['saas_owner'],
-  '/owner/users':       ['saas_owner'],
+  "/dashboard": ["academy_director", "coach"],
+  "/teams": ["academy_director", "coach"],
+  "/players": ["academy_director", "coach"],
+  "/attendance": ["academy_director", "coach"],
+  "/evaluations": ["academy_director", "coach"],
+  "/notifications": ["academy_director", "coach", "parent"],
+  "/settings": ["academy_director", "coach", "parent"],
+  "/portal": ["parent"],
+  "/owner/dashboard": ["saas_owner"],
+  "/owner/academies": ["saas_owner"],
+  "/owner/subscriptions": ["saas_owner"],
+  "/owner/plan-limits": ["saas_owner"],
+  "/owner/users": ["saas_owner"],
 };
 
 /**
@@ -65,7 +69,7 @@ export function isRouteAllowed(path: string, role: UserRole): boolean {
 
   // 2. Prefix match — find the longest registered prefix that the path starts with
   const prefixMatch = Object.keys(ROUTE_PERMISSIONS)
-    .filter((key) => path.startsWith(key + '/'))
+    .filter((key) => path.startsWith(key + "/"))
     .sort((a, b) => b.length - a.length)[0];
 
   if (!prefixMatch) return false;
@@ -76,9 +80,13 @@ export function isRouteAllowed(path: string, role: UserRole): boolean {
  * Returns the default landing path for a given role after login.
  */
 export function getDefaultRoute(role: UserRole): string {
-  if (role === 'parent') return '/portal';
-  if (role === 'saas_owner') return '/owner/dashboard';
-  return '/dashboard';
+  if (role === "parent") return "/portal";
+  if (role === "saas_owner") return "/owner/dashboard";
+  return "/dashboard";
+}
+
+export function getLandingURL(): string {
+  return import.meta.env.VITE_LANDING_URL || "http://localhost:4321";
 }
 
 // ---------------------------------------------------------------------------
@@ -91,31 +99,126 @@ export function getDefaultRoute(role: UserRole): string {
  */
 export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
   academy_director: [
-    { label: 'Dashboard',     path: '/dashboard',   Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
-    { label: 'Equipos',       path: '/teams',       Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
-    { label: 'Jugadores',     path: '/players',     Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
-    { label: 'Asistencia',    path: '/attendance',  Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
-    { label: 'Evaluaciones',  path: '/evaluations', Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
-    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    {
+      label: "Dashboard",
+      path: "/dashboard",
+      Icon: LayoutDashboard,
+      allowedRoles: ROUTE_PERMISSIONS["/dashboard"],
+    },
+    {
+      label: "Equipos",
+      path: "/teams",
+      Icon: Users,
+      allowedRoles: ROUTE_PERMISSIONS["/teams"],
+    },
+    {
+      label: "Jugadores",
+      path: "/players",
+      Icon: User,
+      allowedRoles: ROUTE_PERMISSIONS["/players"],
+    },
+    {
+      label: "Asistencia",
+      path: "/attendance",
+      Icon: ClipboardList,
+      allowedRoles: ROUTE_PERMISSIONS["/attendance"],
+    },
+    {
+      label: "Evaluaciones",
+      path: "/evaluations",
+      Icon: BarChart2,
+      allowedRoles: ROUTE_PERMISSIONS["/evaluations"],
+    },
+    {
+      label: "Configuración",
+      path: "/settings",
+      Icon: Settings,
+      allowedRoles: ROUTE_PERMISSIONS["/settings"],
+    },
   ],
   coach: [
-    { label: 'Dashboard',     path: '/dashboard',   Icon: LayoutDashboard, allowedRoles: ROUTE_PERMISSIONS['/dashboard'] },
-    { label: 'Equipos',       path: '/teams',       Icon: Users,           allowedRoles: ROUTE_PERMISSIONS['/teams'] },
-    { label: 'Jugadores',     path: '/players',     Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/players'] },
-    { label: 'Asistencia',    path: '/attendance',  Icon: ClipboardList,   allowedRoles: ROUTE_PERMISSIONS['/attendance'] },
-    { label: 'Evaluaciones',  path: '/evaluations', Icon: BarChart2,       allowedRoles: ROUTE_PERMISSIONS['/evaluations'] },
-    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    {
+      label: "Dashboard",
+      path: "/dashboard",
+      Icon: LayoutDashboard,
+      allowedRoles: ROUTE_PERMISSIONS["/dashboard"],
+    },
+    {
+      label: "Equipos",
+      path: "/teams",
+      Icon: Users,
+      allowedRoles: ROUTE_PERMISSIONS["/teams"],
+    },
+    {
+      label: "Jugadores",
+      path: "/players",
+      Icon: User,
+      allowedRoles: ROUTE_PERMISSIONS["/players"],
+    },
+    {
+      label: "Asistencia",
+      path: "/attendance",
+      Icon: ClipboardList,
+      allowedRoles: ROUTE_PERMISSIONS["/attendance"],
+    },
+    {
+      label: "Evaluaciones",
+      path: "/evaluations",
+      Icon: BarChart2,
+      allowedRoles: ROUTE_PERMISSIONS["/evaluations"],
+    },
+    {
+      label: "Configuración",
+      path: "/settings",
+      Icon: Settings,
+      allowedRoles: ROUTE_PERMISSIONS["/settings"],
+    },
   ],
   parent: [
-    { label: 'Mi hijo',       path: '/portal',      Icon: User,            allowedRoles: ROUTE_PERMISSIONS['/portal'] },
-    { label: 'Configuración', path: '/settings',    Icon: Settings,        allowedRoles: ROUTE_PERMISSIONS['/settings'] },
+    {
+      label: "Mi hijo",
+      path: "/portal",
+      Icon: User,
+      allowedRoles: ROUTE_PERMISSIONS["/portal"],
+    },
+    {
+      label: "Configuración",
+      path: "/settings",
+      Icon: Settings,
+      allowedRoles: ROUTE_PERMISSIONS["/settings"],
+    },
   ],
   saas_owner: [
-    { label: 'Dashboard',       path: '/owner/dashboard',     Icon: LayoutDashboard, allowedRoles: ['saas_owner'] },
-    { label: 'Academias',       path: '/owner/academies',     Icon: Building2,       allowedRoles: ['saas_owner'] },
-    { label: 'Suscripciones',   path: '/owner/subscriptions', Icon: CreditCard,      allowedRoles: ['saas_owner'] },
-    { label: 'Límites de planes', path: '/owner/plan-limits', Icon: Sliders,         allowedRoles: ['saas_owner'] },
-    { label: 'Usuarios',        path: '/owner/users',         Icon: Users,           allowedRoles: ['saas_owner'] },
+    {
+      label: "Dashboard",
+      path: "/owner/dashboard",
+      Icon: LayoutDashboard,
+      allowedRoles: ["saas_owner"],
+    },
+    {
+      label: "Academias",
+      path: "/owner/academies",
+      Icon: Building2,
+      allowedRoles: ["saas_owner"],
+    },
+    {
+      label: "Suscripciones",
+      path: "/owner/subscriptions",
+      Icon: CreditCard,
+      allowedRoles: ["saas_owner"],
+    },
+    {
+      label: "Límites de planes",
+      path: "/owner/plan-limits",
+      Icon: Sliders,
+      allowedRoles: ["saas_owner"],
+    },
+    {
+      label: "Usuarios",
+      path: "/owner/users",
+      Icon: Users,
+      allowedRoles: ["saas_owner"],
+    },
   ],
 };
 
@@ -143,9 +246,15 @@ export function getBottomNavItems(role: UserRole): {
 } {
   const all = getNavigationItems(role);
 
-  if (role === 'academy_director' || role === 'coach') {
+  if (role === "academy_director" || role === "coach") {
     // Primary: Dashboard, Equipos, Jugadores, Asistencia, Evaluaciones (5 tabs + "Más" for Configuración)
-    const primaryPaths = ['/dashboard', '/teams', '/players', '/attendance', '/evaluations'];
+    const primaryPaths = [
+      "/dashboard",
+      "/teams",
+      "/players",
+      "/attendance",
+      "/evaluations",
+    ];
     const primary = all.filter((item) => primaryPaths.includes(item.path));
     const overflow = all.filter((item) => !primaryPaths.includes(item.path));
     return { primary, overflow };

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAcceptInvitation } from "@/hooks/useAcceptInvitation";
 import type { UserRole } from "@/types";
+import { getLandingURL } from "@/config/navigation";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -114,6 +115,7 @@ export default function AcceptInvitationPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const landingURL = getLandingURL();
 
   const passwordsMatch = confirmPassword === "" || password === confirmPassword;
   const isInvalid = tokenMissing || isValidationError;
@@ -353,7 +355,15 @@ export default function AcceptInvitationPage() {
 
           {/* Terms */}
           <p className="font-body text-[0.6875rem] text-on-surface-variant text-center mt-6">
-            Al crear tu cuenta aceptas los Términos y Condiciones de Cancha360.
+            Al crear tu cuenta aceptas los{" "}
+            <a
+              href={`${landingURL}/terminos`}
+              target="_blank"
+              className="text-primary hover:underline transition-colors"
+            >
+              Términos y Condiciones
+            </a>{" "}
+            de Cancha360.
           </p>
         </CardShell>
       </div>
