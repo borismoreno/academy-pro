@@ -21,7 +21,7 @@
     "seed:metrics": "ts-node --esm prisma/seeders/default-metrics.seeder.ts",
     "seed:owner": "ts-node --esm prisma/seeders/owner.seeder.ts",
     "seed:plan-limits": "ts-node --esm prisma/seeders/plan-limits.seeder.ts",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org cancha360 --project node-nestjs ./dist && sentry-cli sourcemaps upload --org cancha360 --project node-nestjs ./dist"
+    "sentry:sourcemaps": "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN sentry-cli sourcemaps inject --org cancha360 --project node-nestjs ./dist && sentry-cli sourcemaps upload --org cancha360 --project node-nestjs ./dist"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1029.0",
