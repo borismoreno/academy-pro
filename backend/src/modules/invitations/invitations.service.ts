@@ -27,7 +27,11 @@ export class InvitationsService {
     private readonly config: ConfigService,
   ) {}
 
-  async create(academyId: string, invitedById: string, dto: CreateInvitationDto) {
+  async create(
+    academyId: string,
+    invitedById: string,
+    dto: CreateInvitationDto,
+  ) {
     dto.validate();
 
     const role = dto.role as unknown as Role;
@@ -70,7 +74,9 @@ export class InvitationsService {
     }
 
     const token = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000);
+    const expiresAt = new Date(
+      Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000,
+    );
 
     const invitation = await this.prisma.invitation.create({
       data: {
@@ -119,7 +125,9 @@ export class InvitationsService {
     }
 
     if (invitation.status !== InvitationStatus.pending) {
-      throw new BadRequestException('Solo se pueden cancelar invitaciones pendientes');
+      throw new BadRequestException(
+        'Solo se pueden cancelar invitaciones pendientes',
+      );
     }
 
     await this.prisma.invitation.delete({ where: { id } });
@@ -220,6 +228,12 @@ export class InvitationsService {
     });
 
     return { message: 'Cuenta creada exitosamente. Ya puedes iniciar sesión.' };
+  }
+
+  getHello(): string {
+    console.log('Hello from InvitationsService2!');
+    throw new Error('This is a dummy error for Sentry integration');
+    // return 'Hello World!';
   }
 
   private assertValidInvitation(

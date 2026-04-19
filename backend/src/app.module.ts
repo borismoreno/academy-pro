@@ -20,6 +20,9 @@ import { EmailModule } from './common/email/email.module.js';
 import { StorageModule } from './modules/storage/storage.module.js';
 import { OwnerModule } from './modules/owner/owner.module.js';
 import { PlanGuardModule } from './modules/plan-guard/plan-guard.module.js';
+import { SentryModule } from '@sentry/nestjs/setup';
+import { APP_FILTER } from '@nestjs/core';
+import { SentryGlobalFilter } from '@sentry/nestjs/setup';
 
 @Module({
   imports: [
@@ -27,6 +30,7 @@ import { PlanGuardModule } from './modules/plan-guard/plan-guard.module.js';
       isGlobal: true,
       load: [appConfig],
     }),
+    SentryModule.forRoot(),
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -44,6 +48,7 @@ import { PlanGuardModule } from './modules/plan-guard/plan-guard.module.js';
     PlanGuardModule,
   ],
   providers: [
+    { provide: APP_FILTER, useClass: SentryGlobalFilter },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_GUARD, useClass: JwtGuard },
     { provide: APP_GUARD, useClass: RolesGuard },

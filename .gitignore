@@ -47,3 +47,6 @@ frontend/CLAUDE.md
 docs/PRD.md
 docs/design.md
 # CLAUDE-IGNORE-END
+
+#sentry
+.sentryclirc
