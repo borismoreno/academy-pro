@@ -1,15 +1,12 @@
-const CACHE_VERSION = new Date().toISOString().split('T')[0].replace(/-/g, '')
-const CACHE_NAME = `cancha360-${CACHE_VERSION}`
+const CACHE_VERSION = 'v1'
+const STATIC_CACHE = `cancha360-static-${CACHE_VERSION}`
+const DYNAMIC_CACHE = `cancha360-dynamic-${CACHE_VERSION}`
 
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-]
+const STATIC_ASSETS = ['/', '/index.html', '/manifest.json']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(STATIC_CACHE).then((cache) => {
       return cache.addAll(STATIC_ASSETS)
     })
   )
@@ -21,41 +18,57 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => {
-            console.log('Deleting old cache:', name)
-            return caches.delete(name)
-          })
-      )
+          .filter(
+            (name) =>
+              name.startsWith('cancha360-') &&
+              name !== STATIC_CACHE &&
+              name !== DYNAMIC_CACHE
+          )
+          .map((name) => caches.delete(name))
+      ).then(() => self.clients.claim())
     })
   )
-  self.clients.claim()
 })
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return
-  if (event.request.url.includes('/api/')) return
+  const url = new URL(event.request.url)
 
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Clone and cache successful responses
-        if (response && response.status === 200) {
-          const responseClone = response.clone()
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone)
-          })
+  if (event.request.method !== 'GET') return
+  if (url.pathname.includes('/api/')) return
+  if (url.origin !== self.location.origin) return
+  if (event.request.url.includes('sentry.io')) return
+
+  if (url.pathname.includes('/assets/')) {
+    event.respondWith(
+      caches.open(STATIC_CACHE).then(async (cache) => {
+        const cached = await cache.match(event.request)
+        if (cached) return cached
+        const response = await fetch(event.request)
+        if (response.status === 200) {
+          cache.put(event.request, response.clone())
         }
         return response
       })
-      .catch(() => {
-        // Fallback to cache when offline
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) return cachedResponse
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html')
-          }
-        })
+    )
+    return
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then(async (response) => {
+        if (response.status === 200) {
+          const cache = await caches.open(DYNAMIC_CACHE)
+          cache.put(event.request, response.clone())
+        }
+        return response
+      })
+      .catch(async () => {
+        const cached = await caches.match(event.request)
+        if (cached) return cached
+        if (event.request.mode === 'navigate') {
+          return caches.match('/index.html', { cacheName: DYNAMIC_CACHE })
+        }
+        return undefined
       })
   )
 })
