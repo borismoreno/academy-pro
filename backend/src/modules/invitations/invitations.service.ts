@@ -230,12 +230,6 @@ export class InvitationsService {
     return { message: 'Cuenta creada exitosamente. Ya puedes iniciar sesión.' };
   }
 
-  getHello(): string {
-    console.log('Hello from InvitationsService2!');
-    throw new Error('This is a dummy error for Sentry integration');
-    // return 'Hello World!';
-  }
-
   private assertValidInvitation(
     invitation: { status: InvitationStatus; expiresAt: Date } | null,
   ): void {

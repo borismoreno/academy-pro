@@ -16,5 +16,3 @@ Sentry.init({
   // For example, automatic IP address collection on events
   sendDefaultPii: true,
 });
-
-console.log('Sentry initialized with DSN:', process.env.SENTRY_DSN);

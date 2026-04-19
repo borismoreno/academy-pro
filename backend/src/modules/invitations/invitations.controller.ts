@@ -71,10 +71,4 @@ export class InvitationsController {
   async remove(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     await this.invitationsService.remove(user.academyId as string, id);
   }
-
-  @Public()
-  @Get('hello')
-  getHello(): string {
-    return this.invitationsService.getHello();
-  }
 }
