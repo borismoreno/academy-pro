@@ -35,11 +35,6 @@ function extractErrorMessage(error: unknown): string {
   return "Ha ocurrido un error inesperado";
 }
 
-const POSITIONS = ["Portero", "Defensa", "Mediocampista", "Delantero"];
-
-const SELECT_CLASS =
-  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
-
 interface PlayerFormSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -64,7 +59,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
 
   const [fullName, setFullName] = useState(player?.fullName ?? "");
   const [birthDate, setBirthDate] = useState(initialBirthDate);
-  const [position, setPosition] = useState(player?.position ?? "Portero");
+  const [position, setPosition] = useState(player?.position ?? "");
   const [height, setHeight] = useState(String(player?.height ?? ""));
   const [weight, setWeight] = useState(String(player?.weight ?? ""));
 
@@ -72,6 +67,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [isActive, setIsActive] = useState(player?.isActive ?? true);
 
   const [fullNameError, setFullNameError] = useState("");
+  const [positionError, setPositionError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
   const [teamIdError, setTeamIdError] = useState("");
   const [heightError, setHeightError] = useState("");
@@ -116,6 +112,12 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       valid = false;
     } else {
       setFullNameError("");
+    }
+    if (position.trim().length < 2) {
+      setPositionError("La posición debe tener al menos 2 caracteres");
+      valid = false;
+    } else {
+      setPositionError("");
     }
     if (!birthDate) {
       setBirthDateError("La fecha de nacimiento es obligatoria");
@@ -237,18 +239,20 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         <label className="font-body text-sm text-on-surface-variant">
           Posición
         </label>
-        <select
+        <Input
           value={position}
-          onChange={(e) => setPosition(e.target.value)}
+          onChange={(e) => {
+            setPosition(e.target.value);
+            if (positionError) setPositionError("");
+          }}
+          placeholder="Ej. Portero"
           disabled={isPending}
-          className={SELECT_CLASS}
-        >
-          {POSITIONS.map((pos) => (
-            <option key={pos} value={pos}>
-              {pos}
-            </option>
-          ))}
-        </select>
+        />
+        {positionError && (
+          <p className="font-body text-xs text-error-container">
+            {positionError}
+          </p>
+        )}
       </div>
 
       {/* Height */}
