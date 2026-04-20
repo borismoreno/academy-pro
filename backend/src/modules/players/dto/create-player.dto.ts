@@ -1,4 +1,11 @@
-import { IsDateString, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 
 export class CreatePlayerDto {
   @IsString()
@@ -18,4 +25,10 @@ export class CreatePlayerDto {
   @IsOptional()
   @IsString()
   photoUrl?: string;
+
+  @IsOptional()
+  height?: number;
+
+  @IsOptional()
+  weight?: number;
 }

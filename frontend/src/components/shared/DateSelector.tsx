@@ -57,13 +57,15 @@ export const DateSelector = ({
 
   return (
     <div>
-      <label className="text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+      <label className="font-body text-sm text-on-surface-variant">
         {label}
       </label>
       <div className="flex gap-2 mt-1">
         <select
           value={selectedDay}
-          onChange={(e) => handleChange(selectedYear, selectedMonth, e.target.value)}
+          onChange={(e) =>
+            handleChange(selectedYear, selectedMonth, e.target.value)
+          }
           className={`w-20 ${SELECT_CLASS}`}
         >
           <option value="" disabled>
@@ -78,7 +80,9 @@ export const DateSelector = ({
 
         <select
           value={selectedMonth}
-          onChange={(e) => handleChange(selectedYear, e.target.value, selectedDay)}
+          onChange={(e) =>
+            handleChange(selectedYear, e.target.value, selectedDay)
+          }
           className={`flex-1 ${SELECT_CLASS}`}
         >
           <option value="" disabled>
@@ -93,7 +97,9 @@ export const DateSelector = ({
 
         <select
           value={selectedYear}
-          onChange={(e) => handleChange(e.target.value, selectedMonth, selectedDay)}
+          onChange={(e) =>
+            handleChange(e.target.value, selectedMonth, selectedDay)
+          }
           className={`w-24 ${SELECT_CLASS}`}
         >
           <option value="" disabled>

@@ -31,4 +31,10 @@ export class UpdatePlayerDto {
 
   @IsOptional()
   isActive?: boolean;
+
+  @IsOptional()
+  height?: number;
+
+  @IsOptional()
+  weight?: number;
 }

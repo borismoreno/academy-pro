@@ -1,5 +1,5 @@
-import api from './api';
-import type { ApiResponse } from '@/types';
+import api from "./api";
+import type { ApiResponse } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Response type definitions — mirror backend DTOs exactly
@@ -62,6 +62,8 @@ export interface PlayerResponse {
   birthDate: string;
   position: string | null;
   photoUrl: string | null;
+  height: number | null;
+  weight: number | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -121,21 +123,26 @@ export interface SessionListResponse {
 // ---------------------------------------------------------------------------
 
 export async function fetchTeams(): Promise<TeamResponse[]> {
-  const response = await api.get<ApiResponse<TeamResponse[]>>('/teams');
+  const response = await api.get<ApiResponse<TeamResponse[]>>("/teams");
   return response.data.data;
 }
 
 export async function fetchPlayers(): Promise<PlayerResponse[]> {
-  const response = await api.get<ApiResponse<PlayerResponse[]>>('/players');
+  const response = await api.get<ApiResponse<PlayerResponse[]>>("/players");
   return response.data.data;
 }
 
 export async function fetchEvaluations(): Promise<EvaluationResponse[]> {
-  const response = await api.get<ApiResponse<EvaluationResponse[]>>('/evaluations');
+  const response =
+    await api.get<ApiResponse<EvaluationResponse[]>>("/evaluations");
   return response.data.data;
 }
 
-export async function fetchAttendanceSessions(): Promise<SessionListResponse[]> {
-  const response = await api.get<ApiResponse<SessionListResponse[]>>('/attendance/sessions');
+export async function fetchAttendanceSessions(): Promise<
+  SessionListResponse[]
+> {
+  const response = await api.get<ApiResponse<SessionListResponse[]>>(
+    "/attendance/sessions",
+  );
   return response.data.data;
 }

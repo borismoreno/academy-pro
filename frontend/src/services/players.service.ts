@@ -64,6 +64,8 @@ export interface CreatePlayerData {
   birthDate: string;
   position: string;
   teamId: string;
+  height?: number;
+  weight?: number;
 }
 
 export interface UpdatePlayerData {
@@ -72,6 +74,8 @@ export interface UpdatePlayerData {
   position?: string;
   teamId?: string;
   isActive?: boolean;
+  height?: number;
+  weight?: number;
 }
 
 export interface AddParentData {

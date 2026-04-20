@@ -65,12 +65,17 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [fullName, setFullName] = useState(player?.fullName ?? "");
   const [birthDate, setBirthDate] = useState(initialBirthDate);
   const [position, setPosition] = useState(player?.position ?? "Portero");
+  const [height, setHeight] = useState(String(player?.height ?? ""));
+  const [weight, setWeight] = useState(String(player?.weight ?? ""));
+
   const [teamId, setTeamId] = useState(player?.teamId ?? "");
   const [isActive, setIsActive] = useState(player?.isActive ?? true);
 
   const [fullNameError, setFullNameError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
   const [teamIdError, setTeamIdError] = useState("");
+  const [heightError, setHeightError] = useState("");
+  const [weightError, setWeightError] = useState("");
 
   const createMutation = useMutation({
     mutationFn: (data: CreatePlayerData) => createPlayer(data),
@@ -124,6 +129,28 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
     } else {
       setTeamIdError("");
     }
+    if (height) {
+      const heightValue = parseInt(height, 10);
+      if (isNaN(heightValue) || heightValue <= 50) {
+        setHeightError("La altura debe ser un número positivo mayor a 50 cm");
+        valid = false;
+      } else {
+        setHeightError("");
+      }
+    } else {
+      setHeightError("");
+    }
+    if (weight) {
+      const weightValue = parseInt(weight, 10);
+      if (isNaN(weightValue) || weightValue <= 10) {
+        setWeightError("El peso debe ser un número positivo mayor a 10 kg");
+        valid = false;
+      } else {
+        setWeightError("");
+      }
+    } else {
+      setWeightError("");
+    }
     return valid;
   }
 
@@ -135,8 +162,10 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       fullName: fullName.trim(),
       birthDate,
       position,
+      height: height ? parseFloat(height) : undefined,
+      weight: weight ? parseFloat(weight) : undefined,
       teamId,
-      isActive,
+      ...(isEditMode && { isActive }),
     };
 
     if (isEditMode && player) {
@@ -222,27 +251,56 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         </select>
       </div>
 
+      {/* Height */}
+      <div className="flex gap-1.5">
+        <div className="flex flex-col flex-1">
+          <label className="font-body text-sm text-on-surface-variant">
+            Altura (cm)
+          </label>
+          <Input
+            value={height}
+            onChange={(e) => {
+              setHeight(e.target.value);
+              if (heightError) setHeightError("");
+            }}
+            step="0.01"
+            placeholder="Ej. 180"
+            disabled={isPending}
+          />
+          {heightError && (
+            <p className="font-body text-xs text-error-container">
+              {heightError}
+            </p>
+          )}
+        </div>
+        {/* Weight */}
+        <div className="flex flex-col flex-1">
+          <label className="font-body text-sm text-on-surface-variant">
+            Peso (kg)
+          </label>
+          <Input
+            value={weight}
+            onChange={(e) => {
+              setWeight(e.target.value);
+              if (weightError) setWeightError("");
+            }}
+            step="0.01"
+            placeholder="Ej. 75"
+            disabled={isPending}
+          />
+          {weightError && (
+            <p className="font-body text-xs text-error-container">
+              {weightError}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Team */}
       <div className="flex flex-col gap-1.5">
         <label className="font-body text-sm text-on-surface-variant">
           Equipo
         </label>
-        {/* <select
-          value={teamId}
-          onChange={(e) => {
-            setTeamId(e.target.value);
-            if (teamIdError) setTeamIdError("");
-          }}
-          disabled={isPending}
-          className={SELECT_CLASS}
-        >
-          <option value="">Seleccionar equipo</option>
-          {activeTeams.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select> */}
         <SearchableSelect
           options={activeTeams.map((t) => ({
             value: t.id,

@@ -27,6 +27,8 @@ export class PlayerResponseDto {
   birthDate: Date;
   position: string | null;
   photoUrl: string | null;
+  height: number | null;
+  weight: number | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

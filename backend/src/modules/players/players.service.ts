@@ -54,6 +54,8 @@ function mapPlayer(player: PlayerWithTeam): PlayerResponseDto {
     createdAt: player.createdAt,
     updatedAt: player.updatedAt,
     team: player.team,
+    height: player.height,
+    weight: player.weight,
   };
 }
 
@@ -72,6 +74,8 @@ function mapPlayerWithParents(
     createdAt: player.createdAt,
     updatedAt: player.updatedAt,
     team: player.team,
+    height: player.height,
+    weight: player.weight,
     parents: player.parents as PlayerParentResponseDto[],
   };
 }
@@ -126,6 +130,8 @@ export class PlayersService {
         birthDate: new Date(dto.birthDate),
         position: dto.position,
         photoUrl: dto.photoUrl,
+        height: dto.height,
+        weight: dto.weight,
       },
       include: playerInclude,
     });
@@ -224,6 +230,8 @@ export class PlayersService {
         dto.fullName !== undefined ||
         dto.birthDate !== undefined ||
         dto.position !== undefined ||
+        dto.height !== undefined ||
+        dto.weight !== undefined ||
         dto.teamId !== undefined;
       if (hasDisallowedFields) {
         throw new ForbiddenException(
@@ -289,6 +297,8 @@ export class PlayersService {
         ...(dto.teamId !== undefined && { teamId: dto.teamId }),
         ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }),
         ...(dto.isActive !== undefined && { isActive: dto.isActive }),
+        ...(dto.height !== undefined && { height: dto.height }),
+        ...(dto.weight !== undefined && { weight: dto.weight }),
       },
       include: playerInclude,
     });
