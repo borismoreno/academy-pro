@@ -249,13 +249,13 @@ model PlayerParent {
 model AttendanceSession {
   id          String   @id @default(uuid())
   teamId      String   @map("team_id")
-  coachId     String   @map("coach_id")
+  coachId     String?  @map("coach_id")
   sessionDate DateTime @map("session_date")
   notes       String?
   createdAt   DateTime @default(now()) @map("created_at")
 
   team    Team               @relation(fields: [teamId], references: [id])
-  coach   User               @relation(fields: [coachId], references: [id])
+  coach   User?              @relation(fields: [coachId], references: [id])
   records AttendanceRecord[]
 
   @@map("attendance_sessions")

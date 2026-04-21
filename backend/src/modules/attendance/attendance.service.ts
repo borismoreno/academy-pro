@@ -277,12 +277,26 @@ export class AttendanceService {
     return mapSession(updated);
   }
 
-  async deleteSession(academyId: string, id: string): Promise<void> {
+  async deleteSession(
+    academyId: string,
+    userId: string,
+    role: Role,
+    id: string,
+  ): Promise<void> {
     const session = await this.prisma.attendanceSession.findFirst({
       where: { id, team: { academyId } },
     });
     if (!session) {
       throw new NotFoundException('Sesión no encontrada');
+    }
+
+    if (role === Role.coach) {
+      const assigned = await this.prisma.teamCoach.findFirst({
+        where: { teamId: session.teamId, userId },
+      });
+      if (!assigned) {
+        throw new ForbiddenException('No tienes acceso a este equipo');
+      }
     }
 
     await this.prisma.$transaction([
@@ -324,14 +338,23 @@ export class AttendanceService {
       }
     }
 
-    await this.prisma.$transaction(
-      dto.records.map((item) =>
-        this.prisma.attendanceRecord.updateMany({
-          where: { sessionId, playerId: item.playerId },
-          data: { present: item.present },
-        }),
-      ),
-    );
+    await this.prisma.$transaction(async (tx) => {
+      if (!session.coachId) {
+        await tx.attendanceSession.update({
+          where: { id: sessionId },
+          data: { coachId: userId },
+        });
+      }
+
+      await Promise.all(
+        dto.records.map((item) =>
+          tx.attendanceRecord.updateMany({
+            where: { sessionId, playerId: item.playerId },
+            data: { present: item.present },
+          }),
+        ),
+      );
+    });
 
     const updated = await this.prisma.attendanceSession.findUniqueOrThrow({
       where: { id: sessionId },
@@ -339,6 +362,88 @@ export class AttendanceService {
     });
 
     return mapSession(updated);
+  }
+
+  async generateUpcomingSessions(): Promise<{ created: number; skipped: number }> {
+    const now = new Date();
+    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const twoWeeksFromNow = new Date(today);
+    twoWeeksFromNow.setUTCDate(twoWeeksFromNow.getUTCDate() + 14);
+
+    const schedules = await this.prisma.teamSchedule.findMany({
+      where: { team: { isActive: true } },
+      include: { team: true },
+    });
+
+    const dayOfWeekMap: Record<string, number> = {
+      SUNDAY: 0,
+      MONDAY: 1,
+      TUESDAY: 2,
+      WEDNESDAY: 3,
+      THURSDAY: 4,
+      FRIDAY: 5,
+      SATURDAY: 6,
+    };
+
+    let created = 0;
+    let skipped = 0;
+
+    for (const schedule of schedules) {
+      const targetDay = dayOfWeekMap[schedule.dayOfWeek];
+
+      const cursor = new Date(today);
+      while (cursor <= twoWeeksFromNow) {
+        if (cursor.getUTCDay() === targetDay) {
+          const dateStr = cursor.toISOString().split('T')[0];
+          const existing = await this.prisma.attendanceSession.findFirst({
+            where: {
+              teamId: schedule.teamId,
+              sessionDate: this.parseDateRange(dateStr),
+            },
+          });
+
+          if (existing) {
+            skipped++;
+          } else {
+            const players = await this.prisma.player.findMany({
+              where: { teamId: schedule.teamId, isActive: true },
+              select: { id: true },
+            });
+
+            await this.prisma.$transaction(async (tx) => {
+              const newSession = await tx.attendanceSession.create({
+                // coachId omitted — resolves to NULL after migration makes it nullable
+                data: {
+                  teamId: schedule.teamId,
+                  coachId: null as unknown as string,
+                  sessionDate: new Date(Date.UTC(
+                    cursor.getUTCFullYear(),
+                    cursor.getUTCMonth(),
+                    cursor.getUTCDate(),
+                  )),
+                  notes: null,
+                },
+              });
+
+              if (players.length > 0) {
+                await tx.attendanceRecord.createMany({
+                  data: players.map((p) => ({
+                    sessionId: newSession.id,
+                    playerId: p.id,
+                    present: false,
+                  })),
+                });
+              }
+            });
+
+            created++;
+          }
+        }
+        cursor.setUTCDate(cursor.getUTCDate() + 1);
+      }
+    }
+
+    return { created, skipped };
   }
 
   async getPlayerSummary(

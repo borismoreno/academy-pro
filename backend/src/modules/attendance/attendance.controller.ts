@@ -9,11 +9,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator.js';
+import { Public } from '../../auth/decorators/public.decorator.js';
 import { Roles } from '../../auth/decorators/roles.decorator.js';
 import type { JwtPayload } from '../../auth/strategies/jwt.strategy.js';
+import { CronGuard } from '../../common/guards/cron.guard.js';
 import { AttendanceService } from './attendance.service.js';
 import { CreateSessionDto } from './dto/create-session.dto.js';
 import { RecordAttendanceDto } from './dto/record-attendance.dto.js';
@@ -77,6 +80,14 @@ export class AttendanceController {
     return { data, message: 'Resumen de asistencia obtenido exitosamente' };
   }
 
+  @Post('sessions/generate')
+  @Public()
+  @UseGuards(CronGuard)
+  async generateSessions(): Promise<{ data: { created: number; skipped: number }; message: string }> {
+    const data = await this.attendanceService.generateUpcomingSessions();
+    return { data, message: 'Sesiones generadas exitosamente' };
+  }
+
   @Get('sessions/:id')
   @Roles(Role.academy_director, Role.coach, Role.parent)
   async findOneSession(
@@ -127,13 +138,18 @@ export class AttendanceController {
   }
 
   @Delete('sessions/:id')
-  @Roles(Role.academy_director)
+  @Roles(Role.academy_director, Role.coach)
   @HttpCode(HttpStatus.OK)
   async deleteSession(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,
   ): Promise<{ data: null; message: string }> {
-    await this.attendanceService.deleteSession(user.academyId as string, id);
+    await this.attendanceService.deleteSession(
+      user.academyId as string,
+      user.sub,
+      user.role as Role,
+      id,
+    );
     return { data: null, message: 'Sesión eliminada exitosamente' };
   }
 }

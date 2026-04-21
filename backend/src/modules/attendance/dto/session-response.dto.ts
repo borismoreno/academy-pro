@@ -8,7 +8,7 @@ export class TeamInfoDto {
 export class SessionResponseDto {
   id: string;
   teamId: string;
-  coachId: string;
+  coachId: string | null;
   sessionDate: Date;
   notes: string | null;
   createdAt: Date;
@@ -21,7 +21,7 @@ export class SessionResponseDto {
 export class SessionListResponseDto {
   id: string;
   teamId: string;
-  coachId: string;
+  coachId: string | null;
   sessionDate: Date;
   notes: string | null;
   createdAt: Date;

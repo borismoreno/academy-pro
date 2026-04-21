@@ -4,4 +4,8 @@ export class UpdateSessionDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsOptional()
+  @IsString()
+  cancellationReason?: string;
 }
