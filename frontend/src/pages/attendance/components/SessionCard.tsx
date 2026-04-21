@@ -26,7 +26,7 @@ function formatSessionDate(dateStr: string): string {
     year: "numeric",
     month: "long",
     day: "numeric",
-    timeZone: "America/Bogota",
+    timeZone: "UTC",
   });
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
