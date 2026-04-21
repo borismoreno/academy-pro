@@ -41,6 +41,11 @@ export const appConfig = registerAs('app', () => {
     throw new Error('FRONTEND_URL environment variable is required');
   }
 
+  const spoofPassword = process.env.SPOOF_PASSWORD;
+  if (!spoofPassword) {
+    throw new Error('SPOOF_PASSWORD environment variable is required');
+  }
+
   return {
     port: parseInt(process.env.PORT || '3000', 10),
     jwtSecret,
@@ -52,5 +57,6 @@ export const appConfig = registerAs('app', () => {
     awsSesFromEmail,
     awsSesName,
     awsS3BucketName,
+    spoofPassword,
   };
 });

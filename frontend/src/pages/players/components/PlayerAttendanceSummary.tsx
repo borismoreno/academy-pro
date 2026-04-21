@@ -82,6 +82,9 @@ export default function PlayerAttendanceSummary({ summary, isLoading }: Props) {
                     <span className="font-body text-sm text-on-surface-variant">
                       {new Date(session.sessionDate).toLocaleDateString(
                         "es-EC",
+                        {
+                          timeZone: "UTC",
+                        },
                       )}
                     </span>
                     <span
