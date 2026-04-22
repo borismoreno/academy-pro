@@ -50,7 +50,7 @@ export default function AttendancePage() {
   const { sessions, isLoading, deleteSessionMutation } = useAttendance(filters);
 
   const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
   const upcomingSessions = [...sessions]
     .filter((s) => new Date(s.sessionDate) >= today)
