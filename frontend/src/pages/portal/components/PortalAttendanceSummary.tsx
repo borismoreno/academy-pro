@@ -1,8 +1,9 @@
-import type { AttendanceSummary } from '@/services/portal.service';
+import type { AttendanceSummary } from "@/services/portal.service";
 
 interface PortalAttendanceSummaryProps {
   summary: AttendanceSummary | undefined;
   isLoading: boolean;
+  onClick?: () => void;
 }
 
 function SkeletonCard() {
@@ -21,25 +22,34 @@ function SkeletonCard() {
 }
 
 function scoreColor(pct: number): string {
-  if (pct >= 80) return 'text-primary';
-  if (pct >= 60) return 'text-secondary';
-  return 'text-error-container';
+  if (pct >= 80) return "text-primary";
+  if (pct >= 60) return "text-secondary";
+  return "text-error-container";
 }
 
 function assessment(pct: number): { text: string; color: string } {
-  if (pct >= 80) return { text: '¡Excelente asistencia!', color: 'text-primary' };
-  if (pct >= 60) return { text: 'Asistencia regular', color: 'text-secondary' };
-  return { text: 'Necesita mejorar', color: 'text-error-container' };
+  if (pct >= 80)
+    return { text: "¡Excelente asistencia!", color: "text-primary" };
+  if (pct >= 60) return { text: "Asistencia regular", color: "text-secondary" };
+  return { text: "Necesita mejorar", color: "text-error-container" };
 }
 
 export default function PortalAttendanceSummary({
   summary,
   isLoading,
+  onClick,
 }: PortalAttendanceSummaryProps) {
   if (isLoading) return <SkeletonCard />;
 
   return (
-    <div className="bg-surface-high rounded-3xl overflow-hidden">
+    <div
+      onClick={summary && summary.totalSessions > 0 ? onClick : undefined}
+      className={`bg-surface-high rounded-3xl overflow-hidden transition-colors ${
+        summary && summary.totalSessions > 0
+          ? "cursor-pointer hover:bg-surface-highest"
+          : ""
+      }`}
+    >
       {/* Top glow */}
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
@@ -49,15 +59,17 @@ export default function PortalAttendanceSummary({
         </p>
 
         {!summary || summary.totalSessions === 0 ? (
-          <p className="font-body text-sm text-on-surface-variant">Sin sesiones aún</p>
+          <p className="font-body text-sm text-on-surface-variant">
+            Sin sesiones aún
+          </p>
         ) : (
           <>
             {/* Big percentage */}
             <p
               className={[
-                'font-display text-5xl font-bold leading-none',
+                "font-display text-5xl font-bold leading-none",
                 scoreColor(summary.attendancePercentage),
-              ].join(' ')}
+              ].join(" ")}
             >
               {Math.round(summary.attendancePercentage)}%
             </p>
@@ -70,16 +82,18 @@ export default function PortalAttendanceSummary({
             <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
               <div
                 className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(summary.attendancePercentage, 100)}%` }}
+                style={{
+                  width: `${Math.min(summary.attendancePercentage, 100)}%`,
+                }}
               />
             </div>
 
             {/* Assessment */}
             <p
               className={[
-                'font-body text-[0.6875rem] uppercase tracking-[0.05em]',
+                "font-body text-[0.6875rem] uppercase tracking-[0.05em]",
                 assessment(summary.attendancePercentage).color,
-              ].join(' ')}
+              ].join(" ")}
             >
               {assessment(summary.attendancePercentage).text}
             </p>

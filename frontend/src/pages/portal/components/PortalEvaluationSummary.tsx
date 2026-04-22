@@ -6,6 +6,7 @@ interface PortalEvaluationSummaryProps {
   progress: EvaluationProgress | undefined;
   isLoading: boolean;
   isForbidden?: boolean;
+  onClick?: () => void;
 }
 
 function SkeletonCard() {
@@ -65,6 +66,7 @@ export default function PortalEvaluationSummary({
   progress,
   isLoading,
   isForbidden = false,
+  onClick,
 }: PortalEvaluationSummaryProps) {
   if (isLoading) return <SkeletonCard />;
 
@@ -87,7 +89,12 @@ export default function PortalEvaluationSummary({
     : null;
 
   return (
-    <div className="bg-surface-high rounded-3xl overflow-hidden">
+    <div
+      onClick={hasEvaluations ? onClick : undefined}
+      className={`bg-surface-high rounded-3xl overflow-hidden transition-colors ${
+        hasEvaluations ? "cursor-pointer hover:bg-surface-highest" : ""
+      }`}
+    >
       {/* Top glow */}
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 

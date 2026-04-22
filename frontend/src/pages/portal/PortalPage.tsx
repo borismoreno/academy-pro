@@ -9,12 +9,17 @@ import PortalAttendanceSummary from "./components/PortalAttendanceSummary";
 import PortalEvaluationSummary from "./components/PortalEvaluationSummary";
 import PortalRecentActivity from "./components/PortalRecentActivity";
 import PortalProgressChart from "./components/PortalProgressChart";
+import { useState } from "react";
+import PortalEvaluationDetail from "./components/PortalEvaluationDetail";
+import PortalAttendanceDetail from "./components/PortalAttendanceDetail";
 
 function getFirstName(fullName: string): string {
   return fullName.split(" ")[0];
 }
 
 export default function PortalPage() {
+  const [attendanceOpen, setAttendanceOpen] = useState(false);
+  const [evaluationOpen, setEvaluationOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const {
     players,
@@ -84,11 +89,13 @@ export default function PortalPage() {
             <PortalAttendanceSummary
               summary={attendanceSummary}
               isLoading={isLoadingDetail}
+              onClick={() => setAttendanceOpen(true)}
             />
             <PortalEvaluationSummary
               progress={evaluationProgress}
               isLoading={isLoadingDetail}
               isForbidden={isProgressForbidden}
+              onClick={() => setEvaluationOpen(true)}
             />
           </div>
 
@@ -103,6 +110,16 @@ export default function PortalPage() {
             attendanceSummary={attendanceSummary}
             evaluationProgress={evaluationProgress}
             isLoading={isLoadingDetail}
+          />
+          <PortalAttendanceDetail
+            open={attendanceOpen}
+            onOpenChange={setAttendanceOpen}
+            summary={attendanceSummary}
+          />
+          <PortalEvaluationDetail
+            open={evaluationOpen}
+            onOpenChange={setEvaluationOpen}
+            progress={evaluationProgress}
           />
         </>
       )}
