@@ -11,12 +11,14 @@ interface AttendanceListProps {
   records: AttendanceRecord[];
   onBulkUpdate: (data: BulkUpdateData) => Promise<void>;
   isLoading: boolean;
+  disabled?: boolean;
 }
 
 export default function AttendanceList({
   records,
   onBulkUpdate,
   isLoading,
+  disabled,
 }: AttendanceListProps) {
   const [localPresence, setLocalPresence] = useState<Record<string, boolean>>(
     () => {
@@ -67,6 +69,11 @@ export default function AttendanceList({
 
   return (
     <div className="flex flex-col gap-4">
+      {disabled && (
+        <p className="font-body text-sm text-on-surface-variant bg-surface-highest rounded-xl px-4 py-3">
+          No puedes registrar asistencia de una sesión futura.
+        </p>
+      )}
       {/* Counter */}
       <p className="font-body text-sm text-on-surface-variant">
         {presentCount} de {totalCount} presentes
@@ -78,6 +85,7 @@ export default function AttendanceList({
           type="button"
           onClick={() => markAll(true)}
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
+          disabled={disabled}
         >
           <Check size={14} />
           Marcar todos presentes
@@ -86,6 +94,7 @@ export default function AttendanceList({
           type="button"
           onClick={() => markAll(false)}
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors"
+          disabled={disabled}
         >
           <X size={14} />
           Marcar todos ausentes
@@ -103,6 +112,7 @@ export default function AttendanceList({
               setLocalPresence((prev) => ({ ...prev, [record.playerId]: val }))
             }
             index={index}
+            disabled={disabled}
           />
         ))}
       </div>
@@ -112,7 +122,7 @@ export default function AttendanceList({
         <button
           type="button"
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || disabled}
           className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
           {isSaving ? <LoadingSpinner size="sm" /> : null}

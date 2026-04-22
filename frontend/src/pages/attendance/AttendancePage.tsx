@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import { CalendarDays } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
@@ -8,7 +7,6 @@ import { useAuthStore } from "@/store/auth.store";
 import { useTeams } from "@/hooks/useTeams";
 import { useAttendance } from "@/hooks/useAttendance";
 import SessionCard from "./components/SessionCard";
-import SessionFormSheet from "./components/SessionFormSheet";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const SELECT_CLASS =
@@ -36,8 +34,6 @@ export default function AttendancePage() {
   const role = useAuthStore((s) => s.role);
   const user = useAuthStore((s) => s.user);
 
-  const [searchParams] = useSearchParams();
-  const [sheetOpen, setSheetOpen] = useState(false);
   const [teamFilter, setTeamFilter] = useState("");
   const [monthFilter, setMonthFilter] = useState(getCurrentMonth());
 
@@ -53,39 +49,30 @@ export default function AttendancePage() {
 
   const { sessions, isLoading, deleteSessionMutation } = useAttendance(filters);
 
-  const canRegister = role === "academy_director" || role === "coach";
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
 
-  // Auto-open sheet when ?action=create is present
-  useEffect(() => {
-    if (searchParams.get("action") === "create") {
-      setSheetOpen(true);
-    }
-  }, [searchParams]);
+  const upcomingSessions = [...sessions]
+    .filter((s) => new Date(s.sessionDate) >= today)
+    .sort(
+      (a, b) =>
+        new Date(a.sessionDate).getTime() - new Date(b.sessionDate).getTime(),
+    );
 
-  const sortedSessions = [...sessions].sort(
-    (a, b) =>
-      new Date(b.sessionDate).getTime() - new Date(a.sessionDate).getTime(),
-  );
+  const pastSessions = [...sessions]
+    .filter((s) => new Date(s.sessionDate) < today)
+    .sort(
+      (a, b) =>
+        new Date(b.sessionDate).getTime() - new Date(a.sessionDate).getTime(),
+    );
 
   function handleTeamChange(teamId: string) {
     setTeamFilter(teamId);
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHeader
-        title=""
-        action={
-          canRegister ? (
-            <button
-              onClick={() => setSheetOpen(true)}
-              className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap"
-            >
-              Registrar sesión
-            </button>
-          ) : undefined
-        }
-      />
+    <div className="flex flex-col">
+      <PageHeader title="" />
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
@@ -127,28 +114,57 @@ export default function AttendancePage() {
         <div className="flex justify-center py-16">
           <LoadingSpinner size="lg" />
         </div>
-      ) : sortedSessions.length === 0 ? (
+      ) : sessions.length === 0 ? (
         <EmptyState
           message="No hay sesiones registradas para este período."
           icon={<CalendarDays size={48} />}
         />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          {sortedSessions.map((session) => (
-            <SessionCard
-              key={session.id}
-              session={session}
-              onDelete={(id) => deleteSessionMutation.mutate(id)}
-              isDeleting={deleteSessionMutation.isPending}
-              role={role}
-              currentUserId={user?.id ?? null}
-              currentUserName={user?.fullName ?? null}
-            />
-          ))}
+        <div className="flex flex-col gap-8 mt-4">
+          {pastSessions.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="font-display text-[1.1rem] font-semibold text-on-surface-variant uppercase tracking-[0.05em]">
+                Sesiones anteriores
+              </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                {pastSessions.map((session) => (
+                  <SessionCard
+                    key={session.id}
+                    session={session}
+                    onDelete={(id) => deleteSessionMutation.mutate(id)}
+                    isDeleting={deleteSessionMutation.isPending}
+                    role={role}
+                    currentUserId={user?.id ?? null}
+                    currentUserName={user?.fullName ?? null}
+                    isPending={false}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {upcomingSessions.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="font-display text-[1.1rem] font-semibold text-on-surface-variant uppercase tracking-[0.05em]">
+                Próximas sesiones
+              </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                {upcomingSessions.map((session) => (
+                  <SessionCard
+                    key={session.id}
+                    session={session}
+                    onDelete={(id) => deleteSessionMutation.mutate(id)}
+                    isDeleting={deleteSessionMutation.isPending}
+                    role={role}
+                    currentUserId={user?.id ?? null}
+                    currentUserName={user?.fullName ?? null}
+                    isPending={true}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
-
-      <SessionFormSheet open={sheetOpen} onOpenChange={setSheetOpen} />
     </div>
   );
 }

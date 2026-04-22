@@ -29,7 +29,7 @@ function formatFullDate(dateStr: string): string {
     year: "numeric",
     month: "long",
     day: "numeric",
-    timeZone: "America/Bogota",
+    timeZone: "UTC",
   });
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
@@ -100,6 +100,8 @@ export default function SessionDetailPage() {
     total > 0 ? Math.round((session.totalPresent / total) * 100) : 0;
   const coachName = user && session.coachId === user.id ? user.fullName : null;
   const canEditNotes = role === "academy_director" || role === "coach";
+
+  const isFuture = new Date(session.sessionDate) > new Date();
 
   return (
     <div className="flex flex-col gap-6">
@@ -234,6 +236,7 @@ export default function SessionDetailPage() {
               await bulkUpdateMutation.mutateAsync(data);
             }}
             isLoading={isLoading}
+            disabled={isFuture}
           />
         </div>
       </div>

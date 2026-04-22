@@ -25,7 +25,7 @@ import {
   AuthTokenResponse,
 } from './dto/auth-response.dto.js';
 import { JwtPayload } from './strategies/jwt.strategy.js';
-import { Role, User } from '@prisma/client';
+import { Role, User, SubscriptionStatus } from '@prisma/client';
 
 const BCRYPT_ROUNDS = 10;
 const VERIFICATION_EXPIRY_HOURS = 24;
@@ -151,6 +151,19 @@ export class AuthService {
     }
 
     if (academies.length === 1) {
+      const subscription = await this.prisma.academySubscription.findUnique({
+        where: { academyId: academies[0].id! },
+      });
+      if (subscription?.status === SubscriptionStatus.suspended) {
+        throw new ForbiddenException(
+          'Tu academia está suspendida. Contacta al administrador.',
+        );
+      }
+      if (subscription?.status === SubscriptionStatus.cancelled) {
+        throw new ForbiddenException(
+          'Tu academia ha sido cancelada. Contacta al administrador.',
+        );
+      }
       return this.buildTokenResponse(user, academies[0]);
     }
 
@@ -245,6 +258,20 @@ export class AuthService {
 
     if (!academyRole) {
       throw new ForbiddenException('No tienes acceso a esta academia');
+    }
+
+    const subscription = await this.prisma.academySubscription.findUnique({
+      where: { academyId: dto.academyId },
+    });
+    if (subscription?.status === SubscriptionStatus.suspended) {
+      throw new ForbiddenException(
+        'Tu academia está suspendida. Contacta al administrador.',
+      );
+    }
+    if (subscription?.status === SubscriptionStatus.cancelled) {
+      throw new ForbiddenException(
+        'Tu academia ha sido cancelada. Contacta al administrador.',
+      );
     }
 
     const user = await this.prisma.user.findUniqueOrThrow({

@@ -80,7 +80,9 @@ export class AttendanceService {
 
   private parseDateRange(dateStr: string): { gte: Date; lt: Date } {
     const d = new Date(dateStr);
-    const gte = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const gte = new Date(
+      Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
+    );
     const lt = new Date(
       Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1),
     );
@@ -104,7 +106,9 @@ export class AttendanceService {
       where: { id: dto.teamId, academyId, isActive: true },
     });
     if (!team) {
-      throw new NotFoundException('El equipo no existe o no pertenece a esta academia');
+      throw new NotFoundException(
+        'El equipo no existe o no pertenece a esta academia',
+      );
     }
 
     if (role === Role.coach) {
@@ -117,7 +121,10 @@ export class AttendanceService {
     }
 
     const duplicate = await this.prisma.attendanceSession.findFirst({
-      where: { teamId: dto.teamId, sessionDate: this.parseDateRange(dto.sessionDate) },
+      where: {
+        teamId: dto.teamId,
+        sessionDate: this.parseDateRange(dto.sessionDate),
+      },
     });
     if (duplicate) {
       throw new ConflictException(
@@ -164,7 +171,9 @@ export class AttendanceService {
       select: { userId: true },
     });
 
-    const uniqueParentUserIds = [...new Set(parentLinks.map((pl) => pl.userId))];
+    const uniqueParentUserIds = [
+      ...new Set(parentLinks.map((pl) => pl.userId)),
+    ];
     for (const parentUserId of uniqueParentUserIds) {
       await this.notificationsService.createNotification({
         userId: parentUserId,
@@ -364,9 +373,14 @@ export class AttendanceService {
     return mapSession(updated);
   }
 
-  async generateUpcomingSessions(): Promise<{ created: number; skipped: number }> {
+  async generateUpcomingSessions(): Promise<{
+    created: number;
+    skipped: number;
+  }> {
     const now = new Date();
-    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const today = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
     const twoWeeksFromNow = new Date(today);
     twoWeeksFromNow.setUTCDate(twoWeeksFromNow.getUTCDate() + 14);
 
@@ -403,6 +417,36 @@ export class AttendanceService {
           });
 
           if (existing) {
+            // Check for new players not yet in the session
+            const players = await this.prisma.player.findMany({
+              where: { teamId: schedule.teamId, isActive: true },
+              select: { id: true },
+            });
+
+            const existingRecords = await this.prisma.attendanceRecord.findMany(
+              {
+                where: { sessionId: existing.id },
+                select: { playerId: true },
+              },
+            );
+
+            const existingPlayerIds = new Set(
+              existingRecords.map((r) => r.playerId),
+            );
+            const newPlayers = players.filter(
+              (p) => !existingPlayerIds.has(p.id),
+            );
+
+            if (newPlayers.length > 0) {
+              await this.prisma.attendanceRecord.createMany({
+                data: newPlayers.map((p) => ({
+                  sessionId: existing.id,
+                  playerId: p.id,
+                  present: false,
+                })),
+              });
+            }
+
             skipped++;
           } else {
             const players = await this.prisma.player.findMany({
@@ -416,11 +460,13 @@ export class AttendanceService {
                 data: {
                   teamId: schedule.teamId,
                   coachId: null as unknown as string,
-                  sessionDate: new Date(Date.UTC(
-                    cursor.getUTCFullYear(),
-                    cursor.getUTCMonth(),
-                    cursor.getUTCDate(),
-                  )),
+                  sessionDate: new Date(
+                    Date.UTC(
+                      cursor.getUTCFullYear(),
+                      cursor.getUTCMonth(),
+                      cursor.getUTCDate(),
+                    ),
+                  ),
                   notes: null,
                 },
               });
@@ -451,7 +497,6 @@ export class AttendanceService {
     userId: string,
     role: Role,
     playerId: string,
-    month?: string,
   ): Promise<PlayerAttendanceSummaryDto> {
     const player = await this.prisma.player.findFirst({
       where: { id: playerId, academyId },
@@ -480,9 +525,7 @@ export class AttendanceService {
 
     const recordsWhere: Prisma.AttendanceRecordWhereInput = {
       playerId,
-      ...(month && {
-        session: { sessionDate: this.parseMonthRange(month) },
-      }),
+      session: { sessionDate: { lte: new Date() }, coachId: { not: null } },
     };
 
     const records = await this.prisma.attendanceRecord.findMany({

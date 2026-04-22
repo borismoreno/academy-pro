@@ -15,6 +15,7 @@ interface AttendancePlayerRowProps {
   present: boolean;
   onChange: (present: boolean) => void;
   index: number;
+  disabled?: boolean;
 }
 
 export default function AttendancePlayerRow({
@@ -22,6 +23,7 @@ export default function AttendancePlayerRow({
   present,
   onChange,
   index,
+  disabled,
 }: AttendancePlayerRowProps) {
   const isEven = index % 2 === 0;
 
@@ -54,6 +56,7 @@ export default function AttendancePlayerRow({
       <button
         type="button"
         onClick={() => onChange(!present)}
+        disabled={disabled}
         className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-[0.6875rem] uppercase tracking-[0.05em] transition-all active:scale-95 min-h-11 ${
           present
             ? "bg-primary text-on-primary"

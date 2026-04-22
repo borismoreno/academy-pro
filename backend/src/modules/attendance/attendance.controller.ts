@@ -68,14 +68,12 @@ export class AttendanceController {
   async getPlayerSummary(
     @CurrentUser() user: JwtPayload,
     @Param('playerId') playerId: string,
-    @Query('month') month?: string,
   ): Promise<{ data: PlayerAttendanceSummaryDto; message: string }> {
     const data = await this.attendanceService.getPlayerSummary(
       user.academyId as string,
       user.sub,
       user.role as Role,
       playerId,
-      month,
     );
     return { data, message: 'Resumen de asistencia obtenido exitosamente' };
   }
@@ -83,7 +81,10 @@ export class AttendanceController {
   @Post('sessions/generate')
   @Public()
   @UseGuards(CronGuard)
-  async generateSessions(): Promise<{ data: { created: number; skipped: number }; message: string }> {
+  async generateSessions(): Promise<{
+    data: { created: number; skipped: number };
+    message: string;
+  }> {
     const data = await this.attendanceService.generateUpcomingSessions();
     return { data, message: 'Sesiones generadas exitosamente' };
   }
@@ -117,7 +118,10 @@ export class AttendanceController {
       id,
       dto,
     );
-    return { data, message: 'Registros de asistencia actualizados exitosamente' };
+    return {
+      data,
+      message: 'Registros de asistencia actualizados exitosamente',
+    };
   }
 
   @Patch('sessions/:id')

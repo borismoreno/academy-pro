@@ -17,6 +17,7 @@ interface SessionCardProps {
   role: UserRole | null;
   currentUserId: string | null;
   currentUserName: string | null;
+  isPending: boolean;
 }
 
 function formatSessionDate(dateStr: string): string {
@@ -38,6 +39,7 @@ export default function SessionCard({
   role,
   currentUserId,
   currentUserName,
+  isPending,
 }: SessionCardProps) {
   const navigate = useNavigate();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -58,7 +60,11 @@ export default function SessionCard({
     <>
       <div
         onClick={handleCardClick}
-        className="bg-surface-high rounded-3xl overflow-hidden hover:bg-surface-highest transition-colors cursor-pointer"
+        className={`rounded-3xl overflow-hidden transition-colors cursor-pointer ${
+          isPending
+            ? "bg-surface-high/50 hover:bg-surface-high opacity-60"
+            : "bg-surface-high hover:bg-surface-highest"
+        }`}
       >
         {/* Top glow */}
         <div className="h-0.5 bg-linear-to-r from-primary to-secondary" />
@@ -101,22 +107,30 @@ export default function SessionCard({
           </div>
 
           {/* Attendance chips */}
-          <div className="flex items-center gap-2">
-            <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] bg-primary-container text-on-primary rounded-full px-3 py-1">
-              {session.totalPresent} presentes
-            </span>
-            <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] bg-error-container text-on-surface rounded-full px-3 py-1">
-              {session.totalAbsent} ausentes
-            </span>
-          </div>
-
-          {/* Attendance bar */}
-          <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
-            <div
-              className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all"
-              style={{ width: `${presentPct}%` }}
-            />
-          </div>
+          {isPending ? (
+            <div className="flex items-center gap-2">
+              <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
+                Pendiente de registro
+              </span>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] bg-primary-container text-on-primary rounded-full px-3 py-1">
+                  {session.totalPresent} presentes
+                </span>
+                <span className="font-body text-[0.6875rem] uppercase tracking-[0.05em] bg-error-container text-on-surface rounded-full px-3 py-1">
+                  {session.totalAbsent} ausentes
+                </span>
+              </div>
+              <div className="w-full h-1.5 bg-surface-highest rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all"
+                  style={{ width: `${presentPct}%` }}
+                />
+              </div>
+            </>
+          )}
 
           {/* Recorded by */}
           {coachName && (

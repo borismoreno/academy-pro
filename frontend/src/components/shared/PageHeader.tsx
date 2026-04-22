@@ -12,7 +12,7 @@ export default function PageHeader({
   action,
 }: PageHeaderProps) {
   return (
-    <div className="flex items-start justify-between mb-8">
+    <div className={`flex items-start justify-between ${action ? "mb-8" : ""}`}>
       <div>
         <h2 className="font-display text-[1.75rem] font-semibold text-on-surface leading-tight">
           {title}
