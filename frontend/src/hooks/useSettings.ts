@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@/hooks/use-toast';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
 import {
   getAcademy,
   updateAcademy,
@@ -9,58 +9,102 @@ import {
   createMetric,
   updateMetric,
   deleteMetric,
-} from '@/services/settings.service';
+  getPendingInvitations,
+  resendInvitation,
+  cancelInvitation,
+} from "@/services/settings.service";
 import type {
   UpdateAcademyData,
   InviteUserData,
   CreateMetricData,
   UpdateMetricData,
-} from '@/services/settings.service';
+} from "@/services/settings.service";
 
 function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === 'object' && 'response' in error) {
+  if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message) return axiosError.response.data.message;
+    if (axiosError.response?.data?.message)
+      return axiosError.response.data.message;
   }
-  return 'Ha ocurrido un error inesperado';
+  return "Ha ocurrido un error inesperado";
 }
 
 export function useSettings(isDirector = false) {
   const queryClient = useQueryClient();
 
   const { data: academy, isLoading: academyLoading } = useQuery({
-    queryKey: ['academy'],
+    queryKey: ["academy"],
     queryFn: getAcademy,
     enabled: isDirector,
   });
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
-    queryKey: ['members'],
+    queryKey: ["members"],
     queryFn: () => getMembers(),
     enabled: isDirector,
   });
 
   const metricsQuery = useQuery({
-    queryKey: ['metrics'],
+    queryKey: ["metrics"],
     queryFn: getMetrics,
     enabled: isDirector,
   });
 
+  const {
+    data: pendingInvitations = [],
+    isLoading: pendingInvitationsLoading,
+  } = useQuery({
+    queryKey: ["pending-invitations"],
+    queryFn: getPendingInvitations,
+    enabled: isDirector,
+  });
+
+  const resendInvitationMutation = useMutation({
+    mutationFn: (id: string) => resendInvitation(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
+      toast({ description: "Invitación reenviada correctamente" });
+    },
+    onError: (error: unknown) => {
+      toast({
+        title: "Error",
+        description: extractErrorMessage(error),
+        variant: "destructive",
+      });
+    },
+  });
+
+  const cancelInvitationMutation = useMutation({
+    mutationFn: (id: string) => cancelInvitation(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
+      toast({ description: "Invitación cancelada correctamente" });
+    },
+    onError: (error: unknown) => {
+      toast({
+        title: "Error",
+        description: extractErrorMessage(error),
+        variant: "destructive",
+      });
+    },
+  });
+
   const metrics = metricsQuery.data?.metrics ?? [];
-  const isCustomMetricsEnabled = metricsQuery.data?.isCustomMetricsEnabled ?? true;
+  const isCustomMetricsEnabled =
+    metricsQuery.data?.isCustomMetricsEnabled ?? true;
   const metricsLoading = metricsQuery.isLoading;
 
   const updateAcademyMutation = useMutation({
     mutationFn: (data: UpdateAcademyData) => updateAcademy(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['academy'] });
-      toast({ description: 'Información actualizada correctamente' });
+      queryClient.invalidateQueries({ queryKey: ["academy"] });
+      toast({ description: "Información actualizada correctamente" });
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -68,13 +112,14 @@ export function useSettings(isDirector = false) {
   const inviteUserMutation = useMutation({
     mutationFn: (data: InviteUserData) => inviteUser(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -82,13 +127,13 @@ export function useSettings(isDirector = false) {
   const createMetricMutation = useMutation({
     mutationFn: (data: CreateMetricData) => createMetric(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['metrics'] });
+      queryClient.invalidateQueries({ queryKey: ["metrics"] });
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -97,13 +142,13 @@ export function useSettings(isDirector = false) {
     mutationFn: ({ id, data }: { id: string; data: UpdateMetricData }) =>
       updateMetric(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['metrics'] });
+      queryClient.invalidateQueries({ queryKey: ["metrics"] });
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -111,13 +156,13 @@ export function useSettings(isDirector = false) {
   const deleteMetricMutation = useMutation({
     mutationFn: (id: string) => deleteMetric(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['metrics'] });
+      queryClient.invalidateQueries({ queryKey: ["metrics"] });
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -135,5 +180,9 @@ export function useSettings(isDirector = false) {
     createMetricMutation,
     updateMetricMutation,
     deleteMetricMutation,
+    pendingInvitations,
+    pendingInvitationsLoading,
+    resendInvitationMutation,
+    cancelInvitationMutation,
   };
 }

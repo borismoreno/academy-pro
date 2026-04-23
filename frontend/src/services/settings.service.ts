@@ -1,10 +1,10 @@
-import api from './api';
-import type { ApiResponse, Academy, Member, Metric } from '@/types';
+import api from "./api";
+import type { ApiResponse, Academy, Member, Metric } from "@/types";
 
 // ── Academy ───────────────────────────────────────────────────────────────────
 
 export async function getAcademy(): Promise<Academy> {
-  const response = await api.get<ApiResponse<Academy>>('/academies/me');
+  const response = await api.get<ApiResponse<Academy>>("/academies/me");
   return response.data.data;
 }
 
@@ -18,15 +18,17 @@ export interface UpdateAcademyData {
 }
 
 export async function updateAcademy(data: UpdateAcademyData): Promise<Academy> {
-  const response = await api.patch<ApiResponse<Academy>>('/academies/me', data);
+  const response = await api.patch<ApiResponse<Academy>>("/academies/me", data);
   return response.data.data;
 }
 
 // ── Members ───────────────────────────────────────────────────────────────────
 
 export async function getMembers(role?: string): Promise<Member[]> {
-  const params = role ? `?role=${role}` : '';
-  const response = await api.get<ApiResponse<Member[]>>(`/academies/members${params}`);
+  const params = role ? `?role=${role}` : "";
+  const response = await api.get<ApiResponse<Member[]>>(
+    `/academies/members${params}`,
+  );
   return response.data.data;
 }
 
@@ -34,12 +36,35 @@ export async function getMembers(role?: string): Promise<Member[]> {
 
 export interface InviteUserData {
   email: string;
-  role: 'coach' | 'parent';
+  role: "coach" | "parent";
   playerId?: string;
 }
 
 export async function inviteUser(data: InviteUserData): Promise<void> {
-  await api.post('/invitations', data);
+  await api.post("/invitations", data);
+}
+
+export interface PendingInvitation {
+  id: string;
+  email: string;
+  role: "coach" | "parent";
+  expiresAt: string;
+  createdAt: string;
+}
+
+export async function getPendingInvitations(): Promise<PendingInvitation[]> {
+  const response = await api.get<ApiResponse<PendingInvitation[]>>(
+    "/invitations?status=pending",
+  );
+  return response.data.data;
+}
+
+export async function resendInvitation(id: string): Promise<void> {
+  await api.post(`/invitations/${id}/resend`);
+}
+
+export async function cancelInvitation(id: string): Promise<void> {
+  await api.delete(`/invitations/${id}`);
 }
 
 // ── Evaluation Metrics ────────────────────────────────────────────────────────
@@ -50,7 +75,9 @@ export interface MetricsListResponse {
 }
 
 export async function getMetrics(): Promise<MetricsListResponse> {
-  const response = await api.get<ApiResponse<MetricsListResponse>>('/evaluations/metrics');
+  const response = await api.get<ApiResponse<MetricsListResponse>>(
+    "/evaluations/metrics",
+  );
   return response.data.data;
 }
 
@@ -60,7 +87,10 @@ export interface CreateMetricData {
 }
 
 export async function createMetric(data: CreateMetricData): Promise<Metric> {
-  const response = await api.post<ApiResponse<Metric>>('/evaluations/metrics', data);
+  const response = await api.post<ApiResponse<Metric>>(
+    "/evaluations/metrics",
+    data,
+  );
   return response.data.data;
 }
 
@@ -70,8 +100,14 @@ export interface UpdateMetricData {
   isActive?: boolean;
 }
 
-export async function updateMetric(id: string, data: UpdateMetricData): Promise<Metric> {
-  const response = await api.patch<ApiResponse<Metric>>(`/evaluations/metrics/${id}`, data);
+export async function updateMetric(
+  id: string,
+  data: UpdateMetricData,
+): Promise<Metric> {
+  const response = await api.patch<ApiResponse<Metric>>(
+    `/evaluations/metrics/${id}`,
+    data,
+  );
   return response.data.data;
 }
 
@@ -88,10 +124,9 @@ export interface UpdateProfileData {
 export async function updateProfile(
   data: UpdateProfileData,
 ): Promise<{ fullName: string; email: string }> {
-  const response = await api.patch<ApiResponse<{ fullName: string; email: string }>>(
-    '/auth/me',
-    data,
-  );
+  const response = await api.patch<
+    ApiResponse<{ fullName: string; email: string }>
+  >("/auth/me", data);
   return response.data.data;
 }
 
@@ -101,5 +136,5 @@ export interface ChangePasswordData {
 }
 
 export async function changePassword(data: ChangePasswordData): Promise<void> {
-  await api.patch('/auth/me/password', data);
+  await api.patch("/auth/me/password", data);
 }

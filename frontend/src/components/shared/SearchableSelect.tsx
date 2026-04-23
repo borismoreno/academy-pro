@@ -23,6 +23,7 @@ interface SearchableSelectProps {
   isLoading?: boolean;
   disabled?: boolean;
   className?: string;
+  emptyAction?: React.ReactNode;
 }
 
 function useIsDesktop(): boolean {
@@ -59,6 +60,7 @@ interface OptionListProps {
   listClassName: string;
   inputWrapperClassName: string;
   inputRef?: React.RefObject<HTMLInputElement>;
+  emptyAction?: React.ReactNode;
 }
 
 function OptionList({
@@ -72,6 +74,7 @@ function OptionList({
   listClassName,
   inputWrapperClassName,
   inputRef,
+  emptyAction,
 }: OptionListProps) {
   const internalRef = useRef<HTMLInputElement>(null);
   const finalRef = inputRef ?? internalRef;
@@ -128,6 +131,7 @@ function OptionList({
           <div className="flex flex-col items-center justify-center gap-2 py-10 text-on-surface-variant">
             <SearchX size={24} />
             <p className="font-body text-sm">No se encontraron resultados</p>
+            {emptyAction && <div className="mt-1">{emptyAction}</div>}
           </div>
         ) : (
           filtered.map((option) => {
@@ -175,6 +179,7 @@ export function SearchableSelect({
   isLoading,
   disabled,
   className,
+  emptyAction,
 }: SearchableSelectProps) {
   const isDesktop = useIsDesktop();
   const [open, setOpen] = useState(false);
@@ -237,6 +242,7 @@ export function SearchableSelect({
             isLoading={isLoading}
             inputWrapperClassName="px-3 pt-3 pb-2"
             listClassName="max-h-64 overflow-y-auto px-2 pb-2"
+            emptyAction={emptyAction}
           />
         </PopoverContent>
       </Popover>

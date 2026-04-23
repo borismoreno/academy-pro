@@ -65,6 +65,18 @@ export class InvitationsController {
     return { data: null, message: result.message };
   }
 
+  @Post(':id/resend')
+  @Roles(Role.academy_director)
+  @HttpCode(HttpStatus.OK)
+  async resend(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
+    const data = await this.invitationsService.resend(
+      user.academyId as string,
+      user.sub,
+      id,
+    );
+    return { data, message: 'Invitación reenviada exitosamente' };
+  }
+
   @Delete(':id')
   @Roles(Role.academy_director)
   @HttpCode(HttpStatus.NO_CONTENT)

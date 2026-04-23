@@ -1,33 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { toast } from '@/hooks/use-toast';
-import { usePlayers } from '@/hooks/usePlayers';
-import { inviteUser } from '@/services/settings.service';
-import type { InviteUserData } from '@/services/settings.service';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { toast } from "@/hooks/use-toast";
+import { usePlayers } from "@/hooks/usePlayers";
+import { inviteUser } from "@/services/settings.service";
+import type { InviteUserData } from "@/services/settings.service";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const SELECT_CLASS =
-  'w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50';
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer disabled:opacity-50";
 
 function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === 'object' && 'response' in error) {
+  if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message) return axiosError.response.data.message;
+    if (axiosError.response?.data?.message)
+      return axiosError.response.data.message;
   }
-  return 'Ha ocurrido un error inesperado';
+  return "Ha ocurrido un error inesperado";
 }
 
 function useIsDesktop(): boolean {
@@ -36,8 +38,8 @@ function useIsDesktop(): boolean {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 1024);
     }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   return isDesktop;
 }
@@ -51,46 +53,47 @@ interface FormContentProps {
 
 function FormContent({ onSuccess, onClose }: FormContentProps) {
   const queryClient = useQueryClient();
-  const { players } = usePlayers();
+  const { players, isLoading: isLoadingPlayers } = usePlayers();
   const activePlayers = players.filter((p) => p.isActive);
 
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState<'coach' | 'parent'>('coach');
-  const [playerId, setPlayerId] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<"coach" | "parent">("coach");
+  const [playerId, setPlayerId] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [playerFilter, setPlayerFilter] = useState("");
 
   const mutation = useMutation({
     mutationFn: (data: InviteUserData) => inviteUser(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members'] });
-      toast({ description: 'Invitación enviada correctamente' });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      toast({ description: "Invitación enviada correctamente" });
       onClose();
       onSuccess();
     },
     onError: (error: unknown) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: extractErrorMessage(error),
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
 
-  function handleRoleChange(newRole: 'coach' | 'parent') {
+  function handleRoleChange(newRole: "coach" | "parent") {
     setRole(newRole);
-    if (newRole === 'coach') setPlayerId('');
+    if (newRole === "coach") setPlayerId("");
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) {
-      setEmailError('El correo es requerido');
+      setEmailError("El correo es requerido");
       return;
     }
-    setEmailError('');
+    setEmailError("");
 
     const data: InviteUserData = { email: email.trim(), role };
-    if (role === 'parent' && playerId) data.playerId = playerId;
+    if (role === "parent" && playerId) data.playerId = playerId;
 
     mutation.mutate(data);
   }
@@ -107,7 +110,7 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            if (emailError) setEmailError('');
+            if (emailError) setEmailError("");
           }}
           placeholder="usuario@ejemplo.com"
           disabled={mutation.isPending}
@@ -125,7 +128,9 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
         </label>
         <select
           value={role}
-          onChange={(e) => handleRoleChange(e.target.value as 'coach' | 'parent')}
+          onChange={(e) =>
+            handleRoleChange(e.target.value as "coach" | "parent")
+          }
           disabled={mutation.isPending}
           className={SELECT_CLASS}
         >
@@ -135,12 +140,12 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
       </div>
 
       {/* Player link — only for parent */}
-      {role === 'parent' && (
+      {role === "parent" && (
         <div className="flex flex-col gap-1.5">
           <label className="font-body text-sm text-on-surface-variant">
             Vincular a un jugador (opcional)
           </label>
-          <select
+          {/* <select
             value={playerId}
             onChange={(e) => setPlayerId(e.target.value)}
             disabled={mutation.isPending}
@@ -152,7 +157,19 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
                 {p.fullName}
               </option>
             ))}
-          </select>
+          </select> */}
+          <SearchableSelect
+            options={activePlayers.map((p) => ({
+              value: p.id,
+              label: p.fullName,
+              subtitle: p.team?.name,
+            }))}
+            value={playerFilter || "all"}
+            onValueChange={(val) => setPlayerFilter(val === "all" ? "" : val)}
+            placeholder="Todos los jugadores"
+            searchPlaceholder="Buscar jugador..."
+            isLoading={isLoadingPlayers}
+          />
         </div>
       )}
 
@@ -176,9 +193,13 @@ interface Props {
   onSuccess: () => void;
 }
 
-export default function InviteUserSheet({ open, onOpenChange, onSuccess }: Props) {
+export default function InviteUserSheet({
+  open,
+  onOpenChange,
+  onSuccess,
+}: Props) {
   const isDesktop = useIsDesktop();
-  const title = 'Invitar usuario';
+  const title = "Invitar usuario";
 
   const content = (
     <FormContent

@@ -1,8 +1,10 @@
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import type { Member } from '@/types';
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import type { Member } from "@/types";
+import { RefreshCw, X } from "lucide-react";
+import type { PendingInvitation } from "@/services/settings.service";
 
 function getInitials(name: string): string {
-  const parts = name.trim().split(' ');
+  const parts = name.trim().split(" ");
   return parts.length >= 2
     ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
     : parts[0].substring(0, 2).toUpperCase();
@@ -10,11 +12,69 @@ function getInitials(name: string): string {
 
 function roleLabel(role: string): string {
   const labels: Record<string, string> = {
-    coach: 'Entrenador',
-    parent: 'Padre / Tutor',
-    academy_director: 'Director',
+    coach: "Entrenador",
+    parent: "Padre / Tutor",
+    academy_director: "Director",
   };
   return labels[role] ?? role;
+}
+
+function PendingInvitationRow({
+  invitation,
+  onResend,
+  onCancel,
+  isResending,
+  isCancelling,
+}: {
+  invitation: PendingInvitation;
+  onResend: () => void;
+  onCancel: () => void;
+  isResending: boolean;
+  isCancelling: boolean;
+}) {
+  const expiresAt = new Date(invitation.expiresAt).toLocaleString("es-EC", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "America/Bogota",
+  });
+
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-surface-high rounded-xl border border-outline-variant/15">
+      <div className="flex-1 min-w-0">
+        <p className="font-body text-sm text-on-surface truncate">
+          {invitation.email}
+        </p>
+        <p className="font-body text-[0.6875rem] text-on-surface-variant mt-0.5">
+          Caduca: {expiresAt}
+        </p>
+      </div>
+      <span className="font-body text-[0.6875rem] bg-surface-highest text-on-surface-variant rounded-full px-2 py-1 shrink-0 whitespace-nowrap">
+        Pendiente
+      </span>
+      <div className="flex items-center gap-1 shrink-0">
+        <button
+          type="button"
+          onClick={onResend}
+          disabled={isResending || isCancelling}
+          title="Reenviar invitación"
+          className="w-9 h-9 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-primary transition-colors disabled:opacity-40"
+        >
+          <RefreshCw size={15} />
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={isResending || isCancelling}
+          title="Cancelar invitación"
+          className="w-9 h-9 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-error-container transition-colors disabled:opacity-40"
+        >
+          <X size={15} />
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function MemberRow({ member }: { member: Member }) {
@@ -26,8 +86,12 @@ function MemberRow({ member }: { member: Member }) {
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-body text-sm text-on-surface truncate">{member.fullName}</p>
-        <p className="font-body text-sm text-on-surface-variant truncate">{member.email}</p>
+        <p className="font-body text-sm text-on-surface truncate">
+          {member.fullName}
+        </p>
+        <p className="font-body text-sm text-on-surface-variant truncate">
+          {member.email}
+        </p>
       </div>
       <span className="font-body text-[0.6875rem] bg-surface-highest text-on-surface-variant rounded-full px-2 py-1 shrink-0 whitespace-nowrap">
         {roleLabel(member.role)}
@@ -40,16 +104,36 @@ interface Props {
   members: Member[];
   onInvite: () => void;
   isLoading: boolean;
+  pendingInvitations: PendingInvitation[];
+  pendingInvitationsLoading: boolean;
+  onResend: (id: string) => void;
+  onCancel: (id: string) => void;
+  isResending: boolean;
+  isCancelling: boolean;
 }
 
-export default function UserManagement({ members, onInvite, isLoading }: Props) {
-  const coaches = members.filter((m) => m.role === 'coach');
-  const parents = members.filter((m) => m.role === 'parent');
+export default function UserManagement({
+  members,
+  onInvite,
+  isLoading,
+  pendingInvitations,
+  pendingInvitationsLoading,
+  onResend,
+  onCancel,
+  isResending,
+  isCancelling,
+}: Props) {
+  const coaches = members.filter((m) => m.role === "coach");
+  const parents = members.filter((m) => m.role === "parent");
+  const pendingCoaches = pendingInvitations.filter((i) => i.role === "coach");
+  const pendingParents = pendingInvitations.filter((i) => i.role === "parent");
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">Usuarios</h2>
+        <h2 className="font-display text-[1.75rem] font-semibold text-on-surface">
+          Usuarios
+        </h2>
         <button
           onClick={onInvite}
           className="flex items-center gap-2 h-11 px-5 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 cursor-pointer whitespace-nowrap shrink-0"
@@ -71,12 +155,27 @@ export default function UserManagement({ members, onInvite, isLoading }: Props) 
             </p>
             {coaches.length === 0 ? (
               <p className="font-body text-sm text-on-surface-variant">
-                No hay entrenadores invitados.
+                No hay entrenadores activos.
               </p>
             ) : (
               <div className="flex flex-col gap-2">
                 {coaches.map((m) => (
                   <MemberRow key={m.userId} member={m} />
+                ))}
+              </div>
+            )}
+            {/* Pending coach invitations */}
+            {!pendingInvitationsLoading && pendingCoaches.length > 0 && (
+              <div className="flex flex-col gap-2 mt-1">
+                {pendingCoaches.map((inv) => (
+                  <PendingInvitationRow
+                    key={inv.id}
+                    invitation={inv}
+                    onResend={() => onResend(inv.id)}
+                    onCancel={() => onCancel(inv.id)}
+                    isResending={isResending}
+                    isCancelling={isCancelling}
+                  />
                 ))}
               </div>
             )}
@@ -89,12 +188,27 @@ export default function UserManagement({ members, onInvite, isLoading }: Props) 
             </p>
             {parents.length === 0 ? (
               <p className="font-body text-sm text-on-surface-variant">
-                No hay padres invitados.
+                No hay padres activos.
               </p>
             ) : (
               <div className="flex flex-col gap-2">
                 {parents.map((m) => (
                   <MemberRow key={m.userId} member={m} />
+                ))}
+              </div>
+            )}
+            {/* Pending parent invitations */}
+            {!pendingInvitationsLoading && pendingParents.length > 0 && (
+              <div className="flex flex-col gap-2 mt-1">
+                {pendingParents.map((inv) => (
+                  <PendingInvitationRow
+                    key={inv.id}
+                    invitation={inv}
+                    onResend={() => onResend(inv.id)}
+                    onCancel={() => onCancel(inv.id)}
+                    isResending={isResending}
+                    isCancelling={isCancelling}
+                  />
                 ))}
               </div>
             )}

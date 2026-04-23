@@ -61,27 +61,41 @@ export class TeamsService {
     };
   }
 
-  async create(academyId: string, dto: CreateTeamDto): Promise<TeamResponseDto> {
+  async create(
+    academyId: string,
+    dto: CreateTeamDto,
+  ): Promise<TeamResponseDto> {
     await this.planGuard.validateLimit(academyId, 'teams');
 
     const duplicate = await this.prisma.team.findFirst({
       where: { academyId, name: dto.name, isActive: true },
     });
     if (duplicate) {
-      throw new ConflictException('Ya existe un equipo con ese nombre en la academia');
+      throw new ConflictException(
+        'Ya existe un equipo con ese nombre en la academia',
+      );
     }
 
     if (dto.coaches && dto.coaches.length > 0) {
       const userIds = dto.coaches.map((c) => c.userId);
       if (new Set(userIds).size !== userIds.length) {
-        throw new ConflictException('No se pueden asignar coaches duplicados al equipo');
+        throw new ConflictException(
+          'No se pueden asignar coaches duplicados al equipo',
+        );
       }
       for (const coachEntry of dto.coaches) {
         const coachRole = await this.prisma.userAcademyRole.findFirst({
-          where: { userId: coachEntry.userId, academyId, role: Role.coach, isActive: true },
+          where: {
+            userId: coachEntry.userId,
+            academyId,
+            role: Role.coach,
+            isActive: true,
+          },
         });
         if (!coachRole) {
-          throw new NotFoundException('El usuario no es un coach de esta academia');
+          throw new NotFoundException(
+            'El usuario no es un coach de esta academia',
+          );
         }
       }
     }
@@ -89,17 +103,26 @@ export class TeamsService {
     if (dto.schedules && dto.schedules.length > 0) {
       const days = dto.schedules.map((s) => s.dayOfWeek);
       if (new Set(days).size !== days.length) {
-        throw new ConflictException('El equipo ya tiene un horario asignado para ese día');
+        throw new ConflictException(
+          'El equipo ya tiene un horario asignado para ese día',
+        );
       }
       for (const scheduleEntry of dto.schedules) {
-        if (timeToMinutes(scheduleEntry.endTime) <= timeToMinutes(scheduleEntry.startTime)) {
-          throw new BadRequestException('La hora de fin debe ser posterior a la hora de inicio');
+        if (
+          timeToMinutes(scheduleEntry.endTime) <=
+          timeToMinutes(scheduleEntry.startTime)
+        ) {
+          throw new BadRequestException(
+            'La hora de fin debe ser posterior a la hora de inicio',
+          );
         }
         const field = await this.prisma.field.findFirst({
           where: { id: scheduleEntry.fieldId, academyId, isActive: true },
         });
         if (!field) {
-          throw new NotFoundException('La cancha no existe o no pertenece a esta academia');
+          throw new NotFoundException(
+            'La cancha no existe o no pertenece a esta academia',
+          );
         }
       }
     }
@@ -136,7 +159,11 @@ export class TeamsService {
     return this.mapTeam(team);
   }
 
-  async findAll(academyId: string, userId: string, role: Role): Promise<TeamResponseDto[]> {
+  async findAll(
+    academyId: string,
+    userId: string,
+    role: Role,
+  ): Promise<TeamResponseDto[]> {
     const where: Prisma.TeamWhereInput = {
       academyId,
       isActive: true,
@@ -176,7 +203,11 @@ export class TeamsService {
     return this.mapTeam(team);
   }
 
-  async update(academyId: string, id: string, dto: UpdateTeamDto): Promise<TeamResponseDto> {
+  async update(
+    academyId: string,
+    id: string,
+    dto: UpdateTeamDto,
+  ): Promise<TeamResponseDto> {
     const team = await this.prisma.team.findFirst({
       where: { id, academyId },
     });
@@ -189,7 +220,9 @@ export class TeamsService {
         where: { academyId, name: dto.name, isActive: true, NOT: { id } },
       });
       if (duplicate) {
-        throw new ConflictException('Ya existe un equipo con ese nombre en la academia');
+        throw new ConflictException(
+          'Ya existe un equipo con ese nombre en la academia',
+        );
       }
     }
 
@@ -241,7 +274,12 @@ export class TeamsService {
     }
 
     const coachRole = await this.prisma.userAcademyRole.findFirst({
-      where: { userId: dto.userId, academyId, role: Role.coach, isActive: true },
+      where: {
+        userId: dto.userId,
+        academyId,
+        role: Role.coach,
+        isActive: true,
+      },
     });
     if (!coachRole) {
       throw new NotFoundException('El usuario no es un coach de esta academia');
@@ -271,7 +309,11 @@ export class TeamsService {
     });
   }
 
-  async removeCoach(academyId: string, teamId: string, userId: string): Promise<void> {
+  async removeCoach(
+    academyId: string,
+    teamId: string,
+    userId: string,
+  ): Promise<void> {
     const team = await this.prisma.team.findFirst({
       where: { id: teamId, academyId },
     });
@@ -307,18 +349,24 @@ export class TeamsService {
       where: { id: dto.fieldId, academyId, isActive: true },
     });
     if (!field) {
-      throw new NotFoundException('La cancha no existe o no pertenece a esta academia');
+      throw new NotFoundException(
+        'La cancha no existe o no pertenece a esta academia',
+      );
     }
 
     if (timeToMinutes(dto.endTime) <= timeToMinutes(dto.startTime)) {
-      throw new BadRequestException('La hora de fin debe ser posterior a la hora de inicio');
+      throw new BadRequestException(
+        'La hora de fin debe ser posterior a la hora de inicio',
+      );
     }
 
     const duplicate = await this.prisma.teamSchedule.findFirst({
       where: { teamId, dayOfWeek: dto.dayOfWeek },
     });
     if (duplicate) {
-      throw new ConflictException('El equipo ya tiene un horario asignado para ese día');
+      throw new ConflictException(
+        'El equipo ya tiene un horario asignado para ese día',
+      );
     }
 
     return this.prisma.teamSchedule.create({
@@ -335,7 +383,11 @@ export class TeamsService {
     });
   }
 
-  async removeSchedule(academyId: string, teamId: string, scheduleId: string): Promise<void> {
+  async removeSchedule(
+    academyId: string,
+    teamId: string,
+    scheduleId: string,
+  ): Promise<void> {
     const team = await this.prisma.team.findFirst({
       where: { id: teamId, academyId },
     });
@@ -350,8 +402,50 @@ export class TeamsService {
       throw new NotFoundException('Horario no encontrado');
     }
 
-    await this.prisma.teamSchedule.delete({
-      where: { id: scheduleId },
+    const dayOfWeekMap: Record<string, number> = {
+      SUNDAY: 0,
+      MONDAY: 1,
+      TUESDAY: 2,
+      WEDNESDAY: 3,
+      THURSDAY: 4,
+      FRIDAY: 5,
+      SATURDAY: 6,
+    };
+
+    const targetDay = dayOfWeekMap[schedule.dayOfWeek];
+    const now = new Date();
+    const today = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+
+    // Find future sessions for this team on this day of week with no attendance recorded
+    const futureSessions = await this.prisma.attendanceSession.findMany({
+      where: {
+        teamId,
+        sessionDate: { gte: today },
+        coachId: null, // only sessions not yet recorded
+      },
+      select: { id: true, sessionDate: true },
+    });
+
+    // Filter by day of week
+    const sessionsToDelete = futureSessions.filter(
+      (s) => new Date(s.sessionDate).getUTCDay() === targetDay,
+    );
+
+    await this.prisma.$transaction(async (tx) => {
+      if (sessionsToDelete.length > 0) {
+        const sessionIds = sessionsToDelete.map((s) => s.id);
+        await tx.attendanceRecord.deleteMany({
+          where: { sessionId: { in: sessionIds } },
+        });
+        await tx.attendanceSession.deleteMany({
+          where: { id: { in: sessionIds } },
+        });
+      }
+      await tx.teamSchedule.delete({
+        where: { id: scheduleId },
+      });
     });
   }
 }

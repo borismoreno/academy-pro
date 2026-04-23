@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
@@ -48,6 +49,7 @@ interface FormBodyProps {
 
 function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addCoachMutation } = useTeamDetail(teamId);
+  const navigate = useNavigate();
 
   const { data: coaches = [], isLoading: isLoadingCoaches } = useQuery({
     queryKey: ["academy-coaches"],
@@ -87,6 +89,18 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
         searchPlaceholder="Buscar entrenador..."
         isLoading={isLoadingCoaches}
         disabled={addCoachMutation.isPending}
+        emptyAction={
+          <button
+            type="button"
+            onClick={() => {
+              onOpenChange(false);
+              navigate("/settings?action=invite");
+            }}
+            className="font-body text-sm text-primary hover:underline"
+          >
+            Invitar entrenador desde Configuración →
+          </button>
+        }
       />
 
       {/* isPrimary toggle */}

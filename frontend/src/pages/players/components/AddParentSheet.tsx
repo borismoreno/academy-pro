@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
@@ -44,6 +45,7 @@ interface FormBodyProps {
 
 function FormBody({ playerId, onOpenChange }: FormBodyProps) {
   const { addParentMutation } = usePlayerDetail(playerId);
+  const navigate = useNavigate();
 
   const { data: parents = [], isLoading: isLoadingParents } = useQuery({
     queryKey: ["academy-parents"],
@@ -83,6 +85,18 @@ function FormBody({ playerId, onOpenChange }: FormBodyProps) {
         searchPlaceholder="Buscar por nombre o email..."
         isLoading={isLoadingParents}
         disabled={addParentMutation.isPending}
+        emptyAction={
+          <button
+            type="button"
+            onClick={() => {
+              onOpenChange(false);
+              navigate("/settings?action=invite");
+            }}
+            className="font-body text-sm text-primary hover:underline"
+          >
+            Invitar padre/tutor desde Configuración →
+          </button>
+        }
       />
 
       {/* Relationship select */}

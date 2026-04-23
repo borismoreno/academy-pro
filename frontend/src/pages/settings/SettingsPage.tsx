@@ -54,6 +54,10 @@ export default function SettingsPage() {
     createMetricMutation,
     updateMetricMutation,
     deleteMetricMutation,
+    pendingInvitations,
+    pendingInvitationsLoading,
+    resendInvitationMutation,
+    cancelInvitationMutation,
   } = useSettings(isDirector);
 
   // ?action=invite — navigate to usuarios tab and open sheet
@@ -92,6 +96,12 @@ export default function SettingsPage() {
               members={members}
               onInvite={() => setInviteSheetOpen(true)}
               isLoading={membersLoading}
+              pendingInvitations={pendingInvitations}
+              pendingInvitationsLoading={pendingInvitationsLoading}
+              onResend={(id) => resendInvitationMutation.mutate(id)}
+              onCancel={(id) => cancelInvitationMutation.mutate(id)}
+              isResending={resendInvitationMutation.isPending}
+              isCancelling={cancelInvitationMutation.isPending}
             />
             <InviteUserSheet
               open={inviteSheetOpen}

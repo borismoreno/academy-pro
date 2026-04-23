@@ -115,6 +115,41 @@ export class InvitationsService {
     });
   }
 
+  async resend(academyId: string, invitedById: string, id: string) {
+    const invitation = await this.prisma.invitation.findFirst({
+      where: { id, academyId, status: InvitationStatus.pending },
+      include: { academy: true },
+    });
+    if (!invitation) {
+      throw new NotFoundException(
+        'Invitación no encontrada o ya no está pendiente',
+      );
+    }
+
+    const token = crypto.randomUUID();
+    const expiresAt = new Date(
+      Date.now() + INVITATION_TTL_HOURS * 60 * 60 * 1000,
+    );
+
+    const updated = await this.prisma.invitation.update({
+      where: { id },
+      data: { token, expiresAt },
+      include: { academy: true },
+    });
+
+    const frontendUrl = this.config.get<string>('app.frontendUrl');
+    const acceptUrl = `${frontendUrl}/invitations/accept?token=${token}`;
+
+    await this.emailService.sendInvitationEmail(
+      invitation.email,
+      invitation.academy.name,
+      invitation.role,
+      acceptUrl,
+    );
+
+    return updated;
+  }
+
   async remove(academyId: string, id: string) {
     const invitation = await this.prisma.invitation.findFirst({
       where: { id, academyId },

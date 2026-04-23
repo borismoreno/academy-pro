@@ -49,7 +49,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
     queryFn: getFields,
   });
 
-  const [dayOfWeek, setDayOfWeek] = useState<DayOfWeek>("MONDAY");
+  const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedFieldId, setSelectedFieldId] = useState("");
@@ -58,7 +58,17 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   // Derive effective fieldId: prefer explicit selection, fall back to first available
   const fieldId = selectedFieldId || (fields.length > 0 ? fields[0].id : "");
 
+  function toggleDay(day: DayOfWeek) {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
+    );
+  }
+
   function validate(): boolean {
+    if (selectedDays.length === 0) {
+      setTimeError("Selecciona al menos un día de entrenamiento");
+      return false;
+    }
     if (!startTime || !endTime) {
       setTimeError("Las horas de inicio y fin son requeridas");
       return false;
@@ -71,19 +81,26 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
     return true;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
 
-    addScheduleMutation.mutate(
-      { dayOfWeek, startTime, endTime, fieldId },
-      {
-        onSuccess: () => {
-          toast({ description: "Horario agregado correctamente" });
-          onOpenChange(false);
-        },
-      },
-    );
+    try {
+      await Promise.all(
+        selectedDays.map((day) =>
+          addScheduleMutation.mutateAsync({
+            dayOfWeek: day,
+            startTime,
+            endTime,
+            fieldId,
+          }),
+        ),
+      );
+      toast({ description: "Horario agregado correctamente" });
+      onOpenChange(false);
+    } catch {
+      // error toast ya lo maneja el mutation onError
+    }
   }
 
   const isPending = addScheduleMutation.isPending;
@@ -91,7 +108,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   return (
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
       {/* Day of week */}
-      <div className="flex flex-col gap-1.5">
+      {/* <div className="flex flex-col gap-1.5">
         <label className="font-body text-sm text-on-surface-variant">
           Día de entrenamiento
         </label>
@@ -111,6 +128,37 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
             </option>
           ))}
         </select>
+      </div> */}
+      {/* Days of week */}
+      <div className="flex flex-col gap-1.5">
+        <label className="font-body text-sm text-on-surface-variant">
+          Días de entrenamiento
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {DAY_OPTIONS.map((opt) => {
+            const isSelected = selectedDays.includes(opt.value);
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => toggleDay(opt.value)}
+                disabled={isPending}
+                className={`h-10 px-4 rounded-xl font-body text-sm transition-colors disabled:opacity-50 ${
+                  isSelected
+                    ? "bg-primary text-on-primary font-semibold"
+                    : "bg-surface-low border border-outline-variant/15 text-on-surface-variant hover:text-on-surface"
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+        {selectedDays.length === 0 && (
+          <p className="font-body text-xs text-on-surface-variant">
+            Selecciona uno o más días
+          </p>
+        )}
       </div>
 
       {/* Start time */}
@@ -174,7 +222,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
       </div>
 
       <div className="flex flex-col gap-3 pt-2">
-        <Button
+        {/* <Button
           type="submit"
           variant="primary"
           className="w-full"
@@ -182,6 +230,22 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
         >
           {isPending ? <LoadingSpinner size="sm" /> : null}
           Agregar horario
+        </Button> */}
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full"
+          disabled={
+            isPending ||
+            fieldsLoading ||
+            fields.length === 0 ||
+            selectedDays.length === 0
+          }
+        >
+          {isPending ? <LoadingSpinner size="sm" /> : null}
+          {selectedDays.length > 1
+            ? `Agregar ${selectedDays.length} horarios`
+            : "Agregar horario"}
         </Button>
         <Button
           type="button"
