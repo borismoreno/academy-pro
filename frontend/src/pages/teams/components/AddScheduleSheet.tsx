@@ -19,6 +19,7 @@ import { toast } from "@/hooks/use-toast";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
 import { getFields } from "@/services/fields.service";
 import type { DayOfWeek } from "@/types";
+import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
 const DAY_OPTIONS: { value: DayOfWeek; label: string }[] = [
   { value: "MONDAY", label: "Lunes" },
@@ -107,28 +108,6 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
 
   return (
     <form onSubmit={handleSubmit} className="px-6 pb-8 flex flex-col gap-5">
-      {/* Day of week */}
-      {/* <div className="flex flex-col gap-1.5">
-        <label className="font-body text-sm text-on-surface-variant">
-          Día de entrenamiento
-        </label>
-        <select
-          value={dayOfWeek}
-          onChange={(e) => setDayOfWeek(e.target.value as DayOfWeek)}
-          disabled={isPending}
-          className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-sm text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
-        >
-          {DAY_OPTIONS.map((opt) => (
-            <option
-              key={opt.value}
-              value={opt.value}
-              className="bg-surface-high"
-            >
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div> */}
       {/* Days of week */}
       <div className="flex flex-col gap-1.5">
         <label className="font-body text-sm text-on-surface-variant">
@@ -205,32 +184,22 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
             No hay canchas disponibles. Crea una cancha en Configuración.
           </p>
         ) : (
-          <select
+          <SearchableSelect
+            options={fields.map((f) => ({
+              value: f.id,
+              label: f.name,
+              subtitle: f.location ?? undefined,
+            }))}
             value={fieldId}
-            onChange={(e) => setSelectedFieldId(e.target.value)}
+            onValueChange={setSelectedFieldId}
+            placeholder="Selecciona una cancha"
+            searchPlaceholder="Buscar cancha..."
             disabled={isPending}
-            className="flex h-11 w-full rounded-xl bg-surface-low px-4 py-2 font-body text-sm text-on-surface border border-outline-variant/15 focus:outline-none focus:border-primary transition-colors appearance-none disabled:opacity-50"
-          >
-            {fields.map((f) => (
-              <option key={f.id} value={f.id} className="bg-surface-high">
-                {f.name}
-                {f.location ? ` — ${f.location}` : ""}
-              </option>
-            ))}
-          </select>
+          />
         )}
       </div>
 
       <div className="flex flex-col gap-3 pt-2">
-        {/* <Button
-          type="submit"
-          variant="primary"
-          className="w-full"
-          disabled={isPending || fieldsLoading || fields.length === 0}
-        >
-          {isPending ? <LoadingSpinner size="sm" /> : null}
-          Agregar horario
-        </Button> */}
         <Button
           type="submit"
           variant="primary"

@@ -9,9 +9,6 @@ import { useAttendance } from "@/hooks/useAttendance";
 import SessionCard from "./components/SessionCard";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
 
-const SELECT_CLASS =
-  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
-
 function getCurrentMonth(): string {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -96,17 +93,15 @@ export default function AttendancePage() {
         </div>
 
         {/* Month filter */}
-        <select
-          value={monthFilter}
-          onChange={(e) => setMonthFilter(e.target.value)}
-          className={SELECT_CLASS}
-        >
-          {monthOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={monthOptions}
+            value={monthFilter}
+            onValueChange={setMonthFilter}
+            placeholder="Seleccionar mes"
+            searchPlaceholder="Buscar mes..."
+          />
+        </div>
       </div>
 
       {/* Content */}

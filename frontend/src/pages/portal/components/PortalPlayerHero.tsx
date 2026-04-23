@@ -207,12 +207,12 @@ export default function PortalPlayerHero({
   const age = calculateAge(player.birthDate);
 
   return (
-    <div className="bg-surface-high rounded-3xl overflow-hidden p-4 lg:p-6">
+    <div className="bg-surface-high rounded-3xl overflow-hidden">
       {/* Top glow */}
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
-      <div className="p-6">
-        <div className="flex flex-row gap-4 items-center">
+      <div className="p-5 flex flex-col gap-3">
+        <div className="flex flex-row gap-4 items-start">
           {/* Avatar / Photo */}
           <PlayerAvatar
             photoUrl={player.photoUrl}
@@ -223,7 +223,7 @@ export default function PortalPlayerHero({
           />
 
           {/* Info */}
-          <div className="flex flex-col gap-2 min-w-0">
+          <div className="flex flex-col gap-1 min-w-0">
             <h2 className="font-display text-[1.25rem] lg:text-[2rem] font-bold text-on-surface leading-tight">
               {player.fullName}
             </h2>

@@ -79,19 +79,21 @@ export default function PortalPage() {
             />
           )}
 
-          {/* Player hero */}
-          <PortalPlayerHero
-            player={player}
-            isLoading={isLoadingDetail}
-            selectedPlayerId={selectedPlayerId ?? undefined}
-          />
-          <PortalNextSession
-            nextSession={nextSession}
-            isLoading={isLoadingDetail}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Player hero */}
+            <PortalPlayerHero
+              player={player}
+              isLoading={isLoadingDetail}
+              selectedPlayerId={selectedPlayerId ?? undefined}
+            />
+            <PortalNextSession
+              nextSession={nextSession}
+              isLoading={isLoadingDetail}
+            />
+          </div>
 
           {/* Stats grid — 2 columns */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <PortalAttendanceSummary
               summary={attendanceSummary}
               isLoading={isLoadingDetail}

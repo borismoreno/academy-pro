@@ -176,7 +176,7 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
   ],
   parent: [
     {
-      label: "Mi hijo",
+      label: "Inicio",
       path: "/portal",
       Icon: User,
       allowedRoles: ROUTE_PERMISSIONS["/portal"],

@@ -10,17 +10,8 @@ import { useAuthStore } from "@/store/auth.store";
 import PlayerCard from "./components/PlayerCard";
 import PlayerFormSheet from "./components/PlayerFormSheet";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
-
-const POSITIONS = [
-  { value: "", label: "Todas las posiciones" },
-  { value: "Portero", label: "Portero" },
-  { value: "Defensa", label: "Defensa" },
-  { value: "Mediocampista", label: "Mediocampista" },
-  { value: "Delantero", label: "Delantero" },
-];
-
-const FILTER_SELECT_CLASS =
-  "bg-surface-high border border-outline-variant/15 rounded-xl px-3 py-2 font-body text-sm text-on-surface-variant focus:outline-none focus:border-primary min-h-11 appearance-none cursor-pointer";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function PlayersPage() {
   const role = useAuthStore((state) => state.role);
@@ -28,6 +19,7 @@ export default function PlayersPage() {
 
   const [teamFilter, setTeamFilter] = useState("");
   const [positionFilter, setPositionFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
   const filters = {
@@ -37,6 +29,22 @@ export default function PlayersPage() {
 
   const { players, isLoading } = usePlayers(
     Object.keys(filters).length > 0 ? filters : undefined,
+  );
+
+  // Derive unique positions from ALL players (no filters applied)
+  const { players: allPlayers } = usePlayers();
+  const positionOptions = [
+    { value: "", label: "Todas las posiciones" },
+    ...Array.from(
+      new Set(
+        allPlayers.map((p) => p.position).filter((pos): pos is string => !!pos),
+      ),
+    )
+      .sort()
+      .map((pos) => ({ value: pos, label: pos })),
+  ];
+  const filteredPlayers = players.filter((p) =>
+    p.fullName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const { teams, isLoading: isLoadingTeams } = useTeams();
   const activeTeams = teams.filter((t) => t.isActive);
@@ -81,30 +89,27 @@ export default function PlayersPage() {
             isLoading={isLoadingTeams}
           />
         </div>
-        {/* <select
-          value={teamFilter}
-          onChange={(e) => setTeamFilter(e.target.value)}
-          className={FILTER_SELECT_CLASS}
-        >
-          <option value="">Todos los equipos</option>
-          {activeTeams.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select> */}
-
-        <select
-          value={positionFilter}
-          onChange={(e) => setPositionFilter(e.target.value)}
-          className={FILTER_SELECT_CLASS}
-        >
-          {POSITIONS.map((pos) => (
-            <option key={pos.value} value={pos.value}>
-              {pos.label}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-56">
+          <SearchableSelect
+            options={positionOptions}
+            value={positionFilter || ""}
+            onValueChange={(val) => setPositionFilter(val)}
+            placeholder="Todas las posiciones"
+            searchPlaceholder="Buscar posición..."
+          />
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+          />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Buscar jugador..."
+            className="pl-9"
+          />
+        </div>
       </div>
 
       {/* Content */}
@@ -112,7 +117,7 @@ export default function PlayersPage() {
         <div className="flex justify-center py-16">
           <LoadingSpinner size="lg" />
         </div>
-      ) : players.length === 0 ? (
+      ) : filteredPlayers.length === 0 ? (
         <EmptyState
           message="No hay jugadores registrados."
           icon={<Users size={48} />}
@@ -130,7 +135,7 @@ export default function PlayersPage() {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {players.map((player) => (
+          {filteredPlayers.map((player) => (
             <PlayerCard key={player.id} player={player} role={role} />
           ))}
         </div>
