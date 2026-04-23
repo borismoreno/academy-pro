@@ -39,10 +39,10 @@ function SkeletonHero() {
     <div className="bg-surface-high rounded-3xl overflow-hidden animate-pulse">
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
       <div className="p-6">
-        <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+        <div className="flex flex-row gap-4 items-center">
           <div
             className="rounded-full bg-surface-highest shrink-0"
-            style={{ width: 80, height: 80 }}
+            style={{ width: 64, height: 64 }}
           />
           <div className="flex-1 space-y-3">
             <div className="h-8 w-48 bg-surface-highest rounded" />
@@ -81,15 +81,6 @@ function PlayerAvatar({
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // if (file.size > 2 * 1024 * 1024) {
-    //   toast({
-    //     description: "La imagen no debe superar los 2MB",
-    //     variant: "destructive",
-    //   });
-    //   e.target.value = "";
-    //   return;
-    // }
 
     const previousUrl = currentPhotoUrl;
     setUploading(true);
@@ -133,7 +124,7 @@ function PlayerAvatar({
     return (
       <div
         className="rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-surface-highest"
-        style={{ width: 80, height: 80 }}
+        style={{ width: 64, height: 64 }}
       >
         {avatarContent}
       </div>
@@ -142,7 +133,7 @@ function PlayerAvatar({
 
   return (
     <div className="group flex flex-col items-center gap-1.5 shrink-0">
-      <div className="relative" style={{ width: 80, height: 80 }}>
+      <div className="relative" style={{ width: 64, height: 64 }}>
         <button
           type="button"
           onClick={() => {
@@ -216,12 +207,12 @@ export default function PortalPlayerHero({
   const age = calculateAge(player.birthDate);
 
   return (
-    <div className="bg-surface-high rounded-3xl overflow-hidden">
+    <div className="bg-surface-high rounded-3xl overflow-hidden p-4 lg:p-6">
       {/* Top glow */}
       <div className="h-0.5 w-full bg-linear-to-r from-primary to-secondary" />
 
       <div className="p-6">
-        <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+        <div className="flex flex-row gap-4 items-center">
           {/* Avatar / Photo */}
           <PlayerAvatar
             photoUrl={player.photoUrl}
@@ -233,7 +224,7 @@ export default function PortalPlayerHero({
 
           {/* Info */}
           <div className="flex flex-col gap-2 min-w-0">
-            <h2 className="font-display text-[2rem] lg:text-[3.5rem] font-bold text-on-surface leading-tight wrap-break-word">
+            <h2 className="font-display text-[1.25rem] lg:text-[2rem] font-bold text-on-surface leading-tight">
               {player.fullName}
             </h2>
 

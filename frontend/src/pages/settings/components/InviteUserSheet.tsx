@@ -145,19 +145,6 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
           <label className="font-body text-sm text-on-surface-variant">
             Vincular a un jugador (opcional)
           </label>
-          {/* <select
-            value={playerId}
-            onChange={(e) => setPlayerId(e.target.value)}
-            disabled={mutation.isPending}
-            className={SELECT_CLASS}
-          >
-            <option value="">Sin vincular</option>
-            {activePlayers.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fullName}
-              </option>
-            ))}
-          </select> */}
           <SearchableSelect
             options={activePlayers.map((p) => ({
               value: p.id,
