@@ -12,6 +12,7 @@ import PortalProgressChart from "./components/PortalProgressChart";
 import { useState } from "react";
 import PortalEvaluationDetail from "./components/PortalEvaluationDetail";
 import PortalAttendanceDetail from "./components/PortalAttendanceDetail";
+import PortalNextSession from "./components/PortalNextSession";
 
 function getFirstName(fullName: string): string {
   return fullName.split(" ")[0];
@@ -31,6 +32,7 @@ export default function PortalPage() {
     isLoadingPlayers,
     isLoadingDetail,
     isProgressForbidden,
+    nextSession,
   } = usePortal();
 
   return (
@@ -82,6 +84,10 @@ export default function PortalPage() {
             player={player}
             isLoading={isLoadingDetail}
             selectedPlayerId={selectedPlayerId ?? undefined}
+          />
+          <PortalNextSession
+            nextSession={nextSession}
+            isLoading={isLoadingDetail}
           />
 
           {/* Stats grid — 2 columns */}

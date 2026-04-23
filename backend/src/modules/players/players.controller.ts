@@ -16,7 +16,10 @@ import { Roles } from '../../auth/decorators/roles.decorator.js';
 import type { JwtPayload } from '../../auth/strategies/jwt.strategy.js';
 import { AddParentDto } from './dto/add-parent.dto.js';
 import { CreatePlayerDto } from './dto/create-player.dto.js';
-import { PlayerParentResponseDto, PlayerResponseDto } from './dto/player-response.dto.js';
+import {
+  PlayerParentResponseDto,
+  PlayerResponseDto,
+} from './dto/player-response.dto.js';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
 import { PlayersService } from './players.service.js';
 
@@ -54,6 +57,31 @@ export class PlayersController {
       position,
     );
     return { data, message: 'Jugadores obtenidos exitosamente' };
+  }
+
+  @Get(':id/next-session')
+  @Roles(Role.academy_director, Role.coach, Role.parent)
+  async getNextSession(
+    @CurrentUser() user: JwtPayload,
+    @Param('id') id: string,
+  ): Promise<{
+    data: {
+      dayOfWeek: string;
+      startTime: string;
+      endTime: string;
+      fieldName: string | null;
+      nextDate: string;
+    } | null;
+    message: string;
+  }> {
+    const data = await this.playersService.getNextSession(
+      user.academyId as string,
+      user.sub,
+      user.role as Role,
+      id,
+    );
+    console.log('getNextSession data in controller:', data);
+    return { data, message: 'Próxima sesión obtenida exitosamente' };
   }
 
   @Get(':id')
@@ -106,7 +134,11 @@ export class PlayersController {
     @Param('id') id: string,
     @Body() dto: AddParentDto,
   ): Promise<{ data: PlayerParentResponseDto; message: string }> {
-    const data = await this.playersService.addParent(user.academyId as string, id, dto);
+    const data = await this.playersService.addParent(
+      user.academyId as string,
+      id,
+      dto,
+    );
     return { data, message: 'Padre/tutor vinculado exitosamente' };
   }
 
@@ -118,7 +150,11 @@ export class PlayersController {
     @Param('id') id: string,
     @Param('userId') userId: string,
   ): Promise<{ data: null; message: string }> {
-    await this.playersService.removeParent(user.academyId as string, id, userId);
+    await this.playersService.removeParent(
+      user.academyId as string,
+      id,
+      userId,
+    );
     return { data: null, message: 'Padre/tutor desvinculado exitosamente' };
   }
 }

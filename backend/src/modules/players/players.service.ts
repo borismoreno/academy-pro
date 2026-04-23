@@ -392,4 +392,92 @@ export class PlayersService {
       where: { id: link.id },
     });
   }
+
+  async getNextSession(
+    academyId: string,
+    userId: string,
+    role: Role,
+    playerId: string,
+  ): Promise<{
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    fieldName: string | null;
+    nextDate: string;
+  } | null> {
+    const player = await this.prisma.player.findFirst({
+      where: { id: playerId, academyId },
+    });
+    if (!player) throw new NotFoundException('Jugador no encontrado');
+
+    if (role === Role.parent) {
+      const linked = await this.prisma.playerParent.findFirst({
+        where: { playerId, userId },
+      });
+      if (!linked)
+        throw new ForbiddenException('No tienes acceso a este jugador');
+    }
+
+    const schedules = await this.prisma.teamSchedule.findMany({
+      where: { teamId: player.teamId },
+      include: { field: { select: { name: true } } },
+    });
+
+    if (schedules.length === 0) return null;
+
+    const dayOfWeekMap: Record<string, number> = {
+      SUNDAY: 0,
+      MONDAY: 1,
+      TUESDAY: 2,
+      WEDNESDAY: 3,
+      THURSDAY: 4,
+      FRIDAY: 5,
+      SATURDAY: 6,
+    };
+
+    const now = new Date();
+    const todayUTC = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+
+    let nearest: {
+      dayOfWeek: string;
+      startTime: string;
+      endTime: string;
+      fieldName: string | null;
+      nextDate: string;
+      diff: number;
+    } | null = null;
+
+    for (const schedule of schedules) {
+      const targetDay = dayOfWeekMap[schedule.dayOfWeek];
+      const todayDay = todayUTC.getUTCDay();
+      let daysUntil = targetDay - todayDay;
+      if (daysUntil <= 0) daysUntil += 7;
+
+      const nextDate = new Date(todayUTC);
+      nextDate.setUTCDate(nextDate.getUTCDate() + daysUntil);
+
+      if (!nearest || daysUntil < nearest.diff) {
+        nearest = {
+          dayOfWeek: schedule.dayOfWeek,
+          startTime: schedule.startTime,
+          endTime: schedule.endTime,
+          fieldName: schedule.field?.name ?? null,
+          nextDate: nextDate.toISOString().split('T')[0],
+          diff: daysUntil,
+        };
+      }
+    }
+
+    if (!nearest) return null;
+
+    return {
+      dayOfWeek: nearest.dayOfWeek,
+      startTime: nearest.startTime,
+      endTime: nearest.endTime,
+      fieldName: nearest.fieldName,
+      nextDate: nearest.nextDate,
+    };
+  }
 }

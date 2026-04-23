@@ -14,9 +14,10 @@ export interface StandardResponse<T> {
 }
 
 @Injectable()
-export class ResponseInterceptor<T>
-  implements NestInterceptor<T, StandardResponse<T>>
-{
+export class ResponseInterceptor<T> implements NestInterceptor<
+  T,
+  StandardResponse<T>
+> {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -27,7 +28,10 @@ export class ResponseInterceptor<T>
       map((payload) => ({
         statusCode,
         message: payload?.message ?? 'success',
-        data: payload?.data ?? payload,
+        data:
+          payload !== null && typeof payload === 'object' && 'data' in payload
+            ? payload.data
+            : payload,
       })),
     );
   }

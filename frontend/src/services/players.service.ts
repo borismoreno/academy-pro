@@ -83,6 +83,14 @@ export interface AddParentData {
   relationship: string;
 }
 
+export interface NextSession {
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  fieldName: string | null;
+  nextDate: string;
+}
+
 export async function getPlayers(filters?: {
   teamId?: string;
   position?: string;
