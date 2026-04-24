@@ -453,7 +453,7 @@ export class PlayersService {
       const targetDay = dayOfWeekMap[schedule.dayOfWeek];
       const todayDay = todayUTC.getUTCDay();
       let daysUntil = targetDay - todayDay;
-      if (daysUntil <= 0) daysUntil += 7;
+      if (daysUntil < 0) daysUntil += 7;
 
       const nextDate = new Date(todayUTC);
       nextDate.setUTCDate(nextDate.getUTCDate() + daysUntil);
