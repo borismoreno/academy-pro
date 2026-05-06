@@ -27,6 +27,8 @@ const AttendancePage = lazy(() => import('@/pages/attendance/AttendancePage'));
 const SessionDetailPage = lazy(() => import('@/pages/attendance/SessionDetailPage'));
 const EvaluationsPage = lazy(() => import('@/pages/evaluations/EvaluationsPage'));
 const EvaluationDetailPage = lazy(() => import('@/pages/evaluations/EvaluationDetailPage'));
+const PaymentsPage = lazy(() => import('@/pages/payments/PaymentsPage'));
+const ConceptDetailPage = lazy(() => import('@/pages/payments/ConceptDetailPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const PortalPage = lazy(() => import('@/pages/PortalPage'));
@@ -98,8 +100,10 @@ export default function App() {
             <Route path="/players/:id"     element={<PlayerDetailPage />} />
             <Route path="/attendance"      element={<AttendancePage />} />
             <Route path="/attendance/:id"  element={<SessionDetailPage />} />
-            <Route path="/evaluations"     element={<EvaluationsPage />} />
-            <Route path="/evaluations/:id" element={<EvaluationDetailPage />} />
+            <Route path="/evaluations"        element={<EvaluationsPage />} />
+            <Route path="/evaluations/:id"    element={<EvaluationDetailPage />} />
+            <Route path="/payments"           element={<PaymentsPage />} />
+            <Route path="/payments/:id"       element={<ConceptDetailPage />} />
             <Route path="/notifications"   element={<NotificationsPage />} />
             <Route path="/settings"        element={<SettingsPage />} />
             <Route path="/portal"          element={<PortalPage />} />

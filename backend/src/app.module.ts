@@ -20,6 +20,7 @@ import { EmailModule } from './common/email/email.module.js';
 import { StorageModule } from './modules/storage/storage.module.js';
 import { OwnerModule } from './modules/owner/owner.module.js';
 import { PlanGuardModule } from './modules/plan-guard/plan-guard.module.js';
+import { PaymentsModule } from './modules/payments/payments.module.js';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
 import { SentryGlobalFilter } from '@sentry/nestjs/setup';
@@ -46,6 +47,7 @@ import { SentryGlobalFilter } from '@sentry/nestjs/setup';
     StorageModule,
     OwnerModule,
     PlanGuardModule,
+    PaymentsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: SentryGlobalFilter },
