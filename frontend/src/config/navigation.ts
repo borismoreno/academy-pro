@@ -9,6 +9,7 @@ import {
   CreditCard,
   Sliders,
   Wallet,
+  Trophy,
 } from "lucide-react";
 import type { ComponentType } from "react";
 import type { UserRole } from "@/types";
@@ -40,6 +41,7 @@ export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
   "/players": ["academy_director", "coach"],
   "/attendance": ["academy_director", "coach"],
   "/evaluations": ["academy_director", "coach"],
+  "/matches": ["academy_director", "coach"],
   "/payments": ["academy_director"],
   "/notifications": ["academy_director", "coach", "parent"],
   "/settings": ["academy_director", "coach", "parent"],
@@ -132,6 +134,12 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
       allowedRoles: ROUTE_PERMISSIONS["/evaluations"],
     },
     {
+      label: "Encuentros",
+      path: "/matches",
+      Icon: Trophy,
+      allowedRoles: ROUTE_PERMISSIONS["/matches"],
+    },
+    {
       label: "Pagos",
       path: "/payments",
       Icon: Wallet,
@@ -174,6 +182,12 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
       path: "/evaluations",
       Icon: BarChart2,
       allowedRoles: ROUTE_PERMISSIONS["/evaluations"],
+    },
+    {
+      label: "Encuentros",
+      path: "/matches",
+      Icon: Trophy,
+      allowedRoles: ROUTE_PERMISSIONS["/matches"],
     },
     {
       label: "Configuración",

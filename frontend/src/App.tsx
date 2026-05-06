@@ -29,6 +29,8 @@ const EvaluationsPage = lazy(() => import('@/pages/evaluations/EvaluationsPage')
 const EvaluationDetailPage = lazy(() => import('@/pages/evaluations/EvaluationDetailPage'));
 const PaymentsPage = lazy(() => import('@/pages/payments/PaymentsPage'));
 const ConceptDetailPage = lazy(() => import('@/pages/payments/ConceptDetailPage'));
+const MatchesPage = lazy(() => import('@/pages/matches/MatchesPage'));
+const MatchDetailPage = lazy(() => import('@/pages/matches/MatchDetailPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const PortalPage = lazy(() => import('@/pages/PortalPage'));
@@ -102,6 +104,8 @@ export default function App() {
             <Route path="/attendance/:id"  element={<SessionDetailPage />} />
             <Route path="/evaluations"        element={<EvaluationsPage />} />
             <Route path="/evaluations/:id"    element={<EvaluationDetailPage />} />
+            <Route path="/matches"            element={<MatchesPage />} />
+            <Route path="/matches/:id"        element={<MatchDetailPage />} />
             <Route path="/payments"           element={<PaymentsPage />} />
             <Route path="/payments/:id"       element={<ConceptDetailPage />} />
             <Route path="/notifications"   element={<NotificationsPage />} />

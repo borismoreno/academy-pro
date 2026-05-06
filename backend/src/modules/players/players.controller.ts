@@ -80,7 +80,6 @@ export class PlayersController {
       user.role as Role,
       id,
     );
-    console.log('getNextSession data in controller:', data);
     return { data, message: 'Próxima sesión obtenida exitosamente' };
   }
 

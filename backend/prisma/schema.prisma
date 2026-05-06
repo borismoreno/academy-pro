@@ -74,6 +74,7 @@ model User {
   notifications           Notification[]
   passwordResetTokens     PasswordResetToken[]
   paymentConceptsCreated  PaymentConcept[]  @relation("PaymentConceptCreatedBy")
+  matchesCreated          Match[]           @relation("MatchCreatedBy")
 
   @@map("users")
 }
@@ -98,6 +99,8 @@ model Academy {
   notifications    Notification[]
   fields           Field[]
   paymentConcepts  PaymentConcept[]
+  matches          Match[]
+  matchStatMetrics MatchStatMetric[]
 
   @@map("academies")
 }
@@ -165,6 +168,7 @@ model Team {
   attendanceSessions AttendanceSession[]
   teamSchedules      TeamSchedule[]
   paymentConcepts    PaymentConcept[]
+  matches            Match[]
 
   @@map("teams")
 }
@@ -233,6 +237,8 @@ model Player {
   evaluations       Evaluation[]
   invitations       Invitation[]
   paymentRecords    PaymentRecord[]
+  matchLineups      MatchLineup[]
+  matchPlayerStats  MatchPlayerStat[]
 
   @@map("players")
 }
@@ -359,6 +365,19 @@ model PlanLimit {
   @@map("plan_limits")
 }
 
+enum MatchType {
+  team_vs
+  individual
+}
+
+enum StatType {
+  count
+  time_seconds
+  distance_meters
+  rating
+  boolean
+}
+
 enum DiscountType {
   siblings
   scholarship
@@ -369,6 +388,77 @@ enum PaymentStatus {
   pending
   paid
   overdue
+}
+
+model Match {
+  id           String    @id @default(uuid())
+  academyId    String    @map("academy_id")
+  teamId       String    @map("team_id")
+  matchType    MatchType @map("match_type")
+  opponent     String?
+  location     String?
+  matchDate    DateTime  @db.Date @map("match_date")
+  scoreLocal   Int?      @map("score_local")
+  scoreVisitor Int?      @map("score_visitor")
+  notes        String?   @db.Text
+  createdById  String    @map("created_by_id")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  academy     Academy           @relation(fields: [academyId], references: [id])
+  team        Team              @relation(fields: [teamId], references: [id])
+  createdBy   User              @relation("MatchCreatedBy", fields: [createdById], references: [id])
+  lineups     MatchLineup[]
+  playerStats MatchPlayerStat[]
+
+  @@map("matches")
+}
+
+model MatchStatMetric {
+  id          String   @id @default(uuid())
+  academyId   String   @map("academy_id")
+  name        String
+  statType    StatType @map("stat_type")
+  unitLabel   String?  @map("unit_label")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  academy     Academy           @relation(fields: [academyId], references: [id])
+  playerStats MatchPlayerStat[]
+
+  @@map("match_stat_metrics")
+}
+
+model MatchLineup {
+  id            String   @id @default(uuid())
+  matchId       String   @map("match_id")
+  playerId      String   @map("player_id")
+  minutesPlayed Int?     @map("minutes_played")
+  isStarter     Boolean  @default(false) @map("is_starter")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  match  Match  @relation(fields: [matchId], references: [id])
+  player Player @relation(fields: [playerId], references: [id])
+
+  @@unique([matchId, playerId])
+  @@map("match_lineups")
+}
+
+model MatchPlayerStat {
+  id        String   @id @default(uuid())
+  matchId   String   @map("match_id")
+  playerId  String   @map("player_id")
+  metricId  String   @map("metric_id")
+  value     Decimal? @db.Decimal(10, 2)
+  boolValue Boolean? @map("bool_value")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  match   Match           @relation(fields: [matchId], references: [id])
+  player  Player          @relation(fields: [playerId], references: [id])
+  metric  MatchStatMetric @relation(fields: [metricId], references: [id])
+
+  @@unique([matchId, playerId, metricId])
+  @@map("match_player_stats")
 }
 
 model PaymentConcept {

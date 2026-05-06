@@ -13,6 +13,28 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+export function formatSeconds(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+export function formatStatValue(
+  value: string | number | null,
+  boolValue: boolean | null,
+  statType: string,
+  unitLabel?: string | null,
+): string {
+  if (statType === 'boolean') return boolValue ? '✓' : '—';
+  if (value === null || value === undefined) return '—';
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '—';
+  if (statType === 'time_seconds') return formatSeconds(num);
+  if (statType === 'rating') return `${num}/10`;
+  if (unitLabel) return `${num} ${unitLabel}`;
+  return String(num);
+}
+
 export function formatRelativeTime(dateString: string): string {
   const now = new Date();
   const today = new Date(
