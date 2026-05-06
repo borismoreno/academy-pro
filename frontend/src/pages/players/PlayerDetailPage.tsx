@@ -10,6 +10,7 @@ import PlayerFormSheet from "./components/PlayerFormSheet";
 import PlayerAttendanceSummary from "./components/PlayerAttendanceSummary";
 import PlayerEvaluationHistory from "./components/PlayerEvaluationHistory";
 import PlayerParentsList from "./components/PlayerParentsList";
+import PlayerMatchStatsSummary from "./components/PlayerMatchStatsSummary";
 
 function getInitials(name: string): string {
   return name
@@ -170,6 +171,9 @@ export default function PlayerDetailPage() {
             />
           </div>
         </div>
+
+        {/* Match stats season summary */}
+        <PlayerMatchStatsSummary playerId={player.id} />
 
         {/* Parents — full width */}
         <PlayerParentsList
