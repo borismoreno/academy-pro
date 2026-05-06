@@ -6,16 +6,30 @@ import {
   getAttendanceSummary,
   getEvaluationProgress,
   getNextSession,
+  getPlayerPaymentRecords,
+  getPlayerMatchHistory,
+  getPlayerSeasonStats,
 } from "@/services/portal.service";
 import type {
   PlayerResponse,
   AttendanceSummary,
   EvaluationProgress,
+  PortalPaymentRecord,
+  PortalMatchEntry,
+  PlayerSeasonSummary,
 } from "@/services/portal.service";
+import { useAuthStore } from "@/store/auth.store";
 
-export type { PlayerResponse, AttendanceSummary, EvaluationProgress };
+export type {
+  PlayerResponse,
+  AttendanceSummary,
+  EvaluationProgress,
+  PortalPaymentRecord,
+  PortalMatchEntry,
+  PlayerSeasonSummary,
+};
 
-function isAxios403(error: unknown): boolean {
+export function isAxios403(error: unknown): boolean {
   if (error !== null && typeof error === "object" && "response" in error) {
     const axiosError = error as { response?: { status?: number } };
     return axiosError.response?.status === 403;
@@ -87,4 +101,42 @@ export function usePortal() {
       nextSessionQuery.isLoading,
     isProgressForbidden,
   };
+}
+
+export function useGetPlayerPaymentRecords(playerId: string | null) {
+  const academyId = useAuthStore((s) => s.currentAcademyId);
+  return useQuery<PortalPaymentRecord[]>({
+    queryKey: ["portal-payments", academyId, playerId],
+    queryFn: () => getPlayerPaymentRecords(academyId!, playerId!),
+    enabled: !!playerId && !!academyId,
+  });
+}
+
+export function useGetPlayerMatchHistory(playerId: string | null) {
+  const academyId = useAuthStore((s) => s.currentAcademyId);
+  return useQuery<PortalMatchEntry[]>({
+    queryKey: ["portal-matches", academyId, playerId],
+    queryFn: () => getPlayerMatchHistory(academyId!, playerId!),
+    enabled: !!playerId && !!academyId,
+    retry: (failureCount, error) => {
+      if (isAxios403(error)) return false;
+      return failureCount < 3;
+    },
+  });
+}
+
+export function useGetPlayerSeasonStats(
+  playerId: string | null,
+  enabled = true,
+) {
+  const academyId = useAuthStore((s) => s.currentAcademyId);
+  return useQuery<PlayerSeasonSummary>({
+    queryKey: ["portal-season-stats", academyId, playerId],
+    queryFn: () => getPlayerSeasonStats(academyId!, playerId!),
+    enabled: enabled && !!playerId && !!academyId,
+    retry: (failureCount, error) => {
+      if (isAxios403(error)) return false;
+      return failureCount < 3;
+    },
+  });
 }

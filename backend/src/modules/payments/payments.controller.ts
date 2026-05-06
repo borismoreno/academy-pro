@@ -18,6 +18,7 @@ import {
   PaymentConceptDetailDto,
   PaymentConceptSummaryDto,
   PaymentRecordResponseDto,
+  PlayerPaymentRecordDto,
 } from './dto/payment-response.dto.js';
 import { PaymentsService } from './payments.service.js';
 
@@ -57,6 +58,21 @@ export class PaymentsController {
       { teamId, search },
     );
     return { data, message: 'Conceptos de pago obtenidos exitosamente' };
+  }
+
+  @Get('players/:playerId/records')
+  @Roles(Role.parent)
+  async getRecordsByPlayer(
+    @Param('academyId') academyId: string,
+    @Param('playerId') playerId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ data: PlayerPaymentRecordDto[]; message: string }> {
+    const data = await this.paymentsService.getRecordsByPlayer(
+      academyId,
+      playerId,
+      user.sub,
+    );
+    return { data, message: 'Registros de pago obtenidos exitosamente' };
   }
 
   @Get('concepts/:conceptId')

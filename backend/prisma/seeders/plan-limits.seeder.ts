@@ -21,6 +21,7 @@ const LIMITS: PlanLimitSeed[] = [
   { plan: SubscriptionPlan.free, resource: 'evaluations_custom_metrics', maxCount: 0 },
   { plan: SubscriptionPlan.free, resource: 'parent_portal_evaluations', maxCount: 0 },
   { plan: SubscriptionPlan.free, resource: 'parent_notifications', maxCount: 0 },
+  { plan: SubscriptionPlan.free, resource: 'parent_portal_matches', maxCount: 0 },
 
   // ── Pro plan — unlimited (-1) ────────────────────────────────────────────────
   { plan: SubscriptionPlan.pro, resource: 'teams', maxCount: -1 },
@@ -30,6 +31,7 @@ const LIMITS: PlanLimitSeed[] = [
   { plan: SubscriptionPlan.pro, resource: 'evaluations_custom_metrics', maxCount: -1 },
   { plan: SubscriptionPlan.pro, resource: 'parent_portal_evaluations', maxCount: -1 },
   { plan: SubscriptionPlan.pro, resource: 'parent_notifications', maxCount: -1 },
+  { plan: SubscriptionPlan.pro, resource: 'parent_portal_matches', maxCount: -1 },
 
   // ── Enterprise plan — unlimited (-1) ────────────────────────────────────────
   { plan: SubscriptionPlan.enterprise, resource: 'teams', maxCount: -1 },
@@ -39,6 +41,7 @@ const LIMITS: PlanLimitSeed[] = [
   { plan: SubscriptionPlan.enterprise, resource: 'evaluations_custom_metrics', maxCount: -1 },
   { plan: SubscriptionPlan.enterprise, resource: 'parent_portal_evaluations', maxCount: -1 },
   { plan: SubscriptionPlan.enterprise, resource: 'parent_notifications', maxCount: -1 },
+  { plan: SubscriptionPlan.enterprise, resource: 'parent_portal_matches', maxCount: -1 },
 ];
 
 async function main(): Promise<void> {

@@ -6,6 +6,7 @@ import {
 import { Prisma, PaymentStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { verifyParentAccess } from '../../common/helpers/parent-guard.helper.js';
 import { CreatePaymentConceptDto } from './dto/create-payment-concept.dto.js';
 import { UpdatePaymentRecordDto } from './dto/update-payment-record.dto.js';
 import {
@@ -13,6 +14,7 @@ import {
   PaymentConceptDetailDto,
   PaymentConceptSummaryDto,
   PaymentRecordResponseDto,
+  PlayerPaymentRecordDto,
 } from './dto/payment-response.dto.js';
 
 const recordWithPlayer = {
@@ -290,6 +292,44 @@ export class PaymentsService {
       totalAmountCollected,
       totalAmountPending: totalAmountExpected.minus(totalAmountCollected),
     };
+  }
+
+  async getRecordsByPlayer(
+    academyId: string,
+    playerId: string,
+    requestingUserId: string,
+  ): Promise<PlayerPaymentRecordDto[]> {
+    await verifyParentAccess(this.prisma, playerId, requestingUserId);
+
+    const records = await this.prisma.paymentRecord.findMany({
+      where: {
+        playerId,
+        concept: { academyId },
+      },
+      include: {
+        concept: { select: { id: true, name: true, dueDate: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return records.map((r) => ({
+      id: r.id,
+      conceptId: r.conceptId,
+      concept: {
+        id: r.concept.id,
+        name: r.concept.name,
+        dueDate: r.concept.dueDate,
+      },
+      baseAmount: r.baseAmount,
+      discountAmount: r.discountAmount,
+      discountType: r.discountType,
+      finalAmount: r.finalAmount,
+      status: r.status,
+      paidAt: r.paidAt,
+      paymentMethod: r.paymentMethod,
+      notes: r.notes,
+      createdAt: r.createdAt,
+    }));
   }
 
   async markOverdue(): Promise<number> {

@@ -74,6 +74,33 @@ export class MatchStatMetricResponseDto {
   createdAt: Date;
 }
 
+export class PlayerMatchLineupDto {
+  minutesPlayed: number | null;
+  isStarter: boolean;
+}
+
+export class PlayerMatchStatDto {
+  metricId: string;
+  metricName: string;
+  statType: StatType;
+  unitLabel: string | null;
+  value: string | null;
+  boolValue: boolean | null;
+}
+
+export class PlayerMatchHistoryItemDto {
+  id: string;
+  matchType: MatchType;
+  opponent: string | null;
+  location: string | null;
+  matchDate: Date;
+  scoreLocal: number | null;
+  scoreVisitor: number | null;
+  team: MatchTeamDto;
+  lineupEntry: PlayerMatchLineupDto;
+  playerStats: PlayerMatchStatDto[];
+}
+
 export class PlayerSeasonStatItemDto {
   metricId: string;
   metricName: string;

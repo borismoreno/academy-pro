@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { MatchType, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { verifyParentAccess } from '../../common/helpers/parent-guard.helper.js';
+import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { CreateMatchDto } from './dto/create-match.dto.js';
 import { CreateMatchStatMetricDto } from './dto/create-match-stat-metric.dto.js';
 import {
@@ -15,6 +17,7 @@ import {
   MatchResponseDto,
   MatchStatMetricResponseDto,
   MatchTeamDto,
+  PlayerMatchHistoryItemDto,
   PlayerSeasonStatItemDto,
   PlayerSeasonStatsResponseDto,
 } from './dto/match-response.dto.js';
@@ -89,7 +92,10 @@ function mapMatchDetail(match: MatchWithDetails): MatchResponseDto {
 
 @Injectable()
 export class MatchesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly planGuard: PlanGuardService,
+  ) {}
 
   // ---------------------------------------------------------------------------
   // Matches
@@ -310,11 +316,77 @@ export class MatchesService {
     return this.findOneMatch(academyId, matchId);
   }
 
+  async getMatchesByPlayer(
+    academyId: string,
+    playerId: string,
+    requestingUserId: string,
+  ): Promise<PlayerMatchHistoryItemDto[]> {
+    await verifyParentAccess(this.prisma, playerId, requestingUserId);
+    await this.planGuard.validateLimit(academyId, 'parent_portal_matches');
+
+    const lineups = await this.prisma.matchLineup.findMany({
+      where: {
+        playerId,
+        match: { academyId },
+      },
+      include: {
+        match: {
+          include: {
+            team: { select: { id: true, name: true } },
+            playerStats: {
+              where: { playerId },
+              include: {
+                metric: {
+                  select: {
+                    id: true,
+                    name: true,
+                    statType: true,
+                    unitLabel: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { match: { matchDate: 'desc' } },
+    });
+
+    return lineups.map((l) => ({
+      id: l.match.id,
+      matchType: l.match.matchType,
+      opponent: l.match.opponent,
+      location: l.match.location,
+      matchDate: l.match.matchDate,
+      scoreLocal: l.match.scoreLocal,
+      scoreVisitor: l.match.scoreVisitor,
+      team: { id: l.match.team.id, name: l.match.team.name },
+      lineupEntry: {
+        minutesPlayed: l.minutesPlayed,
+        isStarter: l.isStarter,
+      },
+      playerStats: l.match.playerStats.map((s) => ({
+        metricId: s.metric.id,
+        metricName: s.metric.name,
+        statType: s.metric.statType,
+        unitLabel: s.metric.unitLabel,
+        value: s.value !== null ? s.value.toString() : null,
+        boolValue: s.boolValue,
+      })),
+    }));
+  }
+
   async getPlayerSeasonStats(
     academyId: string,
     playerId: string,
     filters?: { teamId?: string },
+    requestingUserId?: string,
   ): Promise<PlayerSeasonStatsResponseDto> {
+    if (requestingUserId) {
+      await verifyParentAccess(this.prisma, playerId, requestingUserId);
+      await this.planGuard.validateLimit(academyId, 'parent_portal_matches');
+    }
+
     const player = await this.prisma.player.findFirst({
       where: { id: playerId, academyId },
       select: { id: true, fullName: true },

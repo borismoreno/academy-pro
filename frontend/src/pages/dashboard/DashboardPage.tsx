@@ -1,10 +1,10 @@
-import PageHeader from '@/components/shared/PageHeader';
-import { useDashboard } from '@/hooks/useDashboard';
-import KpiGrid from './components/KpiGrid';
-import HeroProgressBlock from './components/HeroProgressBlock';
-import QuickActions from './components/QuickActions';
-import RecentActivity from './components/RecentActivity';
-import TeamsList from './components/TeamsList';
+import PageHeader from "@/components/shared/PageHeader";
+import { useDashboard } from "@/hooks/useDashboard";
+import KpiGrid from "./components/KpiGrid";
+import HeroProgressBlock from "./components/HeroProgressBlock";
+import QuickActions from "./components/QuickActions";
+import RecentActivity from "./components/RecentActivity";
+import TeamsList from "./components/TeamsList";
 
 export default function DashboardPage() {
   const {
@@ -16,7 +16,8 @@ export default function DashboardPage() {
     role,
   } = useDashboard();
 
-  const pageTitle = role === 'academy_director' ? 'Panel de control' : 'Mi panel';
+  const pageTitle =
+    role === "academy_director" ? "Panel de control" : "Mi panel";
 
   return (
     // Mobile: flex column ordered for above-the-fold CTA
@@ -48,13 +49,13 @@ export default function DashboardPage() {
       </div>
 
       {/* RecentActivity — mobile 5th, desktop 5th (col-span-7) */}
-      <div className="order-5 lg:col-span-7 lg:order-5">
+      {/* <div className="order-5 lg:col-span-7 lg:order-5">
         <RecentActivity
           recentEvaluations={recentEvaluations}
           recentSessions={recentSessions}
           isLoading={isLoading}
         />
-      </div>
+      </div> */}
 
       {/* TeamsList — mobile 6th, desktop 6th (col-span-5) */}
       <div className="order-6 lg:col-span-5 lg:order-6">

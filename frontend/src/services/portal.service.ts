@@ -6,12 +6,18 @@ import type {
   EvaluationProgress,
   NextSession,
 } from "./players.service";
+import type { PortalPaymentRecord } from "@/types/payment.types";
+import type { PortalMatchEntry } from "@/types/match.types";
+import type { PlayerSeasonSummary } from "@/types/match.types";
 
 export type {
   PlayerResponse,
   AttendanceSummary,
   EvaluationProgress,
   NextSession,
+  PortalPaymentRecord,
+  PortalMatchEntry,
+  PlayerSeasonSummary,
 };
 
 /**
@@ -51,6 +57,36 @@ export async function getEvaluationProgress(
 ): Promise<EvaluationProgress> {
   const response = await api.get<ApiResponse<EvaluationProgress>>(
     `/evaluations/players/${playerId}/progress`,
+  );
+  return response.data.data;
+}
+
+export async function getPlayerPaymentRecords(
+  academyId: string,
+  playerId: string,
+): Promise<PortalPaymentRecord[]> {
+  const response = await api.get<ApiResponse<PortalPaymentRecord[]>>(
+    `/academies/${academyId}/payments/players/${playerId}/records`,
+  );
+  return response.data.data;
+}
+
+export async function getPlayerMatchHistory(
+  academyId: string,
+  playerId: string,
+): Promise<PortalMatchEntry[]> {
+  const response = await api.get<ApiResponse<PortalMatchEntry[]>>(
+    `/academies/${academyId}/matches/players/${playerId}/history`,
+  );
+  return response.data.data;
+}
+
+export async function getPlayerSeasonStats(
+  academyId: string,
+  playerId: string,
+): Promise<PlayerSeasonSummary> {
+  const response = await api.get<ApiResponse<PlayerSeasonSummary>>(
+    `/academies/${academyId}/matches/players/${playerId}/season-stats`,
   );
   return response.data.data;
 }

@@ -80,6 +80,29 @@ export interface PlayerSeasonSummary {
   statsByStat: PlayerSeasonStat[];
 }
 
+export interface PortalMatchEntry {
+  id: string;
+  matchType: MatchType;
+  opponent: string | null;
+  location: string | null;
+  matchDate: string;
+  scoreLocal: number | null;
+  scoreVisitor: number | null;
+  team: { name: string };
+  lineupEntry: {
+    minutesPlayed: number | null;
+    isStarter: boolean;
+  };
+  playerStats: {
+    metricId: string;
+    metricName: string;
+    statType: StatType;
+    unitLabel: string | null;
+    value: string | null;
+    boolValue: boolean | null;
+  }[];
+}
+
 // ── Request shapes (mirror backend DTOs) ─────────────────────────────────────
 
 export interface CreateMatchData {
