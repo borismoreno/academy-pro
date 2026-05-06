@@ -8,6 +8,7 @@ import {
   Building2,
   CreditCard,
   Sliders,
+  Wallet,
 } from "lucide-react";
 import type { ComponentType } from "react";
 import type { UserRole } from "@/types";
@@ -39,6 +40,7 @@ export const ROUTE_PERMISSIONS: Record<string, UserRole[]> = {
   "/players": ["academy_director", "coach"],
   "/attendance": ["academy_director", "coach"],
   "/evaluations": ["academy_director", "coach"],
+  "/payments": ["academy_director"],
   "/notifications": ["academy_director", "coach", "parent"],
   "/settings": ["academy_director", "coach", "parent"],
   "/portal": ["parent"],
@@ -128,6 +130,12 @@ export const NAV_ITEMS: Record<UserRole, NavItemConfig[]> = {
       path: "/evaluations",
       Icon: BarChart2,
       allowedRoles: ROUTE_PERMISSIONS["/evaluations"],
+    },
+    {
+      label: "Pagos",
+      path: "/payments",
+      Icon: Wallet,
+      allowedRoles: ROUTE_PERMISSIONS["/payments"],
     },
     {
       label: "Configuración",
@@ -246,7 +254,21 @@ export function getBottomNavItems(role: UserRole): {
 } {
   const all = getNavigationItems(role);
 
-  if (role === "academy_director" || role === "coach") {
+  if (role === "academy_director") {
+    // Primary: Dashboard, Equipos, Jugadores, Evaluaciones, Pagos (5 tabs + Asistencia + Configuración in overflow)
+    const primaryPaths = [
+      "/dashboard",
+      "/teams",
+      "/players",
+      "/evaluations",
+      "/payments",
+    ];
+    const primary = all.filter((item) => primaryPaths.includes(item.path));
+    const overflow = all.filter((item) => !primaryPaths.includes(item.path));
+    return { primary, overflow };
+  }
+
+  if (role === "coach") {
     // Primary: Dashboard, Equipos, Jugadores, Asistencia, Evaluaciones (5 tabs + "Más" for Configuración)
     const primaryPaths = [
       "/dashboard",

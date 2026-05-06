@@ -65,14 +65,15 @@ model User {
   createdAt                  DateTime  @default(now()) @map("created_at")
   updatedAt                  DateTime  @updatedAt @map("updated_at")
 
-  academyRoles        UserAcademyRole[]
-  invitationsSent     Invitation[]      @relation("InvitedBy")
-  teamCoaches         TeamCoach[]
-  playerParents       PlayerParent[]
-  attendanceSessions  AttendanceSession[]
-  evaluations         Evaluation[]
-  notifications       Notification[]
-  passwordResetTokens PasswordResetToken[]
+  academyRoles            UserAcademyRole[]
+  invitationsSent         Invitation[]      @relation("InvitedBy")
+  teamCoaches             TeamCoach[]
+  playerParents           PlayerParent[]
+  attendanceSessions      AttendanceSession[]
+  evaluations             Evaluation[]
+  notifications           Notification[]
+  passwordResetTokens     PasswordResetToken[]
+  paymentConceptsCreated  PaymentConcept[]  @relation("PaymentConceptCreatedBy")
 
   @@map("users")
 }
@@ -88,14 +89,15 @@ model Academy {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userRoles     UserAcademyRole[]
-  subscription  AcademySubscription?
-  invitations   Invitation[]
-  teams         Team[]
-  players       Player[]
-  metrics       EvaluationMetric[]
-  notifications Notification[]
-  fields        Field[]
+  userRoles        UserAcademyRole[]
+  subscription     AcademySubscription?
+  invitations      Invitation[]
+  teams            Team[]
+  players          Player[]
+  metrics          EvaluationMetric[]
+  notifications    Notification[]
+  fields           Field[]
+  paymentConcepts  PaymentConcept[]
 
   @@map("academies")
 }
@@ -162,6 +164,7 @@ model Team {
   players            Player[]
   attendanceSessions AttendanceSession[]
   teamSchedules      TeamSchedule[]
+  paymentConcepts    PaymentConcept[]
 
   @@map("teams")
 }
@@ -229,6 +232,7 @@ model Player {
   attendanceRecords AttendanceRecord[]
   evaluations       Evaluation[]
   invitations       Invitation[]
+  paymentRecords    PaymentRecord[]
 
   @@map("players")
 }
@@ -353,4 +357,55 @@ model PlanLimit {
 
   @@unique([plan, resource])
   @@map("plan_limits")
+}
+
+enum DiscountType {
+  siblings
+  scholarship
+  other
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  overdue
+}
+
+model PaymentConcept {
+  id          String    @id @default(uuid())
+  academyId   String    @map("academy_id")
+  teamId      String?   @map("team_id")
+  name        String
+  amount      Decimal   @db.Decimal(10, 2)
+  dueDate     DateTime  @db.Date @map("due_date")
+  createdById String    @map("created_by_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  academy   Academy         @relation(fields: [academyId], references: [id])
+  team      Team?           @relation(fields: [teamId], references: [id])
+  createdBy User            @relation("PaymentConceptCreatedBy", fields: [createdById], references: [id])
+  records   PaymentRecord[]
+
+  @@map("payment_concepts")
+}
+
+model PaymentRecord {
+  id             String         @id @default(uuid())
+  conceptId      String         @map("concept_id")
+  playerId       String         @map("player_id")
+  baseAmount     Decimal        @db.Decimal(10, 2) @map("base_amount")
+  discountAmount Decimal        @db.Decimal(10, 2) @default(0) @map("discount_amount")
+  discountType   DiscountType?  @map("discount_type")
+  discountNotes  String?        @map("discount_notes")
+  finalAmount    Decimal        @db.Decimal(10, 2) @map("final_amount")
+  status         PaymentStatus  @default(pending)
+  paidAt         DateTime?      @map("paid_at")
+  paymentMethod  String?        @map("payment_method")
+  notes          String?
+  createdAt      DateTime       @default(now()) @map("created_at")
+
+  concept PaymentConcept @relation(fields: [conceptId], references: [id])
+  player  Player         @relation(fields: [playerId], references: [id])
+
+  @@map("payment_records")
 }
