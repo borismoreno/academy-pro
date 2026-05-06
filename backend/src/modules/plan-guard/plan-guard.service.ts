@@ -17,6 +17,8 @@ const LIMIT_MESSAGES: Record<string, string> = {
     'La visualización de evaluaciones en el portal de padres no está disponible en tu plan actual. Actualiza a Pro para que los padres puedan ver las evaluaciones.',
   parent_notifications:
     'Las notificaciones a padres no están disponibles en tu plan actual. Actualiza a Pro para activar las notificaciones.',
+  parent_portal_matches:
+    'El historial de encuentros en el portal de padres no está disponible en tu plan actual. Actualiza a Pro para que los padres puedan ver los encuentros.',
 };
 
 @Injectable()

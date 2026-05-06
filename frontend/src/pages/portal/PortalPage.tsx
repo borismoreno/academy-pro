@@ -1,15 +1,23 @@
 import { Users } from "lucide-react";
+import { useState } from "react";
 import { useAuthStore } from "@/store/auth.store";
-import { usePortal } from "@/hooks/usePortal";
+import {
+  usePortal,
+  useGetPlayerPaymentRecords,
+  useGetPlayerMatchHistory,
+  useGetPlayerSeasonStats,
+  isAxios403,
+} from "@/hooks/usePortal";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
 import PlayerSelector from "./components/PlayerSelector";
 import PortalPlayerHero from "./components/PortalPlayerHero";
 import PortalAttendanceSummary from "./components/PortalAttendanceSummary";
 import PortalEvaluationSummary from "./components/PortalEvaluationSummary";
+import PortalMatchesSummary from "./components/PortalMatchesSummary";
+import PortalPaymentStatus from "./components/PortalPaymentStatus";
 import PortalRecentActivity from "./components/PortalRecentActivity";
 import PortalProgressChart from "./components/PortalProgressChart";
-import { useState } from "react";
 import PortalEvaluationDetail from "./components/PortalEvaluationDetail";
 import PortalAttendanceDetail from "./components/PortalAttendanceDetail";
 import PortalNextSession from "./components/PortalNextSession";
@@ -21,7 +29,9 @@ function getFirstName(fullName: string): string {
 export default function PortalPage() {
   const [attendanceOpen, setAttendanceOpen] = useState(false);
   const [evaluationOpen, setEvaluationOpen] = useState(false);
+
   const user = useAuthStore((state) => state.user);
+
   const {
     players,
     selectedPlayerId,
@@ -34,6 +44,20 @@ export default function PortalPage() {
     isProgressForbidden,
     nextSession,
   } = usePortal();
+
+  const paymentRecordsQuery = useGetPlayerPaymentRecords(selectedPlayerId);
+  const matchHistoryQuery = useGetPlayerMatchHistory(selectedPlayerId);
+  const seasonStatsQuery = useGetPlayerSeasonStats(
+    selectedPlayerId,
+    // disable season stats if match history is already forbidden
+    !isAxios403(matchHistoryQuery.error),
+  );
+
+  const isMatchesForbidden =
+    isAxios403(matchHistoryQuery.error) || isAxios403(seasonStatsQuery.error);
+
+  const isLoadingMatches =
+    matchHistoryQuery.isLoading || seasonStatsQuery.isLoading;
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,7 +104,6 @@ export default function PortalPage() {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Player hero */}
             <PortalPlayerHero
               player={player}
               isLoading={isLoadingDetail}
@@ -92,7 +115,13 @@ export default function PortalPage() {
             />
           </div>
 
-          {/* Stats grid — 2 columns */}
+          {/* Payment status — all plans */}
+          <PortalPaymentStatus
+            records={paymentRecordsQuery.data}
+            isLoading={paymentRecordsQuery.isLoading}
+          />
+
+          {/* Attendance + Evaluation */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <PortalAttendanceSummary
               summary={attendanceSummary}
@@ -107,18 +136,31 @@ export default function PortalPage() {
             />
           </div>
 
-          {/* Progress chart — full width */}
+          {/* Progress chart */}
           <PortalProgressChart
             progress={evaluationProgress}
             isLoading={isLoadingDetail}
           />
 
-          {/* Recent activity — full width */}
-          <PortalRecentActivity
+          {/* Matches — Pro/Enterprise feature gate */}
+          <PortalMatchesSummary
+            matchHistory={matchHistoryQuery.data}
+            seasonStats={seasonStatsQuery.data}
+            isLoading={isLoadingMatches}
+            isForbidden={isMatchesForbidden}
+          />
+
+          {/* Recent activity */}
+          {/* <PortalRecentActivity
             attendanceSummary={attendanceSummary}
             evaluationProgress={evaluationProgress}
+            paymentRecords={paymentRecordsQuery.data}
+            matchHistory={
+              isMatchesForbidden ? undefined : matchHistoryQuery.data
+            }
             isLoading={isLoadingDetail}
-          />
+          /> */}
+
           <PortalAttendanceDetail
             open={attendanceOpen}
             onOpenChange={setAttendanceOpen}

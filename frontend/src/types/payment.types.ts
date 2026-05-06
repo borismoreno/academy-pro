@@ -59,6 +59,24 @@ export interface PaymentSummary {
   totalAmountPending: number;
 }
 
+export interface PortalPaymentRecord {
+  id: string;
+  conceptId: string;
+  concept: {
+    name: string;
+    dueDate: string;
+  };
+  baseAmount: number;
+  discountAmount: number;
+  discountType: DiscountType | null;
+  finalAmount: number;
+  status: PaymentStatus;
+  paidAt: string | null;
+  paymentMethod: string | null;
+  notes: string | null;
+  createdAt: string;
+}
+
 export interface CreatePaymentConceptData {
   name: string;
   amount: number;

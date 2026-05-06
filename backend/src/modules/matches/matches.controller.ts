@@ -20,6 +20,7 @@ import {
   MatchListItemDto,
   MatchResponseDto,
   MatchStatMetricResponseDto,
+  PlayerMatchHistoryItemDto,
   PlayerSeasonStatsResponseDto,
 } from './dto/match-response.dto.js';
 import { SaveMatchResultsDto } from './dto/save-match-results.dto.js';
@@ -66,20 +67,39 @@ export class MatchesController {
   }
 
   // ---------------------------------------------------------------------------
-  // Player season stats — declared BEFORE /:matchId to avoid route conflict
+  // Player match history and season stats — declared BEFORE /:matchId to avoid route conflict
   // ---------------------------------------------------------------------------
 
+  @Get('players/:playerId/history')
+  @Roles(Role.parent)
+  async getMatchesByPlayer(
+    @Param('academyId') academyId: string,
+    @Param('playerId') playerId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ data: PlayerMatchHistoryItemDto[]; message: string }> {
+    const data = await this.matchesService.getMatchesByPlayer(
+      academyId,
+      playerId,
+      user.sub,
+    );
+    return { data, message: 'Historial de encuentros obtenido exitosamente' };
+  }
+
   @Get('players/:playerId/season-stats')
-  @Roles(Role.academy_director, Role.coach)
+  @Roles(Role.academy_director, Role.coach, Role.parent)
   async getPlayerSeasonStats(
     @Param('academyId') academyId: string,
     @Param('playerId') playerId: string,
+    @CurrentUser() user: JwtPayload,
     @Query('teamId') teamId?: string,
   ): Promise<{ data: PlayerSeasonStatsResponseDto; message: string }> {
+    const requestingUserId =
+      user.role === Role.parent ? user.sub : undefined;
     const data = await this.matchesService.getPlayerSeasonStats(
       academyId,
       playerId,
       { teamId },
+      requestingUserId,
     );
     return { data, message: 'Estadísticas de temporada obtenidas exitosamente' };
   }

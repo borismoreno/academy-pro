@@ -48,6 +48,27 @@ export class PaymentConceptDetailDto extends PaymentConceptSummaryDto {
   records: PaymentRecordResponseDto[];
 }
 
+export class PlayerPaymentConceptInfoDto {
+  id: string;
+  name: string;
+  dueDate: Date;
+}
+
+export class PlayerPaymentRecordDto {
+  id: string;
+  conceptId: string;
+  concept: PlayerPaymentConceptInfoDto;
+  baseAmount: Decimal;
+  discountAmount: Decimal;
+  discountType: DiscountType | null;
+  finalAmount: Decimal;
+  status: PaymentStatus;
+  paidAt: Date | null;
+  paymentMethod: string | null;
+  notes: string | null;
+  createdAt: Date;
+}
+
 export class AcademyPaymentSummaryDto {
   totalConcepts: number;
   totalRecords: number;
