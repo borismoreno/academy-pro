@@ -35,6 +35,15 @@ export function formatStatValue(
   return String(num);
 }
 
+export function getInitials(fullName: string): string {
+  return fullName
+    .split(' ')
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
+}
+
 export function formatRelativeTime(dateString: string): string {
   const now = new Date();
   const today = new Date(
