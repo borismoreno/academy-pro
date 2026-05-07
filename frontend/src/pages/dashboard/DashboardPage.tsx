@@ -3,18 +3,11 @@ import { useDashboard } from "@/hooks/useDashboard";
 import KpiGrid from "./components/KpiGrid";
 import HeroProgressBlock from "./components/HeroProgressBlock";
 import QuickActions from "./components/QuickActions";
-import RecentActivity from "./components/RecentActivity";
 import TeamsList from "./components/TeamsList";
 
 export default function DashboardPage() {
-  const {
-    teams,
-    totalPlayers,
-    recentEvaluations,
-    recentSessions,
-    isLoading,
-    role,
-  } = useDashboard();
+  const { teams, totalPlayers, recentEvaluations, isLoading, role } =
+    useDashboard();
 
   const pageTitle =
     role === "academy_director" ? "Panel de control" : "Mi panel";
