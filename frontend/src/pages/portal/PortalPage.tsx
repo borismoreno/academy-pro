@@ -16,7 +16,6 @@ import PortalAttendanceSummary from "./components/PortalAttendanceSummary";
 import PortalEvaluationSummary from "./components/PortalEvaluationSummary";
 import PortalMatchesSummary from "./components/PortalMatchesSummary";
 import PortalPaymentStatus from "./components/PortalPaymentStatus";
-import PortalRecentActivity from "./components/PortalRecentActivity";
 import PortalProgressChart from "./components/PortalProgressChart";
 import PortalEvaluationDetail from "./components/PortalEvaluationDetail";
 import PortalAttendanceDetail from "./components/PortalAttendanceDetail";
