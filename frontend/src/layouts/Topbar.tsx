@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.store';
 import { useLogout } from '@/hooks/useLogout';
 import NotificationPanel from '@/components/notifications/NotificationPanel';
@@ -9,45 +10,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { getInitials } from '@/lib/utils';
 
 interface TopbarProps {
   pageTitle: string;
 }
 
-function getInitials(fullName: string): string {
-  return fullName
-    .split(' ')
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('');
-}
-
 export default function Topbar({ pageTitle }: TopbarProps) {
   const user = useAuthStore((state) => state.user);
   const { logout } = useLogout();
+  const location = useLocation();
 
   const initials = user ? getInitials(user.fullName) : '?';
+  const isDashboard = location.pathname === '/dashboard';
+  const firstName = user?.fullName.split(' ')[0] ?? '';
 
   return (
-    <header className="sticky top-0 z-10 h-16 bg-surface-high/70 backdrop-blur-[20px] flex items-center justify-between px-8">
-      {/* Left: page title */}
-      <h1 className="font-display text-[1.75rem] font-semibold text-on-surface leading-none">
-        {pageTitle}
-      </h1>
+    <header className="sticky top-0 z-10 h-16 bg-surface-high/70 backdrop-blur-[20px] flex items-center justify-between px-6 lg:px-8">
+      {isDashboard ? (
+        <div className="flex flex-col gap-0">
+          <span className="font-body text-[10px] uppercase tracking-[0.08em] text-on-surface-variant">
+            Bienvenido de vuelta
+          </span>
+          <span className="font-display text-[18px] font-bold text-on-surface leading-tight">
+            {firstName} 👋
+          </span>
+        </div>
+      ) : (
+        <h1 className="font-display text-[1.75rem] font-semibold text-on-surface leading-none">
+          {pageTitle}
+        </h1>
+      )}
 
-      {/* Right: notification bell + avatar */}
-      <div className="flex items-center gap-4">
-        {/* Notification panel (Popover on desktop, Sheet on mobile) */}
+      <div className="flex items-center gap-3">
         <NotificationPanel />
 
-        {/* User avatar dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="w-9 h-9 rounded-full bg-surface-high flex items-center justify-center hover:bg-surface-highest transition-colors cursor-pointer focus:outline-none"
+              className="w-[38px] h-[38px] rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center font-display text-[13px] font-bold text-on-primary cursor-pointer focus:outline-none"
               aria-label="Menú de usuario"
             >
-              <span className="font-display text-xs font-bold text-primary">{initials}</span>
+              {initials}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
