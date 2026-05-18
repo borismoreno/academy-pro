@@ -224,7 +224,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
           }}
           yearRange={{
             min: new Date().getFullYear() - 80,
-            max: new Date().getFullYear() - 5,
+            max: new Date().getFullYear() - 3,
           }}
         />
         {birthDateError && (
