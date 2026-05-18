@@ -36,7 +36,7 @@ export async function getMembers(role?: string): Promise<Member[]> {
 
 export interface InviteUserData {
   email: string;
-  role: "coach" | "parent";
+  role: "coach" | "parent" | "academy_director";
   playerId?: string;
 }
 
@@ -47,7 +47,7 @@ export async function inviteUser(data: InviteUserData): Promise<void> {
 export interface PendingInvitation {
   id: string;
   email: string;
-  role: "coach" | "parent";
+  role: "coach" | "parent" | "academy_director";
   expiresAt: string;
   createdAt: string;
 }

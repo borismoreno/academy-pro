@@ -57,7 +57,9 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
   const activePlayers = players.filter((p) => p.isActive);
 
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"coach" | "parent">("coach");
+  const [role, setRole] = useState<"coach" | "parent" | "academy_director">(
+    "coach",
+  );
   const [playerId, setPlayerId] = useState("");
   const [emailError, setEmailError] = useState("");
   const [playerFilter, setPlayerFilter] = useState("");
@@ -79,9 +81,9 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
     },
   });
 
-  function handleRoleChange(newRole: "coach" | "parent") {
+  function handleRoleChange(newRole: "coach" | "parent" | "academy_director") {
     setRole(newRole);
-    if (newRole === "coach") setPlayerId("");
+    if (newRole !== "parent") setPlayerId("");
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -129,11 +131,14 @@ function FormContent({ onSuccess, onClose }: FormContentProps) {
         <select
           value={role}
           onChange={(e) =>
-            handleRoleChange(e.target.value as "coach" | "parent")
+            handleRoleChange(
+              e.target.value as "coach" | "parent" | "academy_director",
+            )
           }
           disabled={mutation.isPending}
           className={SELECT_CLASS}
         >
+          <option value="academy_director">Director</option>
           <option value="coach">Entrenador</option>
           <option value="parent">Padre / Tutor</option>
         </select>
