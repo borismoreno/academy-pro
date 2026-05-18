@@ -55,18 +55,18 @@ export default function RegisterPage() {
 
           <div className="mt-10 flex gap-4 flex-wrap">
             {[
-              { label: "Equipos", value: "100+" },
-              { label: "Jugadores", value: "2.5K+" },
-              { label: "Academias", value: "30+" },
+              { label: "Asistencia en segundos", value: "⚡" },
+              { label: "Portal para padres incluido", value: "👨‍👦" },
+              { label: "Configuración en 24 horas", value: "🚀" },
             ].map((stat) => (
               <div
                 key={stat.label}
                 className="bg-surface-high rounded-3xl px-5 py-3"
               >
-                <div className="font-display text-[1.75rem] font-semibold text-primary leading-none">
+                <div className="text-[1.5rem] leading-none mb-1">
                   {stat.value}
                 </div>
-                <div className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant mt-1">
+                <div className="font-body text-[0.75rem] text-on-surface-variant mt-1 leading-tight">
                   {stat.label}
                 </div>
               </div>
