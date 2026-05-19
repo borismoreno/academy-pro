@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { queryKeys } from '@/lib/queryKeys';
 import axios from 'axios';
 import { verifyEmail, resendVerification } from '@/services/auth.service';
 import { useToast } from '@/hooks/use-toast';
@@ -20,7 +21,7 @@ export function useVerifyEmail(token: string | null) {
   const toastShown = useRef(false);
 
   const verifyEmailQuery = useQuery({
-    queryKey: ['verify-email', token],
+    queryKey: queryKeys.auth.verifyEmail(token!),
     queryFn: () => verifyEmail(token!),
     enabled: !!token,
     retry: false,

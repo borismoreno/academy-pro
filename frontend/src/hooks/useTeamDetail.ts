@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getTeamById,
   addCoach,
@@ -27,7 +28,7 @@ export function useTeamDetail(id: string) {
   const queryClient = useQueryClient();
 
   const { data: team, isLoading, isError } = useQuery({
-    queryKey: ['team', id],
+    queryKey: queryKeys.teams.detail(id),
     queryFn: () => getTeamById(id),
     enabled: !!id,
   });
@@ -35,7 +36,7 @@ export function useTeamDetail(id: string) {
   const addCoachMutation = useMutation({
     mutationFn: (data: AddCoachData) => addCoach(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['team', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(id) });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -45,7 +46,7 @@ export function useTeamDetail(id: string) {
   const removeCoachMutation = useMutation({
     mutationFn: (userId: string) => removeCoach(id, userId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['team', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(id) });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -55,7 +56,7 @@ export function useTeamDetail(id: string) {
   const addScheduleMutation = useMutation({
     mutationFn: (data: AddScheduleData) => addSchedule(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['team', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(id) });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -65,7 +66,7 @@ export function useTeamDetail(id: string) {
   const removeScheduleMutation = useMutation({
     mutationFn: (scheduleId: string) => removeSchedule(id, scheduleId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['team', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(id) });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });

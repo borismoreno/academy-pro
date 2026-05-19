@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import { queryKeys } from "@/lib/queryKeys";
 import {
   getAcademy,
   updateAcademy,
@@ -33,19 +34,19 @@ export function useSettings(isDirector = false) {
   const queryClient = useQueryClient();
 
   const { data: academy, isLoading: academyLoading } = useQuery({
-    queryKey: ["academy"],
+    queryKey: queryKeys.settings.academy(),
     queryFn: getAcademy,
     enabled: isDirector,
   });
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
-    queryKey: ["members"],
+    queryKey: queryKeys.settings.members(),
     queryFn: () => getMembers(),
     enabled: isDirector,
   });
 
   const metricsQuery = useQuery({
-    queryKey: ["metrics"],
+    queryKey: queryKeys.settings.metrics(),
     queryFn: getMetrics,
     enabled: isDirector,
   });
@@ -54,7 +55,7 @@ export function useSettings(isDirector = false) {
     data: pendingInvitations = [],
     isLoading: pendingInvitationsLoading,
   } = useQuery({
-    queryKey: ["pending-invitations"],
+    queryKey: queryKeys.settings.pendingInvitations(),
     queryFn: getPendingInvitations,
     enabled: isDirector,
   });
@@ -62,7 +63,7 @@ export function useSettings(isDirector = false) {
   const resendInvitationMutation = useMutation({
     mutationFn: (id: string) => resendInvitation(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.pendingInvitations() });
       toast({ description: "Invitación reenviada correctamente" });
     },
     onError: (error: unknown) => {
@@ -77,7 +78,7 @@ export function useSettings(isDirector = false) {
   const cancelInvitationMutation = useMutation({
     mutationFn: (id: string) => cancelInvitation(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.pendingInvitations() });
       toast({ description: "Invitación cancelada correctamente" });
     },
     onError: (error: unknown) => {
@@ -97,7 +98,7 @@ export function useSettings(isDirector = false) {
   const updateAcademyMutation = useMutation({
     mutationFn: (data: UpdateAcademyData) => updateAcademy(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["academy"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.academy() });
       toast({ description: "Información actualizada correctamente" });
     },
     onError: (error: unknown) => {
@@ -112,8 +113,8 @@ export function useSettings(isDirector = false) {
   const inviteUserMutation = useMutation({
     mutationFn: (data: InviteUserData) => inviteUser(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
-      queryClient.invalidateQueries({ queryKey: ["pending-invitations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.members() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.pendingInvitations() });
     },
     onError: (error: unknown) => {
       toast({
@@ -127,7 +128,7 @@ export function useSettings(isDirector = false) {
   const createMetricMutation = useMutation({
     mutationFn: (data: CreateMetricData) => createMetric(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["metrics"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.metrics() });
     },
     onError: (error: unknown) => {
       toast({
@@ -142,7 +143,7 @@ export function useSettings(isDirector = false) {
     mutationFn: ({ id, data }: { id: string; data: UpdateMetricData }) =>
       updateMetric(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["metrics"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.metrics() });
     },
     onError: (error: unknown) => {
       toast({
@@ -156,7 +157,7 @@ export function useSettings(isDirector = false) {
   const deleteMetricMutation = useMutation({
     mutationFn: (id: string) => deleteMetric(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["metrics"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.settings.metrics() });
     },
     onError: (error: unknown) => {
       toast({

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getPlayerById,
   getPlayerAttendanceSummary,
@@ -22,19 +23,19 @@ export function usePlayerDetail(id: string) {
 
   // All three queries run in parallel — React Query fires them concurrently
   const playerQuery = useQuery({
-    queryKey: ['player', id],
+    queryKey: queryKeys.players.detail(id),
     queryFn: () => getPlayerById(id),
     enabled: !!id,
   });
 
   const attendanceQuery = useQuery({
-    queryKey: ['player-attendance', id],
+    queryKey: queryKeys.players.attendanceSummary(id),
     queryFn: () => getPlayerAttendanceSummary(id),
     enabled: !!id,
   });
 
   const evaluationQuery = useQuery({
-    queryKey: ['player-evaluations', id],
+    queryKey: queryKeys.players.evaluationProgress(id),
     queryFn: () => getPlayerEvaluationProgress(id),
     enabled: !!id,
   });
@@ -42,7 +43,7 @@ export function usePlayerDetail(id: string) {
   const addParentMutation = useMutation({
     mutationFn: (data: AddParentData) => addParent(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['player', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.players.detail(id) });
     },
     onError: (error: unknown) => {
       toast({
@@ -56,7 +57,7 @@ export function usePlayerDetail(id: string) {
   const removeParentMutation = useMutation({
     mutationFn: (userId: string) => removeParent(id, userId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['player', id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.players.detail(id) });
     },
     onError: (error: unknown) => {
       toast({

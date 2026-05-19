@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
 import {
   getMyPlayers,
   getPlayerById,
@@ -41,7 +42,7 @@ export function usePortal() {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
 
   const playersQuery = useQuery({
-    queryKey: ["my-players"],
+    queryKey: queryKeys.portal.myPlayers(),
     queryFn: getMyPlayers,
   });
 
@@ -55,19 +56,19 @@ export function usePortal() {
   }, [players, selectedPlayerId]);
 
   const playerQuery = useQuery({
-    queryKey: ["portal-player", selectedPlayerId],
+    queryKey: queryKeys.portal.player(selectedPlayerId!),
     queryFn: () => getPlayerById(selectedPlayerId!),
     enabled: !!selectedPlayerId,
   });
 
   const attendanceQuery = useQuery({
-    queryKey: ["portal-attendance", selectedPlayerId],
+    queryKey: queryKeys.portal.attendance(selectedPlayerId!),
     queryFn: () => getAttendanceSummary(selectedPlayerId!),
     enabled: !!selectedPlayerId,
   });
 
   const progressQuery = useQuery({
-    queryKey: ["portal-progress", selectedPlayerId],
+    queryKey: queryKeys.portal.progress(selectedPlayerId!),
     queryFn: () => getEvaluationProgress(selectedPlayerId!),
     enabled: !!selectedPlayerId,
     retry: (failureCount, error) => {
@@ -78,7 +79,7 @@ export function usePortal() {
   });
 
   const nextSessionQuery = useQuery({
-    queryKey: ["portal-next-session", selectedPlayerId],
+    queryKey: queryKeys.portal.nextSession(selectedPlayerId!),
     queryFn: () => getNextSession(selectedPlayerId!),
     enabled: !!selectedPlayerId,
   });
@@ -106,7 +107,7 @@ export function usePortal() {
 export function useGetPlayerPaymentRecords(playerId: string | null) {
   const academyId = useAuthStore((s) => s.currentAcademyId);
   return useQuery<PortalPaymentRecord[]>({
-    queryKey: ["portal-payments", academyId, playerId],
+    queryKey: queryKeys.portal.payments(academyId!, playerId!),
     queryFn: () => getPlayerPaymentRecords(academyId!, playerId!),
     enabled: !!playerId && !!academyId,
   });
@@ -115,7 +116,7 @@ export function useGetPlayerPaymentRecords(playerId: string | null) {
 export function useGetPlayerMatchHistory(playerId: string | null) {
   const academyId = useAuthStore((s) => s.currentAcademyId);
   return useQuery<PortalMatchEntry[]>({
-    queryKey: ["portal-matches", academyId, playerId],
+    queryKey: queryKeys.portal.matches(academyId!, playerId!),
     queryFn: () => getPlayerMatchHistory(academyId!, playerId!),
     enabled: !!playerId && !!academyId,
     retry: (failureCount, error) => {
@@ -131,7 +132,7 @@ export function useGetPlayerSeasonStats(
 ) {
   const academyId = useAuthStore((s) => s.currentAcademyId);
   return useQuery<PlayerSeasonSummary>({
-    queryKey: ["portal-season-stats", academyId, playerId],
+    queryKey: queryKeys.portal.seasonStats(academyId!, playerId!),
     queryFn: () => getPlayerSeasonStats(academyId!, playerId!),
     enabled: enabled && !!playerId && !!academyId,
     retry: (failureCount, error) => {

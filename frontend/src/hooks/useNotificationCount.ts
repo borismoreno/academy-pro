@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/queryKeys';
 import api from '@/services/api';
 import type { ApiResponse } from '@/types';
 
@@ -8,7 +9,7 @@ interface UnreadCountData {
 
 export function useNotificationCount() {
   const { data, isLoading } = useQuery<ApiResponse<UnreadCountData>>({
-    queryKey: ['notifications', 'unread-count'],
+    queryKey: queryKeys.notifications.unreadCount(),
     queryFn: async () => {
       const response = await api.get<ApiResponse<UnreadCountData>>('/notifications/unread-count');
       return response.data;

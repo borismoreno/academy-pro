@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, Role } from '@prisma/client';
+import { PaymentStatus, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import { PlanGuardService } from '../plan-guard/plan-guard.service.js';
 import { AddParentDto } from './dto/add-parent.dto.js';
@@ -14,6 +14,7 @@ import {
   PlayerResponseDto,
 } from './dto/player-response.dto.js';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
+import { Decimal } from '@prisma/client/runtime/library';
 
 const playerInclude = {
   team: {
@@ -135,6 +136,27 @@ export class PlayersService {
       },
       include: playerInclude,
     });
+
+    // verificar si el jugador nuevo pertenece a un equipo con un paymetntConcept de tipo "player_fee" activo, y si es así, crear un paymentRecord para el nuevo jugador
+    const paymentConcept = await this.prisma.paymentConcept.findFirst({
+      where: {
+        teamId: dto.teamId,
+        academyId: academyId,
+      },
+    });
+
+    if (paymentConcept) {
+      await this.prisma.paymentRecord.create({
+        data: {
+          conceptId: paymentConcept.id,
+          playerId: player.id,
+          baseAmount: paymentConcept.amount,
+          discountAmount: new Decimal(0),
+          finalAmount: paymentConcept.amount,
+          status: PaymentStatus.pending,
+        },
+      });
+    }
 
     return mapPlayer(player);
   }

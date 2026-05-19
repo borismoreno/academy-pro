@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getStats,
   getAcademies,
@@ -28,21 +29,21 @@ function extractErrorMessage(error: unknown): string {
 
 export function useOwnerStats() {
   return useQuery({
-    queryKey: ['owner-stats'],
+    queryKey: queryKeys.owner.stats(),
     queryFn: getStats,
   });
 }
 
 export function useOwnerAcademies(search?: string) {
   return useQuery({
-    queryKey: ['owner-academies', search ?? ''],
+    queryKey: queryKeys.owner.academies(search),
     queryFn: () => getAcademies(search),
   });
 }
 
 export function useOwnerAcademy(id: string) {
   return useQuery({
-    queryKey: ['owner-academy', id],
+    queryKey: queryKeys.owner.academy(id),
     queryFn: () => getAcademyById(id),
     enabled: !!id,
   });
@@ -50,14 +51,14 @@ export function useOwnerAcademy(id: string) {
 
 export function useOwnerPlanLimits() {
   return useQuery({
-    queryKey: ['owner-plan-limits'],
+    queryKey: queryKeys.owner.planLimits(),
     queryFn: getPlanLimits,
   });
 }
 
 export function useOwnerUsers(search?: string) {
   return useQuery({
-    queryKey: ['owner-users', search ?? ''],
+    queryKey: queryKeys.owner.users(search),
     queryFn: () => getUsers(search),
   });
 }
@@ -68,8 +69,8 @@ export function useCreateAcademy() {
   return useMutation({
     mutationFn: (data: CreateAcademyData) => createAcademy(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['owner-academies'] });
-      queryClient.invalidateQueries({ queryKey: ['owner-stats'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.academies() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.stats() });
     },
     onError: (error: unknown) => {
       toast({
@@ -88,9 +89,9 @@ export function useUpdateSubscription(academyId: string) {
     mutationFn: (data: UpdateSubscriptionData) =>
       updateSubscription(academyId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['owner-academies'] });
-      queryClient.invalidateQueries({ queryKey: ['owner-academy', academyId] });
-      queryClient.invalidateQueries({ queryKey: ['owner-stats'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.academies() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.academy(academyId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.stats() });
     },
     onError: (error: unknown) => {
       toast({
@@ -109,7 +110,7 @@ export function useUpdatePlanLimit() {
     mutationFn: ({ id, data }: { id: string; data: UpdatePlanLimitData }) =>
       updatePlanLimit(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['owner-plan-limits'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.owner.planLimits() });
     },
     onError: (error: unknown) => {
       toast({
