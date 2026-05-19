@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import { getSessionById, bulkUpdateRecords } from '@/services/attendance.service';
 import type { BulkUpdateData } from '@/services/attendance.service';
 
@@ -15,7 +16,7 @@ export function useSessionDetail(id: string) {
   const queryClient = useQueryClient();
 
   const { data: session, isLoading, isError } = useQuery({
-    queryKey: ['session', id],
+    queryKey: queryKeys.attendance.session(id),
     queryFn: () => getSessionById(id),
     enabled: !!id,
   });
@@ -23,8 +24,10 @@ export function useSessionDetail(id: string) {
   const bulkUpdateMutation = useMutation({
     mutationFn: (data: BulkUpdateData) => bulkUpdateRecords(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session', id] });
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.attendance.session(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.attendance.sessions() });
+      // Invalidate all player attendance summaries since records changed
+      queryClient.invalidateQueries({ queryKey: queryKeys.players.attendanceSummary() });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });

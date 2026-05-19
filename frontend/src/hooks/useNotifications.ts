@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getNotifications,
   markAsRead,
@@ -24,19 +25,20 @@ export function useNotifications(unreadOnly?: boolean) {
     isLoading,
     isError,
   } = useQuery<Notification[]>({
-    queryKey: ['notifications', { unreadOnly }],
+    queryKey: queryKeys.notifications.all({ unreadOnly }),
     queryFn: () => getNotifications(unreadOnly),
   });
 
   const { data: unreadCount = 0 } = useQuery<number>({
-    queryKey: ['notifications', 'unread-count'],
+    queryKey: queryKeys.notifications.unreadCount(),
     queryFn: getUnreadCount,
   });
 
   const markAsReadMutation = useMutation({
     mutationFn: (id: string) => markAsRead(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
     },
     onError: (error: unknown) => {
       toast({
@@ -50,7 +52,8 @@ export function useNotifications(unreadOnly?: boolean) {
   const markAllAsReadMutation = useMutation({
     mutationFn: markAllAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
     },
     onError: (error: unknown) => {
       toast({

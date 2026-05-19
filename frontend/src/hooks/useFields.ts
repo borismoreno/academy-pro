@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getFields,
   createField,
@@ -24,14 +25,14 @@ export function useFields() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['fields'],
+    queryKey: queryKeys.fields.all(),
     queryFn: getFields,
   });
 
   const createFieldMutation = useMutation({
     mutationFn: (data: CreateFieldData) => createField(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['fields'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.fields.all() });
     },
     onError: (error: unknown) => {
       toast({
@@ -46,7 +47,7 @@ export function useFields() {
     mutationFn: ({ id, data }: { id: string; data: UpdateFieldData }) =>
       updateField(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['fields'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.fields.all() });
     },
     onError: (error: unknown) => {
       toast({
@@ -60,7 +61,7 @@ export function useFields() {
   const deleteFieldMutation = useMutation({
     mutationFn: (id: string) => deleteField(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['fields'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.fields.all() });
     },
     onError: (error: unknown) => {
       toast({

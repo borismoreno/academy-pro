@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
+import { useAuthStore } from '@/store/auth.store';
 import {
   getTeams,
   createTeam,
@@ -24,16 +26,24 @@ function extractErrorMessage(error: unknown): string {
 
 export function useTeams() {
   const queryClient = useQueryClient();
+  const academyId = useAuthStore((s) => s.currentAcademyId);
 
   const { data: teams = [], isLoading, isError } = useQuery({
-    queryKey: ['teams'],
+    queryKey: queryKeys.teams.all(),
     queryFn: getTeams,
   });
+
+  const invalidateDashboard = () => {
+    if (!academyId) return;
+    queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary(academyId) });
+    queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.lowAttendance(academyId) });
+  };
 
   const createTeamMutation = useMutation({
     mutationFn: (data: CreateTeamData) => createTeam(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teams'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.all() });
+      invalidateDashboard();
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -43,7 +53,8 @@ export function useTeams() {
   const updateTeamMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateTeamData }) => updateTeam(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teams'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.all() });
+      invalidateDashboard();
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -53,7 +64,8 @@ export function useTeams() {
   const deleteTeamMutation = useMutation({
     mutationFn: (id: string) => deleteTeam(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teams'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.teams.all() });
+      invalidateDashboard();
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import { useAuthStore } from '@/store/auth.store';
 import {
   getMatches,
@@ -33,7 +34,7 @@ function extractErrorMessage(error: unknown): string {
 export function useGetMatches(filters?: MatchFilters) {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? '';
   return useQuery({
-    queryKey: ['matches', academyId, filters],
+    queryKey: queryKeys.matches.all(academyId, filters as Record<string, unknown> | undefined),
     queryFn: () => getMatches(academyId, filters),
     enabled: !!academyId,
   });
@@ -42,7 +43,7 @@ export function useGetMatches(filters?: MatchFilters) {
 export function useGetMatch(matchId: string) {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? '';
   return useQuery({
-    queryKey: ['match', matchId],
+    queryKey: queryKeys.matches.detail(matchId),
     queryFn: () => getMatchById(academyId, matchId),
     enabled: !!academyId && !!matchId,
   });
@@ -54,7 +55,7 @@ export function useCreateMatch() {
   return useMutation({
     mutationFn: (data: CreateMatchData) => createMatch(academyId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['matches', academyId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.all(academyId) });
     },
     onError: (error: unknown) => {
       toast({
@@ -73,8 +74,8 @@ export function useUpdateMatch() {
     mutationFn: ({ matchId, data }: { matchId: string; data: UpdateMatchData }) =>
       updateMatch(academyId, matchId, data),
     onSuccess: (_, { matchId }) => {
-      queryClient.invalidateQueries({ queryKey: ['match', matchId] });
-      queryClient.invalidateQueries({ queryKey: ['matches', academyId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.detail(matchId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.all(academyId) });
     },
     onError: (error: unknown) => {
       toast({
@@ -92,7 +93,7 @@ export function useDeleteMatch() {
   return useMutation({
     mutationFn: (matchId: string) => deleteMatch(academyId, matchId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['matches', academyId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.all(academyId) });
       toast({ title: 'Encuentro eliminado' });
     },
     onError: (error: unknown) => {
@@ -112,7 +113,7 @@ export function useSaveMatchResults() {
     mutationFn: ({ matchId, data }: { matchId: string; data: SaveMatchResultsData }) =>
       saveMatchResults(academyId, matchId, data),
     onSuccess: (_, { matchId }) => {
-      queryClient.invalidateQueries({ queryKey: ['match', matchId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.detail(matchId) });
     },
     onError: (error: unknown) => {
       toast({
@@ -127,7 +128,7 @@ export function useSaveMatchResults() {
 export function useGetMetrics() {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? '';
   return useQuery({
-    queryKey: ['match-metrics', academyId],
+    queryKey: queryKeys.matches.metrics(academyId),
     queryFn: () => getMetrics(academyId),
     enabled: !!academyId,
   });
@@ -139,7 +140,7 @@ export function useCreateMetric() {
   return useMutation({
     mutationFn: (data: CreateMatchStatMetricData) => createMetric(academyId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['match-metrics', academyId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.metrics(academyId) });
       toast({ title: 'Métrica creada' });
     },
     onError: (error: unknown) => {
@@ -159,7 +160,7 @@ export function useUpdateMetric() {
     mutationFn: ({ metricId, data }: { metricId: string; data: UpdateMatchStatMetricData }) =>
       updateMetric(academyId, metricId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['match-metrics', academyId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.matches.metrics(academyId) });
     },
     onError: (error: unknown) => {
       toast({
@@ -177,7 +178,7 @@ export function useGetPlayerSeasonStats(
 ) {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? '';
   return useQuery({
-    queryKey: ['player-season-stats', playerId, filters],
+    queryKey: queryKeys.players.seasonStats(playerId, filters),
     queryFn: () => getPlayerSeasonStats(academyId, playerId, filters),
     enabled: !!academyId && !!playerId,
   });

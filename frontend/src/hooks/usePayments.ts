@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import { queryKeys } from "@/lib/queryKeys";
 import { useAuthStore } from "@/store/auth.store";
 import {
   getConcepts,
@@ -31,7 +32,7 @@ export function useGetConcepts(filters?: ConceptsFilters) {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? "";
 
   return useQuery({
-    queryKey: ["payments", "concepts", academyId, filters],
+    queryKey: queryKeys.payments.concepts(academyId, filters),
     queryFn: () => getConcepts(academyId, filters),
     enabled: !!academyId,
   });
@@ -41,7 +42,7 @@ export function useGetConcept(conceptId: string) {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? "";
 
   return useQuery({
-    queryKey: ["payments", "concept", conceptId],
+    queryKey: queryKeys.payments.concept(conceptId),
     queryFn: () => getConceptById(academyId, conceptId),
     enabled: !!academyId && !!conceptId,
   });
@@ -56,10 +57,10 @@ export function useCreateConcept() {
       createConcept(academyId, data),
     onSuccess: (result) => {
       queryClient.invalidateQueries({
-        queryKey: ["payments", "concepts", academyId],
+        queryKey: queryKeys.payments.concepts(academyId),
       });
       queryClient.invalidateQueries({
-        queryKey: ["payments", "summary", academyId],
+        queryKey: queryKeys.payments.summary(academyId),
       });
       toast({
         description: `Concepto creado. Se generaron ${result.recordsCreated} registros de pago.`,
@@ -90,14 +91,14 @@ export function useUpdateRecord(conceptId?: string) {
     onSuccess: () => {
       if (conceptId) {
         queryClient.invalidateQueries({
-          queryKey: ["payments", "concept", conceptId],
+          queryKey: queryKeys.payments.concept(conceptId),
         });
       }
       queryClient.invalidateQueries({
-        queryKey: ["payments", "concepts", academyId],
+        queryKey: queryKeys.payments.concepts(academyId),
       });
       queryClient.invalidateQueries({
-        queryKey: ["payments", "summary", academyId],
+        queryKey: queryKeys.payments.summary(academyId),
       });
     },
     onError: (error: unknown) => {
@@ -114,7 +115,7 @@ export function useGetPaymentSummary() {
   const academyId = useAuthStore((s) => s.currentAcademyId) ?? "";
 
   return useQuery({
-    queryKey: ["payments", "summary", academyId],
+    queryKey: queryKeys.payments.summary(academyId),
     queryFn: () => getPaymentSummary(academyId),
     enabled: !!academyId,
   });

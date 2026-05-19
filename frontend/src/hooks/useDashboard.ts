@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
+import { queryKeys } from "@/lib/queryKeys";
 import { fetchTeams, fetchPlayers } from "@/services/dashboard.service";
 import { getMembers } from "@/services/settings.service";
 import { getSessions, getSessionById } from "@/services/attendance.service";
@@ -108,7 +109,7 @@ export function useDashboard() {
   const currentMonth = getCurrentMonth();
 
   const summaryQuery = useQuery({
-    queryKey: ["dashboard", "summary", academyId],
+    queryKey: queryKeys.dashboard.summary(academyId!),
     queryFn: async () => {
       const [teams, players, coaches, sessions] = await Promise.all([
         fetchTeams(),
@@ -150,7 +151,7 @@ export function useDashboard() {
   });
 
   const lowAttendanceQuery = useQuery({
-    queryKey: ["dashboard", "low-attendance", academyId],
+    queryKey: queryKeys.dashboard.lowAttendance(academyId!),
     queryFn: async () => {
       const sessions = await getSessions({ month: currentMonth });
       if (sessions.length === 0) return [];

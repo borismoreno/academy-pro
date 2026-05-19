@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   getSessions,
   createSession,
@@ -24,14 +25,14 @@ export function useAttendance(filters?: SessionFilters) {
   const queryClient = useQueryClient();
 
   const { data: sessions = [], isLoading, isError } = useQuery({
-    queryKey: ['sessions', filters],
+    queryKey: queryKeys.attendance.sessions(filters as Record<string, unknown> | undefined),
     queryFn: () => getSessions(filters),
   });
 
   const createSessionMutation = useMutation({
     mutationFn: (data: CreateSessionData) => createSession(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.attendance.sessions() });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -42,7 +43,7 @@ export function useAttendance(filters?: SessionFilters) {
     mutationFn: ({ id, data }: { id: string; data: UpdateSessionData }) =>
       updateSession(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.attendance.sessions() });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
@@ -52,7 +53,7 @@ export function useAttendance(filters?: SessionFilters) {
   const deleteSessionMutation = useMutation({
     mutationFn: (id: string) => deleteSession(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.attendance.sessions() });
     },
     onError: (error: unknown) => {
       toast({ title: 'Error', description: extractErrorMessage(error), variant: 'destructive' });
