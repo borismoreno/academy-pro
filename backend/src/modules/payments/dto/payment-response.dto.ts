@@ -37,6 +37,7 @@ export class PaymentRecordResponseDto {
   discountType: DiscountType | null;
   discountNotes: string | null;
   finalAmount: Decimal;
+  paidAmount: Decimal;
   status: PaymentStatus;
   paidAt: Date | null;
   paymentMethod: string | null;

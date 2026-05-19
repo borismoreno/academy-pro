@@ -1,5 +1,5 @@
 export type DiscountType = "siblings" | "scholarship" | "other";
-export type PaymentStatus = "pending" | "paid" | "overdue";
+export type PaymentStatus = "pending" | "paid" | "overdue" | "partial";
 
 export interface PaymentTeamInfo {
   id: string;
@@ -37,6 +37,7 @@ export interface PaymentRecord {
   discountType: DiscountType | null;
   discountNotes: string | null;
   finalAmount: number;
+  paidAmount: number;
   status: PaymentStatus;
   paidAt: string | null;
   paymentMethod: string | null;
@@ -92,4 +93,5 @@ export interface UpdatePaymentRecordData {
   paymentMethod?: string;
   notes?: string;
   paidAt?: string;
+  paidAmount?: number;
 }

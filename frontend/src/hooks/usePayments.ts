@@ -100,6 +100,9 @@ export function useUpdateRecord(conceptId?: string) {
       queryClient.invalidateQueries({
         queryKey: queryKeys.payments.summary(academyId),
       });
+      queryClient.invalidateQueries({
+        queryKey: ["portal-payments", academyId],
+      });
     },
     onError: (error: unknown) => {
       toast({

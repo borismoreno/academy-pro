@@ -388,6 +388,7 @@ enum PaymentStatus {
   pending
   paid
   overdue
+  partial
 }
 
 model Match {
@@ -488,6 +489,7 @@ model PaymentRecord {
   discountType   DiscountType?  @map("discount_type")
   discountNotes  String?        @map("discount_notes")
   finalAmount    Decimal        @db.Decimal(10, 2) @map("final_amount")
+  paidAmount     Decimal        @db.Decimal(10, 2) @default(0) @map("paid_amount")
   status         PaymentStatus  @default(pending)
   paidAt         DateTime?      @map("paid_at")
   paymentMethod  String?        @map("payment_method")

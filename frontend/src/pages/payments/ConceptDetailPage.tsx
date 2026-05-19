@@ -25,6 +25,13 @@ function StatusBadge({ status }: { status: PaymentStatus }) {
       </span>
     );
   }
+  if (status === "partial") {
+    return (
+      <span className="inline-flex items-center px-2.5 py-1 rounded-lg font-body text-xs font-medium bg-yellow-500/20 text-yellow-400">
+        Parcial
+      </span>
+    );
+  }
   return (
     <span className="inline-flex items-center px-2.5 py-1 rounded-lg font-body text-xs font-medium bg-yellow-900/40 text-yellow-400">
       Pendiente
@@ -81,6 +88,25 @@ export default function ConceptDetailPage() {
         formatCurrency(Number((row as RecordRow).finalAmount)),
     },
     {
+      key: "paidAmount",
+      label: "Abonado",
+      render: (row: Record<string, unknown>) => {
+        const amt = Number((row as RecordRow).paidAmount);
+        return amt > 0 ? formatCurrency(amt) : "—";
+      },
+    },
+    {
+      key: "pendingAmount",
+      label: "Pendiente",
+      render: (row: Record<string, unknown>) => {
+        const r = row as RecordRow;
+        const paid = Number(r.paidAmount);
+        const final = Number(r.finalAmount);
+        if (paid >= final) return "—";
+        return formatCurrency(Math.max(0, final - paid));
+      },
+    },
+    {
       key: "status",
       label: "Estado",
       render: (row: Record<string, unknown>) => (
@@ -105,12 +131,18 @@ export default function ConceptDetailPage() {
             className="flex items-center gap-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {r.status !== "paid" && (
+            {!(r.status === "paid" && Number(r.paidAmount) === 0) && (
               <button
                 onClick={() => setPaymentRecord(r)}
-                className="h-8 px-3 rounded-lg font-body text-xs font-medium bg-linear-to-br from-primary to-secondary text-on-primary hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap"
+                className={`h-8 px-3 rounded-lg font-body text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap ${
+                  r.status === "paid" || r.status === "partial"
+                    ? "bg-surface-highest text-primary"
+                    : "bg-linear-to-br from-primary to-secondary text-on-primary"
+                }`}
               >
-                Registrar pago
+                {r.status === "paid" || r.status === "partial"
+                  ? "Editar pago"
+                  : "Registrar pago"}
               </button>
             )}
             <button
@@ -245,6 +277,17 @@ export default function ConceptDetailPage() {
                   {r.discountNotes ? ` — ${r.discountNotes}` : ""}
                 </p>
               )}
+              {Number(r.paidAmount) > 0 && (
+                <p className="font-body text-xs text-primary">
+                  Abonado: {formatCurrency(Number(r.paidAmount))}{" "}
+                  <span className="text-on-surface-variant">
+                    · Pendiente:{" "}
+                    {formatCurrency(
+                      Math.max(0, Number(r.finalAmount) - Number(r.paidAmount)),
+                    )}
+                  </span>
+                </p>
+              )}
               {r.paidAt && (
                 <p className="font-body text-xs text-on-surface-variant">
                   Pagado el {formatDate(r.paidAt)}
@@ -252,12 +295,18 @@ export default function ConceptDetailPage() {
                 </p>
               )}
               <div className="flex gap-2 pt-1">
-                {r.status !== "paid" && (
+                {!(r.status === "paid" && Number(r.paidAmount) === 0) && (
                   <button
                     onClick={() => setPaymentRecord(r)}
-                    className="flex-1 h-9 rounded-xl font-body text-xs font-semibold bg-linear-to-br from-primary to-secondary text-on-primary hover:opacity-90 transition-opacity cursor-pointer"
+                    className={`flex-1 h-9 rounded-xl font-body text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer ${
+                      r.status === "paid" || r.status === "partial"
+                        ? "bg-surface-highest text-primary"
+                        : "bg-linear-to-br from-primary to-secondary text-on-primary"
+                    }`}
                   >
-                    Registrar pago
+                    {r.status === "paid" || r.status === "partial"
+                      ? "Editar pago"
+                      : "Registrar pago"}
                   </button>
                 )}
                 <button
