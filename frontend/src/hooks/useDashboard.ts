@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/auth.store';
-import { fetchTeams, fetchPlayers } from '@/services/dashboard.service';
-import { getMembers } from '@/services/settings.service';
-import { getSessions, getSessionById } from '@/services/attendance.service';
-import type { TeamResponse, PlayerResponse } from '@/services/dashboard.service';
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth.store";
+import { fetchTeams, fetchPlayers } from "@/services/dashboard.service";
+import { getMembers } from "@/services/settings.service";
+import { getSessions, getSessionById } from "@/services/attendance.service";
+import type {
+  TeamResponse,
+  PlayerResponse,
+} from "@/services/dashboard.service";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -52,7 +55,8 @@ function computeUpcomingSessions(
   const playerCountByTeam: Record<string, number> = {};
   for (const player of players) {
     if (player.isActive) {
-      playerCountByTeam[player.teamId] = (playerCountByTeam[player.teamId] ?? 0) + 1;
+      playerCountByTeam[player.teamId] =
+        (playerCountByTeam[player.teamId] ?? 0) + 1;
     }
   }
 
@@ -82,12 +86,14 @@ function computeUpcomingSessions(
     }
   }
 
-  return sessions.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, 3);
+  return sessions
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(0, 3);
 }
 
 function getCurrentMonth(): string {
   const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, "0");
   return `${now.getFullYear()}-${month}`;
 }
 
@@ -102,21 +108,27 @@ export function useDashboard() {
   const currentMonth = getCurrentMonth();
 
   const summaryQuery = useQuery({
-    queryKey: ['dashboard', 'summary', academyId],
+    queryKey: ["dashboard", "summary", academyId],
     queryFn: async () => {
       const [teams, players, coaches, sessions] = await Promise.all([
         fetchTeams(),
         fetchPlayers(),
-        getMembers('coach'),
+        getMembers("coach"),
         getSessions({ month: currentMonth }),
       ]);
 
       const activeTeams = teams.filter((t) => t.isActive).length;
       const activePlayers = players.filter((p) => p.isActive).length;
       const activeCoaches = coaches.filter((c) => c.isActive).length;
+      const completedSessions = sessions.filter(
+        (s) => new Date(s.sessionDate) <= new Date(),
+      );
 
-      const totalPresent = sessions.reduce((s, sess) => s + sess.totalPresent, 0);
-      const totalRecords = sessions.reduce(
+      const totalPresent = completedSessions.reduce(
+        (s, sess) => s + sess.totalPresent,
+        0,
+      );
+      const totalRecords = completedSessions.reduce(
         (s, sess) => s + sess.totalPresent + sess.totalAbsent,
         0,
       );
@@ -138,12 +150,18 @@ export function useDashboard() {
   });
 
   const lowAttendanceQuery = useQuery({
-    queryKey: ['dashboard', 'low-attendance', academyId],
+    queryKey: ["dashboard", "low-attendance", academyId],
     queryFn: async () => {
       const sessions = await getSessions({ month: currentMonth });
       if (sessions.length === 0) return [];
 
-      const fullSessions = await Promise.all(sessions.map((s) => getSessionById(s.id)));
+      const completedSessions = sessions.filter(
+        (s) => new Date(s.sessionDate) <= new Date(),
+      );
+
+      const fullSessions = await Promise.all(
+        completedSessions.map((s) => getSessionById(s.id)),
+      );
 
       const playerStats: Record<
         string,
