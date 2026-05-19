@@ -12,6 +12,7 @@ const STATUS_ORDER: Record<PaymentStatus, number> = {
   overdue: 0,
   pending: 1,
   paid: 2,
+  partial: 3,
 };
 
 function sortRecords(records: PortalPaymentRecord[]): PortalPaymentRecord[] {
@@ -22,9 +23,15 @@ function sortRecords(records: PortalPaymentRecord[]): PortalPaymentRecord[] {
   });
 }
 
-function statusBadge(status: PaymentStatus): { label: string; className: string } {
+function statusBadge(status: PaymentStatus): {
+  label: string;
+  className: string;
+} {
   if (status === "paid")
-    return { label: "Pagado", className: "bg-primary-container text-on-primary" };
+    return {
+      label: "Pagado",
+      className: "bg-primary-container text-on-primary",
+    };
   if (status === "overdue")
     return { label: "Vencido", className: "bg-error-container text-white" };
   return { label: "Pendiente", className: "bg-yellow-900/40 text-yellow-400" };
@@ -143,9 +150,7 @@ export default function PortalPaymentStatus({
                     <p className="font-body text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant">
                       Pagado el{" "}
                       {new Date(record.paidAt).toLocaleDateString("es-EC")}
-                      {record.paymentMethod
-                        ? ` · ${record.paymentMethod}`
-                        : ""}
+                      {record.paymentMethod ? ` · ${record.paymentMethod}` : ""}
                     </p>
                   )}
                 </div>
