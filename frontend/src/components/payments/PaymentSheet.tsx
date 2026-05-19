@@ -40,10 +40,20 @@ interface FormContentProps {
   onSuccess: () => void;
 }
 
+const INPUT_CLASS =
+  "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary placeholder:text-on-surface-variant/50 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none";
+
 function FormContent({ record, conceptId, onSuccess }: FormContentProps) {
   const updateRecord = useUpdateRecord(conceptId);
+  const finalAmount = Number(record.finalAmount);
   const [paymentMethod, setPaymentMethod] = useState("Transferencia");
   const [notes, setNotes] = useState("");
+  const [paidAmountStr, setPaidAmountStr] = useState(
+    record.paidAmount ? String(Number(record.paidAmount)) : "",
+  );
+
+  const paidAmount = paidAmountStr === "" ? 0 : Math.max(0, Number(paidAmountStr));
+  const pending = Math.max(0, finalAmount - paidAmount);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,8 +61,7 @@ function FormContent({ record, conceptId, onSuccess }: FormContentProps) {
       {
         recordId: record.id,
         data: {
-          status: "paid",
-          paidAt: new Date().toISOString(),
+          paidAmount,
           paymentMethod,
           ...(notes.trim() ? { notes: notes.trim() } : {}),
         },
@@ -72,8 +81,53 @@ function FormContent({ record, conceptId, onSuccess }: FormContentProps) {
           {record.player.fullName}
         </p>
         <p className="font-body text-sm text-primary mt-1">
-          Monto a cobrar: {formatCurrency(Number(record.finalAmount))}
+          Total a cobrar: {formatCurrency(finalAmount)}
         </p>
+      </div>
+
+      {/* Paid amount */}
+      <div className="flex flex-col gap-1.5">
+        <label className="font-body text-sm text-on-surface-variant">
+          Monto abonado
+        </label>
+        <input
+          type="number"
+          min={0}
+          max={finalAmount}
+          step="0.01"
+          value={paidAmountStr}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === "" || Number(val) <= finalAmount) {
+              setPaidAmountStr(val);
+            }
+          }}
+          placeholder={`0.00`}
+          disabled={updateRecord.isPending}
+          className={INPUT_CLASS}
+        />
+        {/* Real-time breakdown */}
+        <div className="flex flex-col gap-1 bg-surface-highest rounded-xl px-4 py-3 mt-1">
+          <div className="flex justify-between items-center">
+            <span className="font-body text-xs text-on-surface-variant">Abonado</span>
+            <span className="font-body text-xs font-medium text-primary">
+              {formatCurrency(paidAmount)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-body text-xs text-on-surface-variant">Pendiente</span>
+            <span className="font-body text-xs text-on-surface-variant">
+              {formatCurrency(pending)}
+            </span>
+          </div>
+          <div className="h-px bg-outline-variant/15 my-1" />
+          <div className="flex justify-between items-center">
+            <span className="font-body text-xs text-on-surface-variant">Total</span>
+            <span className="font-body text-xs font-medium text-on-surface">
+              {formatCurrency(finalAmount)}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Payment method */}
@@ -116,7 +170,7 @@ function FormContent({ record, conceptId, onSuccess }: FormContentProps) {
 
       <button
         type="submit"
-        disabled={updateRecord.isPending}
+        disabled={updateRecord.isPending || paidAmount <= 0}
         className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-body font-semibold text-sm bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none cursor-pointer sticky bottom-0"
       >
         {updateRecord.isPending ? <LoadingSpinner size="sm" /> : null}
@@ -143,7 +197,7 @@ export default function PaymentSheet({
 
   if (!record) return null;
 
-  const title = "Registrar pago";
+  const title = Number(record.paidAmount) > 0 ? "Editar pago" : "Registrar pago";
   const content = (
     <FormContent
       key={record.id}

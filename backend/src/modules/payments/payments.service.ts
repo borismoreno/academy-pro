@@ -46,6 +46,7 @@ function mapRecord(r: RecordWithPlayer): PaymentRecordResponseDto {
     discountType: r.discountType,
     discountNotes: r.discountNotes,
     finalAmount: r.finalAmount,
+    paidAmount: r.paidAmount,
     status: r.status,
     paidAt: r.paidAt,
     paymentMethod: r.paymentMethod,
@@ -227,8 +228,31 @@ export class PaymentsService {
 
     const newFinalAmount = record.baseAmount.minus(newDiscountAmount);
 
+    if (
+      dto.paidAmount !== undefined &&
+      new Decimal(dto.paidAmount).greaterThan(newFinalAmount)
+    ) {
+      throw new BadRequestException(
+        'El monto pagado no puede superar el monto final',
+      );
+    }
+
+    let computedStatus: PaymentStatus | undefined;
     let newPaidAt: Date | null = record.paidAt;
-    if (dto.status === PaymentStatus.paid && !record.paidAt && !dto.paidAt) {
+
+    if (dto.paidAmount !== undefined) {
+      const paid = new Decimal(dto.paidAmount);
+      if (paid.greaterThanOrEqualTo(newFinalAmount)) {
+        computedStatus = PaymentStatus.paid;
+        newPaidAt = record.paidAt ?? new Date();
+      } else if (paid.greaterThan(0)) {
+        computedStatus = PaymentStatus.partial;
+        newPaidAt = null;
+      } else {
+        computedStatus = PaymentStatus.pending;
+        newPaidAt = null;
+      }
+    } else if (dto.status === PaymentStatus.paid && !record.paidAt && !dto.paidAt) {
       newPaidAt = new Date();
     } else if (dto.paidAt) {
       newPaidAt = new Date(dto.paidAt);
@@ -240,10 +264,22 @@ export class PaymentsService {
       newPaidAt = null;
     }
 
+    if (dto.paidAmount === undefined && dto.discountAmount !== undefined) {
+      const existingPaid = record.paidAmount;
+      if (existingPaid.greaterThanOrEqualTo(newFinalAmount) && newFinalAmount.greaterThan(0)) {
+        computedStatus = PaymentStatus.paid;
+        newPaidAt = record.paidAt ?? new Date();
+      } else if (existingPaid.greaterThan(0) && existingPaid.lessThan(newFinalAmount)) {
+        computedStatus = PaymentStatus.partial;
+      }
+    }
+
+    const resolvedStatus = computedStatus ?? dto.status;
+
     const updated = await this.prisma.paymentRecord.update({
       where: { id: recordId },
       data: {
-        ...(dto.status !== undefined && { status: dto.status }),
+        ...(resolvedStatus !== undefined && { status: resolvedStatus }),
         ...(dto.discountAmount !== undefined && {
           discountAmount: newDiscountAmount,
           finalAmount: newFinalAmount,
@@ -252,6 +288,7 @@ export class PaymentsService {
         ...(dto.discountNotes !== undefined && { discountNotes: dto.discountNotes }),
         ...(dto.paymentMethod !== undefined && { paymentMethod: dto.paymentMethod }),
         ...(dto.notes !== undefined && { notes: dto.notes }),
+        ...(dto.paidAmount !== undefined && { paidAmount: new Decimal(dto.paidAmount) }),
         paidAt: newPaidAt,
       },
       include: recordWithPlayer,

@@ -37,4 +37,9 @@ export class UpdatePaymentRecordDto {
   @IsOptional()
   @IsDateString()
   paidAt?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  paidAmount?: number;
 }
