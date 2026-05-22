@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
@@ -17,9 +16,9 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { TimeSelector } from "@/components/shared/TimeSelector";
 import { toast } from "@/hooks/use-toast";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
-import { getFields } from "@/services/fields.service";
 import type { DayOfWeek } from "@/types";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
+import { useFields } from "@/hooks/useFields";
 
 const DAY_OPTIONS: { value: DayOfWeek; label: string }[] = [
   { value: "MONDAY", label: "Lunes" },
@@ -45,10 +44,7 @@ interface FormBodyProps {
 function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addScheduleMutation } = useTeamDetail(teamId);
 
-  const { data: fields = [], isLoading: fieldsLoading } = useQuery({
-    queryKey: ["fields"],
-    queryFn: getFields,
-  });
+  const { fields, isLoading } = useFields();
 
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
   const [startTime, setStartTime] = useState("");
@@ -172,7 +168,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
         <label className="font-body text-sm text-on-surface-variant">
           Cancha
         </label>
-        {fieldsLoading ? (
+        {isLoading ? (
           <div className="flex items-center gap-2 py-2">
             <LoadingSpinner size="sm" />
             <span className="font-body text-sm text-on-surface-variant">
@@ -206,7 +202,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
           className="w-full"
           disabled={
             isPending ||
-            fieldsLoading ||
+            isLoading ||
             fields.length === 0 ||
             selectedDays.length === 0
           }

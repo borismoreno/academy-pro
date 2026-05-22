@@ -1,26 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Users, User, FileText } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useAuthStore } from "@/store/auth.store";
 import { useSessionDetail } from "@/hooks/useSessionDetail";
-import { updateSession } from "@/services/attendance.service";
-import type { UpdateSessionData } from "@/services/attendance.service";
 import AttendanceList from "./components/AttendanceList";
+import { useAttendance } from "@/hooks/useAttendance";
 
 const TEXTAREA_CLASS =
   "w-full bg-surface-low border border-outline-variant/15 rounded-xl px-3 py-2.5 font-body text-sm text-on-surface focus:outline-none focus:border-primary resize-none placeholder:text-on-surface-variant/50 disabled:opacity-50 disabled:cursor-not-allowed";
-
-function extractErrorMessage(error: unknown): string {
-  if (error !== null && typeof error === "object" && "response" in error) {
-    const axiosError = error as { response?: { data?: { message?: string } } };
-    if (axiosError.response?.data?.message)
-      return axiosError.response.data.message;
-  }
-  return "Ha ocurrido un error inesperado";
-}
 
 function formatFullDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -39,30 +27,13 @@ export default function SessionDetailPage() {
   const navigate = useNavigate();
   const role = useAuthStore((s) => s.role);
   const user = useAuthStore((s) => s.user);
-  const queryClient = useQueryClient();
+  const { updateSessionMutation } = useAttendance();
 
   const { session, records, isLoading, bulkUpdateMutation } =
     useSessionDetail(id);
 
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState("");
-
-  const updateNotesMutation = useMutation({
-    mutationFn: (data: UpdateSessionData) => updateSession(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["session", id] });
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-      setEditingNotes(false);
-      toast({ description: "Notas actualizadas correctamente" });
-    },
-    onError: (error: unknown) => {
-      toast({
-        title: "Error",
-        description: extractErrorMessage(error),
-        variant: "destructive",
-      });
-    },
-  });
 
   function startEditingNotes() {
     setNotesValue(session?.notes ?? "");
@@ -74,7 +45,15 @@ export default function SessionDetailPage() {
   }
 
   function saveNotes() {
-    updateNotesMutation.mutate({ notes: notesValue.trim() || undefined });
+    updateSessionMutation.mutate(
+      {
+        id,
+        data: { notes: notesValue },
+      },
+      {
+        onSuccess: () => setEditingNotes(false),
+      },
+    );
   }
 
   if (isLoading) {
@@ -179,17 +158,17 @@ export default function SessionDetailPage() {
               <div className="flex gap-2">
                 <button
                   onClick={saveNotes}
-                  disabled={updateNotesMutation.isPending}
+                  disabled={updateSessionMutation.isPending}
                   className="flex items-center gap-1.5 h-9 px-4 rounded-xl font-body text-sm font-semibold bg-linear-to-br from-primary to-secondary text-on-primary transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
                 >
-                  {updateNotesMutation.isPending ? (
+                  {updateSessionMutation.isPending ? (
                     <LoadingSpinner size="sm" />
                   ) : null}
                   Guardar
                 </button>
                 <button
                   onClick={cancelEditingNotes}
-                  disabled={updateNotesMutation.isPending}
+                  disabled={updateSessionMutation.isPending}
                   className="h-9 px-4 rounded-xl font-body text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                 >
                   Cancelar

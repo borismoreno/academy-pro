@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import EmptyState from "@/components/shared/EmptyState";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
 import { useAuthStore } from "@/store/auth.store";
-import { fetchPlayers } from "@/services/dashboard.service";
 import TeamFormSheet from "./components/TeamFormSheet";
 import TeamCoachesList from "./components/TeamCoachesList";
 import TeamSchedulesList from "./components/TeamSchedulesList";
+import { usePlayers } from "@/hooks/usePlayers";
 
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
@@ -30,11 +29,7 @@ export default function TeamDetailPage() {
   const { team, isLoading, isError } = useTeamDetail(id ?? "");
   const [editOpen, setEditOpen] = useState(false);
 
-  const { data: allPlayers = [] } = useQuery({
-    queryKey: ["players"],
-    queryFn: fetchPlayers,
-    enabled: !!team,
-  });
+  const { players: allPlayers } = usePlayers();
 
   const teamPlayers = allPlayers.filter((p) => p.teamId === id && p.isActive);
 
