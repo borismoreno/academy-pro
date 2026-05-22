@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
@@ -18,23 +17,7 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { SearchableSelect } from "@/components/shared/SearchableSelect";
 import { toast } from "@/hooks/use-toast";
 import { useTeamDetail } from "@/hooks/useTeamDetail";
-import api from "@/services/api";
-import type { ApiResponse } from "@/types";
-
-interface AcademyMember {
-  userId: string;
-  fullName: string;
-  email: string;
-  isActive: boolean;
-  role: string;
-}
-
-async function fetchCoaches(): Promise<AcademyMember[]> {
-  const response = await api.get<ApiResponse<AcademyMember[]>>(
-    "/academies/members?role=coach",
-  );
-  return response.data.data;
-}
+import { useAcademy } from "@/hooks/useAcademy";
 
 interface AddCoachSheetProps {
   open: boolean;
@@ -51,10 +34,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
   const { addCoachMutation } = useTeamDetail(teamId);
   const navigate = useNavigate();
 
-  const { data: coaches = [], isLoading: isLoadingCoaches } = useQuery({
-    queryKey: ["academy-coaches"],
-    queryFn: fetchCoaches,
-  });
+  const { coaches, isLoading } = useAcademy();
 
   const [selectedUserId, setSelectedUserId] = useState("");
   const [isPrimary, setIsPrimary] = useState(false);
@@ -87,7 +67,7 @@ function FormBody({ teamId, onOpenChange }: FormBodyProps) {
         onValueChange={setSelectedUserId}
         placeholder="Seleccionar entrenador"
         searchPlaceholder="Buscar entrenador..."
-        isLoading={isLoadingCoaches}
+        isLoading={isLoading}
         disabled={addCoachMutation.isPending}
         emptyAction={
           <button

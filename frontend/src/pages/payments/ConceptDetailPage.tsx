@@ -39,8 +39,10 @@ function StatusBadge({ status }: { status: PaymentStatus }) {
   );
 }
 
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("es-EC");
+function formatDate(dateStr: string, toLocale: boolean = true): string {
+  return toLocale
+    ? new Date(dateStr).toLocaleDateString("es-EC")
+    : new Date(dateStr).toISOString().split("T")[0];
 }
 
 type RecordRow = PaymentRecord & Record<string, unknown>;
@@ -49,8 +51,12 @@ export default function ConceptDetailPage() {
   const { id: conceptId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [paymentRecord, setPaymentRecord] = useState<PaymentRecord | null>(null);
-  const [discountRecord, setDiscountRecord] = useState<PaymentRecord | null>(null);
+  const [paymentRecord, setPaymentRecord] = useState<PaymentRecord | null>(
+    null,
+  );
+  const [discountRecord, setDiscountRecord] = useState<PaymentRecord | null>(
+    null,
+  );
 
   const { data: concept, isLoading, isError } = useGetConcept(conceptId ?? "");
 
@@ -221,7 +227,7 @@ export default function ConceptDetailPage() {
             <div className="flex items-center gap-1.5 bg-surface-highest rounded-xl px-3 py-2">
               <Calendar size={14} className="text-on-surface-variant" />
               <span className="font-body text-sm text-on-surface-variant">
-                Vence {formatDate(concept.dueDate)}
+                Vence {formatDate(concept.dueDate, false)}
               </span>
             </div>
           </div>

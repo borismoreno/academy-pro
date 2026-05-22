@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./index.css";
 import App from "./App.tsx";
 import * as Sentry from "@sentry/react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       <Toaster />
     </QueryClientProvider>
   </StrictMode>,

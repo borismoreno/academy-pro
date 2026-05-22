@@ -65,6 +65,12 @@ export const queryKeys = {
     all: () => ["fields"] as const,
   },
 
+  // Academies
+  academies: {
+    all: () => ["academies"] as const,
+    coaches: () => ["academy-coaches"] as const,
+  },
+
   // Academy settings
   settings: {
     academy: () => ["academy"] as const,
