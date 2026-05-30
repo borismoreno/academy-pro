@@ -24,6 +24,12 @@ function formatMonth(date: Date): string {
   return date.toLocaleDateString("es-EC", { month: "short" });
 }
 
+function formatBirthday(dateStr: string): string {
+  const [year, month, day] = dateStr.slice(0, 10).split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString("es-EC", { day: "numeric", month: "long" });
+}
+
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
@@ -64,6 +70,7 @@ export default function DashboardPage() {
     activeCoaches,
     upcomingSessions,
     lowAttendancePlayers,
+    birthdayPlayers,
     isLoading,
     isError,
   } = useDashboard();
@@ -236,6 +243,41 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* ── Cumpleaños este mes ───────────────────────────────── */}
+      {birthdayPlayers.length > 0 && (
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="font-display text-[16px] font-semibold">
+              🎂 Cumpleaños este mes
+            </h2>
+          </div>
+          <div className="flex flex-col gap-2">
+            {birthdayPlayers.slice(0, 4).map((player) => (
+              <div
+                key={player.id}
+                onClick={() => navigate(`/players/${player.id}`)}
+                className="bg-surface-high rounded-2xl px-3.5 py-3 flex items-center gap-3 cursor-pointer active:bg-surface-highest transition-colors"
+              >
+                <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[16px] shrink-0">
+                  🎂
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-medium text-on-surface truncate">
+                    {player.fullName}
+                  </p>
+                  <p className="text-[11px] text-on-surface-variant">
+                    {player.teamName} · {player.turnsAge} años
+                  </p>
+                </div>
+                <div className="bg-primary/10 border border-primary/20 rounded-lg px-2 py-1 font-body text-[11px] text-primary shrink-0">
+                  {formatBirthday(player.birthDate)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Próximos entrenamientos ───────────────────────────── */}
       <div className="pb-2">
