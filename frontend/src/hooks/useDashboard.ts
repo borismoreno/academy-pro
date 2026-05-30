@@ -30,6 +30,14 @@ export interface LowAttendancePlayer {
   attendancePercent: number;
 }
 
+export interface BirthdayPlayer {
+  id: string;
+  fullName: string;
+  teamName: string;
+  birthDate: string;
+  turnsAge: number;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -138,12 +146,45 @@ export function useDashboard() {
 
       const upcomingSessions = computeUpcomingSessions(teams, players);
 
+      const now = new Date();
+      const currentMonthNum = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      const parseDateLocal = (dateStr: string): Date => {
+        const [year, month, day] = dateStr.slice(0, 10).split("-").map(Number);
+        return new Date(year, month - 1, day);
+      };
+
+      const birthdayPlayers: BirthdayPlayer[] = players
+        .filter((p) => {
+          if (!p.isActive || !p.birthDate) return false;
+          const birth = parseDateLocal(p.birthDate);
+          return birth.getMonth() === currentMonthNum;
+        })
+        .map((p) => {
+          const birth = parseDateLocal(p.birthDate);
+          const turnsAge = currentYear - birth.getFullYear();
+          return {
+            id: p.id,
+            fullName: p.fullName,
+            teamName: p.team.name,
+            birthDate: p.birthDate,
+            turnsAge,
+          };
+        })
+        .sort((a, b) => {
+          const dayA = parseDateLocal(a.birthDate).getDate();
+          const dayB = parseDateLocal(b.birthDate).getDate();
+          return dayA - dayB;
+        });
+
       return {
         activeTeams,
         activePlayers,
         activeCoaches,
         attendancePercent,
         upcomingSessions,
+        birthdayPlayers,
       };
     },
     staleTime: STALE_5_MIN,
@@ -218,6 +259,7 @@ export function useDashboard() {
     activeCoaches: summaryQuery.data?.activeCoaches ?? 0,
     attendancePercent: summaryQuery.data?.attendancePercent ?? 0,
     upcomingSessions: summaryQuery.data?.upcomingSessions ?? [],
+    birthdayPlayers: summaryQuery.data?.birthdayPlayers ?? [],
     lowAttendancePlayers: lowAttendanceQuery.data ?? [],
     isLoading: summaryQuery.isLoading,
     isError: summaryQuery.isError || lowAttendanceQuery.isError,
