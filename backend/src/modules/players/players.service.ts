@@ -137,24 +137,25 @@ export class PlayersService {
       include: playerInclude,
     });
 
-    // verificar si el jugador nuevo pertenece a un equipo con un paymetntConcept de tipo "player_fee" activo, y si es así, crear un paymentRecord para el nuevo jugador
-    const paymentConcept = await this.prisma.paymentConcept.findFirst({
+    // verificar si el jugador nuevo pertenece a un equipo con conceptos de pago no vencidos, y si es así, crear un paymentRecord por cada uno
+    const paymentConcepts = await this.prisma.paymentConcept.findMany({
       where: {
         teamId: dto.teamId,
         academyId: academyId,
+        dueDate: { gt: new Date() },
       },
     });
 
-    if (paymentConcept) {
-      await this.prisma.paymentRecord.create({
-        data: {
-          conceptId: paymentConcept.id,
+    if (paymentConcepts.length > 0) {
+      await this.prisma.paymentRecord.createMany({
+        data: paymentConcepts.map((concept) => ({
+          conceptId: concept.id,
           playerId: player.id,
-          baseAmount: paymentConcept.amount,
+          baseAmount: concept.amount,
           discountAmount: new Decimal(0),
-          finalAmount: paymentConcept.amount,
+          finalAmount: concept.amount,
           status: PaymentStatus.pending,
-        },
+        })),
       });
     }
 
