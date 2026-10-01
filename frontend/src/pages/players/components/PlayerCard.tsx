@@ -133,9 +133,16 @@ export default function PlayerCard({ player, role }: PlayerCardProps) {
 
             {/* Name + position chip */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-display text-lg font-semibold text-on-surface leading-tight truncate">
-                {player.fullName}
-              </h3>
+              <div className="flex items-center gap-2 min-w-0">
+                <h3 className="font-display text-lg font-semibold text-on-surface leading-tight truncate">
+                  {player.fullName}
+                </h3>
+                {player.jerseyNumber != null && (
+                  <span className="shrink-0 font-display text-xs font-semibold bg-surface-highest text-primary rounded-full px-2 py-0.5">
+                    #{player.jerseyNumber}
+                  </span>
+                )}
+              </div>
               {player.position && (
                 <span className="inline-block mt-1 font-body text-[0.6875rem] uppercase tracking-[0.05em] bg-surface-highest text-secondary rounded-full px-3 py-1">
                   {player.position}

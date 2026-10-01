@@ -53,6 +53,7 @@ export interface Player {
   fullName: string;
   birthDate: string;
   position: string;
+  jerseyNumber?: number | null;
   photoUrl: string | null;
   isActive: boolean;
 }

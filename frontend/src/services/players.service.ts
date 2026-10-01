@@ -63,6 +63,7 @@ export interface CreatePlayerData {
   fullName: string;
   birthDate: string;
   position: string;
+  jerseyNumber?: number | null;
   teamId: string;
   height?: number;
   weight?: number;
@@ -72,6 +73,7 @@ export interface UpdatePlayerData {
   fullName?: string;
   birthDate?: string;
   position?: string;
+  jerseyNumber?: number | null;
   teamId?: string;
   isActive?: boolean;
   height?: number;

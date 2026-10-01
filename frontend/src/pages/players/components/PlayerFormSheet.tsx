@@ -60,6 +60,9 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [fullName, setFullName] = useState(player?.fullName ?? "");
   const [birthDate, setBirthDate] = useState(initialBirthDate);
   const [position, setPosition] = useState(player?.position ?? "");
+  const [jerseyNumber, setJerseyNumber] = useState(
+    player?.jerseyNumber != null ? String(player.jerseyNumber) : "",
+  );
   const [height, setHeight] = useState(String(player?.height ?? ""));
   const [weight, setWeight] = useState(String(player?.weight ?? ""));
 
@@ -70,6 +73,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
   const [positionError, setPositionError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
   const [teamIdError, setTeamIdError] = useState("");
+  const [jerseyNumberError, setJerseyNumberError] = useState("");
   const [heightError, setHeightError] = useState("");
   const [weightError, setWeightError] = useState("");
 
@@ -131,6 +135,21 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
     } else {
       setTeamIdError("");
     }
+    if (jerseyNumber) {
+      const jerseyValue = Number(jerseyNumber);
+      if (
+        !Number.isInteger(jerseyValue) ||
+        jerseyValue < 1 ||
+        jerseyValue > 99
+      ) {
+        setJerseyNumberError("El dorsal debe ser un número entre 1 y 99");
+        valid = false;
+      } else {
+        setJerseyNumberError("");
+      }
+    } else {
+      setJerseyNumberError("");
+    }
     if (height) {
       const heightValue = parseInt(height, 10);
       if (isNaN(heightValue) || heightValue <= 50) {
@@ -164,6 +183,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       fullName: fullName.trim(),
       birthDate,
       position,
+      jerseyNumber: jerseyNumber ? parseInt(jerseyNumber, 10) : null,
       height: height ? parseFloat(height) : undefined,
       weight: weight ? parseFloat(weight) : undefined,
       teamId,
@@ -251,6 +271,31 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
         {positionError && (
           <p className="font-body text-xs text-error-container">
             {positionError}
+          </p>
+        )}
+      </div>
+
+      {/* Jersey number */}
+      <div className="flex flex-col gap-1.5">
+        <label className="font-body text-sm text-on-surface-variant">
+          Número de dorsal
+        </label>
+        <Input
+          type="number"
+          min={1}
+          max={99}
+          value={jerseyNumber}
+          onChange={(e) => {
+            setJerseyNumber(e.target.value);
+            if (jerseyNumberError) setJerseyNumberError("");
+          }}
+          placeholder="Ej. 10"
+          disabled={isPending}
+          autoComplete="off"
+        />
+        {jerseyNumberError && (
+          <p className="font-body text-xs text-error-container">
+            {jerseyNumberError}
           </p>
         )}
       </div>

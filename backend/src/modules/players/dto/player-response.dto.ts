@@ -26,6 +26,7 @@ export class PlayerResponseDto {
   fullName: string;
   birthDate: Date;
   position: string | null;
+  jerseyNumber: number | null;
   photoUrl: string | null;
   height: number | null;
   weight: number | null;
