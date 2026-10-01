@@ -252,8 +252,8 @@ export default function DashboardPage() {
               🎂 Cumpleaños este mes
             </h2>
           </div>
-          <div className="flex flex-col gap-2">
-            {birthdayPlayers.slice(0, 4).map((player) => (
+          <div className="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1 [scrollbar-width:thin] [scrollbar-color:var(--color-surface-highest)_transparent]">
+            {birthdayPlayers.map((player) => (
               <div
                 key={player.id}
                 onClick={() => navigate(`/players/${player.id}`)}
