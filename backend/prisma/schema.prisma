@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------------------
@@ -223,6 +224,7 @@ model Player {
   fullName  String   @map("full_name")
   birthDate DateTime @map("birth_date")
   position  String?
+  jerseyNumber Int?  @map("jersey_number")
   height    Float?   // in cm
   weight    Float?   // in kg
   photoUrl  String?  @map("photo_url")

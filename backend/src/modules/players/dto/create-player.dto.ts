@@ -1,9 +1,12 @@
 import {
   IsDateString,
   IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   IsUUID,
+  Max,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -25,6 +28,12 @@ export class CreatePlayerDto {
   @IsOptional()
   @IsString()
   photoUrl?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(99)
+  jerseyNumber?: number | null;
 
   @IsOptional()
   height?: number;

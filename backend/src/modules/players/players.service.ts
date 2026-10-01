@@ -50,6 +50,7 @@ function mapPlayer(player: PlayerWithTeam): PlayerResponseDto {
     fullName: player.fullName,
     birthDate: player.birthDate,
     position: player.position,
+    jerseyNumber: player.jerseyNumber,
     photoUrl: player.photoUrl,
     isActive: player.isActive,
     createdAt: player.createdAt,
@@ -70,6 +71,7 @@ function mapPlayerWithParents(
     fullName: player.fullName,
     birthDate: player.birthDate,
     position: player.position,
+    jerseyNumber: player.jerseyNumber,
     photoUrl: player.photoUrl,
     isActive: player.isActive,
     createdAt: player.createdAt,
@@ -130,6 +132,7 @@ export class PlayersService {
         fullName: dto.fullName,
         birthDate: new Date(dto.birthDate),
         position: dto.position,
+        jerseyNumber: dto.jerseyNumber,
         photoUrl: dto.photoUrl,
         height: dto.height,
         weight: dto.weight,
@@ -253,6 +256,7 @@ export class PlayersService {
         dto.fullName !== undefined ||
         dto.birthDate !== undefined ||
         dto.position !== undefined ||
+        dto.jerseyNumber !== undefined ||
         dto.height !== undefined ||
         dto.weight !== undefined ||
         dto.teamId !== undefined;
@@ -317,6 +321,9 @@ export class PlayersService {
           birthDate: new Date(dto.birthDate),
         }),
         ...(dto.position !== undefined && { position: dto.position }),
+        ...(dto.jerseyNumber !== undefined && {
+          jerseyNumber: dto.jerseyNumber,
+        }),
         ...(dto.teamId !== undefined && { teamId: dto.teamId }),
         ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }),
         ...(dto.isActive !== undefined && { isActive: dto.isActive }),

@@ -61,6 +61,7 @@ export interface PlayerResponse {
   fullName: string;
   birthDate: string;
   position: string | null;
+  jerseyNumber?: number | null;
   photoUrl: string | null;
   height: number | null;
   weight: number | null;

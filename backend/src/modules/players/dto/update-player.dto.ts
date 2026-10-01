@@ -1,8 +1,11 @@
 import {
   IsDateString,
+  IsInt,
   IsOptional,
   IsString,
   IsUUID,
+  Max,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -31,6 +34,12 @@ export class UpdatePlayerDto {
 
   @IsOptional()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(99)
+  jerseyNumber?: number | null;
 
   @IsOptional()
   height?: number;
