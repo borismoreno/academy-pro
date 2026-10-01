@@ -278,7 +278,7 @@ function FormBody({ player, onOpenChange }: FormBodyProps) {
       {/* Jersey number */}
       <div className="flex flex-col gap-1.5">
         <label className="font-body text-sm text-on-surface-variant">
-          Número de dorsal
+          Dorsal
         </label>
         <Input
           type="number"
