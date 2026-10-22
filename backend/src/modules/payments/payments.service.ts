@@ -134,7 +134,10 @@ export class PaymentsService {
       },
       include: {
         team: { select: { id: true, name: true } },
-        records: { select: { status: true } },
+        records: {
+          where: { player: { isActive: true } },
+          select: { status: true },
+        },
       },
       orderBy: { dueDate: 'desc' },
     });
@@ -167,6 +170,7 @@ export class PaymentsService {
       include: {
         team: { select: { id: true, name: true } },
         records: {
+          where: { player: { isActive: true } },
           include: recordWithPlayer,
           orderBy: { createdAt: 'asc' },
         },
@@ -301,7 +305,7 @@ export class PaymentsService {
     const [concepts, records] = await Promise.all([
       this.prisma.paymentConcept.count({ where: { academyId } }),
       this.prisma.paymentRecord.findMany({
-        where: { concept: { academyId } },
+        where: { concept: { academyId }, player: { isActive: true } },
         select: { status: true, finalAmount: true },
       }),
     ]);
@@ -375,6 +379,7 @@ export class PaymentsService {
       where: {
         status: PaymentStatus.pending,
         concept: { dueDate: { lt: now } },
+        player: { isActive: true },
       },
       data: { status: PaymentStatus.overdue },
     });
@@ -388,7 +393,10 @@ export class PaymentsService {
       where: { id: conceptId },
       include: {
         team: { select: { id: true, name: true } },
-        records: { select: { status: true } },
+        records: {
+          where: { player: { isActive: true } },
+          select: { status: true },
+        },
       },
     });
 
